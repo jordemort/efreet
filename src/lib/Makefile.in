@@ -41,7 +41,7 @@ subdir = src/lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_attribute.m4 \
-	$(top_srcdir)/m4/ac_define_dir.m4 $(top_srcdir)/configure.in
+	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -64,7 +64,7 @@ am__objects_2 = efreet.lo efreet_base.lo efreet_icon.lo efreet_xml.lo \
 	$(am__objects_1)
 am_libefreet_la_OBJECTS = $(am__objects_2)
 libefreet_la_OBJECTS = $(am_libefreet_la_OBJECTS)
-libefreet_mime_la_LIBADD =
+libefreet_mime_la_DEPENDENCIES = libefreet.la
 am__objects_3 = efreet_mime.lo $(am__objects_1)
 am_libefreet_mime_la_OBJECTS = $(am__objects_3)
 libefreet_mime_la_OBJECTS = $(am_libefreet_mime_la_OBJECTS)
@@ -92,6 +92,7 @@ AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
 AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -101,13 +102,12 @@ CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
-CXX = @CXX@
-CXXCPP = @CXXCPP@
-CXXDEPMODE = @CXXDEPMODE@
-CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
+DEFAULT_VISIBILITY_FALSE = @DEFAULT_VISIBILITY_FALSE@
+DEFAULT_VISIBILITY_TRUE = @DEFAULT_VISIBILITY_TRUE@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -116,8 +116,6 @@ ECORE_CFLAGS = @ECORE_CFLAGS@
 ECORE_LIBS = @ECORE_LIBS@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-F77 = @F77@
-FFLAGS = @FFLAGS@
 GREP = @GREP@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -130,10 +128,10 @@ LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
-PACKAGE_DATA_DIR = @PACKAGE_DATA_DIR@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
@@ -141,17 +139,14 @@ PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 RANLIB = @RANLIB@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
 ac_ct_CC = @ac_ct_CC@
-ac_ct_CXX = @ac_ct_CXX@
-ac_ct_F77 = @ac_ct_F77@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
-am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
-am__fastdepCXX_TRUE = @am__fastdepCXX_TRUE@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -193,11 +188,11 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+version_info = @version_info@
 MAINTAINERCLEANFILES = Makefile.in
-INCLUDES = \
+AM_CPPFLAGS = \
 -I$(top_builddir) \
 -I$(top_srcdir) \
--g -O0 -W -Wall \
 @ECORE_CFLAGS@
 
 lib_LTLIBRARIES = libefreet.la libefreet_mime.la
@@ -208,7 +203,7 @@ efreet_desktop.h \
 efreet_icon.h \
 efreet_ini.h \
 efreet_menu.h \
-efreet_utils.h 
+efreet_utils.h
 
 EFREETSOURCES = \
 efreet.c \
@@ -239,7 +234,8 @@ $(EFREETMIMESOURCES)
 installed_headersdir = $(prefix)/include/efreet
 installed_headers_DATA = $(EFREETHEADERS) $(EFREETMIMEHEADERS)
 libefreet_la_LIBADD = @ECORE_LIBS@
-libefreet_la_LDFLAGS = -version-info 1:0:0
+libefreet_la_LDFLAGS = -version-info @version_info@
+libefreet_mime_la_LIBADD = @ECORE_LIBS@ libefreet.la
 all: all-am
 
 .SUFFIXES:

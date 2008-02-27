@@ -1,5 +1,8 @@
-#include <Efreet.h>
+#include "Efreet.h"
 #include "efreet_private.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 int
 ef_cb_locale(void)
@@ -12,7 +15,7 @@ ef_cb_locale(void)
         char *country;
         char *modifier;
     } langs[] = {
-        /* these are ordered such that when we move from LANG to LC_MESSAGES 
+        /* these are ordered such that when we move from LANG to LC_MESSAGES
          * the LANG env will still be effect. Same with moving from
          * LC_MESSAGES to LANG */
         {"LANG=", NULL, NULL, NULL},
@@ -51,7 +54,7 @@ ef_cb_locale(void)
         if ((langs[i].lang && (!tmp || strcmp(tmp, langs[i].lang)))
                 || (!langs[i].lang && tmp))
         {
-            printf("efreet_lang_get() is wrong (%s) with %s\n", 
+            printf("efreet_lang_get() is wrong (%s) with %s\n",
                                             tmp, langs[i].lang);
             ret = 0;
         }
@@ -60,13 +63,13 @@ ef_cb_locale(void)
         if ((langs[i].country && (!tmp || strcmp(tmp, langs[i].country)))
                 || (!langs[i].country && tmp))
         {
-            printf("efreet_lang_country_get() is wrong (%s) with %s\n", 
+            printf("efreet_lang_country_get() is wrong (%s) with %s\n",
                                                 tmp, langs[i].lang);
             ret = 0;
         }
 
         tmp = efreet_lang_modifier_get();
-        if ((langs[i].modifier && (!tmp || strcmp(tmp, langs[i].modifier))) 
+        if ((langs[i].modifier && (!tmp || strcmp(tmp, langs[i].modifier)))
                 || (!langs[i].modifier && tmp))
         {
             printf("efreet_lang_modifier_get() is wrong with %s with %s\n",
@@ -77,7 +80,6 @@ ef_cb_locale(void)
         efreet_shutdown();
         efreet_init();
     }
-    
+
     return ret;
 }
-

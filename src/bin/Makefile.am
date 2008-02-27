@@ -1,8 +1,15 @@
+
 SUBDIRS = data compare
+
 MAINTAINERCLEANFILES = Makefile.in
 
-INCLUDES = \
--I. -I$(top_srcdir)/src/lib @ECORE_CFLAGS@
+AM_CPPFLAGS = \
+-I. \
+-I$(top_srcdir)/src/lib \
+@ECORE_CFLAGS@ \
+-DPACKAGE_BIN_DIR=\"$(bindir)\" \
+-DPACKAGE_LIB_DIR=\"$(libdir)\" \
+-DPACKAGE_DATA_DIR=\"$(datadir)/$(PACKAGE)\"
 
 bin_PROGRAMS = efreet_test efreet_spec_test efreet_cache_test
 
@@ -15,13 +22,16 @@ efreet_test_SOURCES = \
 ef_data_dirs.c \
 ef_icon_theme.c \
 ef_ini.c \
-ef_locale.c \
+ef_utils.c \
 ef_desktop.c \
 ef_menu.c \
-ef_utils.c \
 ef_mime.c \
 main.c
 
+if DEFAULT_VISIBILITY
+efreet_test_SOURCES += \
+ef_locale.c
+endif
 
 efreet_spec_test_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
 efreet_spec_test_LDADD = $(top_builddir)/src/lib/libefreet.la

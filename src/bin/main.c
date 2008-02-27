@@ -15,7 +15,10 @@ int ef_cb_efreet_icon_theme(void);
 int ef_cb_efreet_icon_theme_list(void);
 int ef_cb_efreet_icon_match(void);
 int ef_cb_ini_parse(void);
+int ef_cb_ini_long_line(void);
+#if DEFAULT_VISIBILITY
 int ef_cb_locale(void);
+#endif
 int ef_cb_desktop_parse(void);
 int ef_cb_desktop_save(void);
 int ef_cb_desktop_command_get(void);
@@ -29,7 +32,6 @@ int ef_cb_menu_save(void);
 #if 0
 int ef_cb_menu_edit(void);
 #endif
-int ef_cb_ini_long_line(void);
 int ef_cb_utils(void);
 int ef_mime_cb_get(void);
 
@@ -51,7 +53,9 @@ static Efreet_Test tests[] = {
     {"Icon Matching", ef_cb_efreet_icon_match},
     {"INI Parsing", ef_cb_ini_parse},
     {"INI Long Line Parsing", ef_cb_ini_long_line},
+#if DEFAULT_VISIBILITY
     {"Locale Parsing", ef_cb_locale},
+#endif
     {"Desktop Parsing", ef_cb_desktop_parse},
     {"Desktop Type Parsing", ef_cb_desktop_type_parse},
     {"Desktop Save", ef_cb_desktop_save},
@@ -135,9 +139,9 @@ main(int argc, char ** argv)
         double start;
 
         /* we've been given specific tests and it isn't in the list */
-        if (run && !ecore_list_find(run, ECORE_COMPARE_CB(strcasecmp), 
+        if (run && !ecore_list_find(run, ECORE_COMPARE_CB(strcasecmp),
                                                         tests[i].name))
-            continue; 
+            continue;
 
         if (!efreet_init())
         {
@@ -147,11 +151,11 @@ main(int argc, char ** argv)
 
         num_tests ++;
 
-        printf("%s:\t\t", tests[i].name); 
+        printf("%s:\t\t", tests[i].name);
         fflush(stdout);
         start = ecore_time_get();
         ret = tests[i].cb();
-        printf("%s in %.3f seconds\n", (ret ? "PASSED" : "FAILED"), 
+        printf("%s in %.3f seconds\n", (ret ? "PASSED" : "FAILED"),
                                             ecore_time_get() - start);
         passed += ret;
 
@@ -168,4 +172,3 @@ main(int argc, char ** argv)
     printf("Total run: %.3f seconds\n", ecore_time_get() - total);
     return 0;
 }
-

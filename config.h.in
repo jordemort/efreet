@@ -8,6 +8,9 @@
 /* Define to 1 if using `alloca.c'. */
 #undef C_ALLOCA
 
+/* Default visibility */
+#undef DEFAULT_VISIBLITY
+
 /* Define to 1 if you have `alloca', as a function or macro. */
 #undef HAVE_ALLOCA
 
@@ -53,9 +56,6 @@
 
 /* Define to the address where bug reports for this package should be sent. */
 #undef PACKAGE_BUGREPORT
-
-/* Shared Data Directory. */
-#undef PACKAGE_DATA_DIR
 
 /* Define to the full name of this package. */
 #undef PACKAGE_NAME

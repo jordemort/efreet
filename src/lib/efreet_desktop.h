@@ -2,21 +2,19 @@
 #ifndef EFREET_DESKTOP_H
 #define EFREET_DESKTOP_H
 
-#include "efreet_ini.h"
-
 /**
  * @file efreet_desktop.h
- * @brief Contains the structures and methods used to support the 
+ * @brief Contains the structures and methods used to support the
  *        FDO desktop entry specificiation.
  * @addtogroup Efreet_Desktop Efreet_Desktop: The FDO Desktop Entry
- *                  Specification functions and structures 
+ *                  Specification functions and structures
  *
  * @{
  */
 
-extern int EFREET_DESKTOP_TYPE_APPLICATION;
-extern int EFREET_DESKTOP_TYPE_LINK;
-extern int EFREET_DESKTOP_TYPE_DIRECTORY;
+EAPI extern int EFREET_DESKTOP_TYPE_APPLICATION;
+EAPI extern int EFREET_DESKTOP_TYPE_LINK;
+EAPI extern int EFREET_DESKTOP_TYPE_DIRECTORY;
 
 /**
  * Efreet_Desktop_Type
@@ -31,13 +29,13 @@ typedef struct Efreet_Desktop Efreet_Desktop;
 /**
  * A callback used with efreet_desktop_command_get()
  */
-typedef void (*Efreet_Desktop_Command_Cb) (void *data, Efreet_Desktop *desktop, 
+typedef void (*Efreet_Desktop_Command_Cb) (void *data, Efreet_Desktop *desktop,
                                             char *command, int remaining);
 
 /**
  * A callback used to get download progress of remote uris
  */
-typedef int (*Efreet_Desktop_Progress_Cb) (void *data, Efreet_Desktop *desktop, 
+typedef int (*Efreet_Desktop_Progress_Cb) (void *data, Efreet_Desktop *desktop,
                                             char *uri, long int total, long int current);
 
 /**
@@ -62,14 +60,14 @@ typedef void *(*Efreet_Desktop_Type_Free_Cb) (void *data);
 struct Efreet_Desktop
 {
     int type;               /**< type of desktop file */
-   
+
     int ref;                /**< reference count - internal */
     int cache_flush;        /**< cache flush value - internal */
 
     double version;         /**< version of spec file conforms to */
 
     char *orig_path;        /**< original path to .desktop file */
-    long long load_time;    /**< modified time of .desktop on disk */ 
+    long long load_time;    /**< modified time of .desktop on disk */
 
     char *name;             /**< Specific name of the application */
     char *generic_name;     /**< Generic name of the application */
@@ -82,9 +80,9 @@ struct Efreet_Desktop
                                 the given string as it's WM class or WM name */
     char *url;              /**< URL to access if type is EFREET_TYPE_LINK */
 
-    Ecore_List *only_show_in;   /**< list of environments that should 
+    Ecore_List *only_show_in;   /**< list of environments that should
                                                     display the icon */
-    Ecore_List *not_show_in;    /**< list of environments that shoudn't 
+    Ecore_List *not_show_in;    /**< list of environments that shoudn't
                                                     display the icon */
     Ecore_List *categories;     /**< Categories in which item should be shown */
     Ecore_List *mime_types;     /**< The mime types supppored by this app */
@@ -99,53 +97,54 @@ struct Efreet_Desktop
     void *type_data; /**< Type specific data for custom types */
 };
 
-Efreet_Desktop   *efreet_desktop_get(const char *file);
-int               efreet_desktop_ref(Efreet_Desktop *desktop);
-Efreet_Desktop   *efreet_desktop_empty_new(const char *file);
-Efreet_Desktop   *efreet_desktop_new(const char *file);
-void              efreet_desktop_free(Efreet_Desktop *desktop);
+EAPI Efreet_Desktop   *efreet_desktop_get(const char *file);
+EAPI int               efreet_desktop_ref(Efreet_Desktop *desktop);
+EAPI Efreet_Desktop   *efreet_desktop_empty_new(const char *file);
+EAPI Efreet_Desktop   *efreet_desktop_new(const char *file);
+EAPI void              efreet_desktop_free(Efreet_Desktop *desktop);
 
-int               efreet_desktop_save(Efreet_Desktop *desktop);
-int               efreet_desktop_save_as(Efreet_Desktop *desktop, 
+EAPI int               efreet_desktop_save(Efreet_Desktop *desktop);
+EAPI int               efreet_desktop_save_as(Efreet_Desktop *desktop,
                                                 const char *file);
 
-void              efreet_desktop_exec(Efreet_Desktop *desktop, 
+EAPI void              efreet_desktop_exec(Efreet_Desktop *desktop,
                                       Ecore_List *files, void *data);
 
-void              efreet_desktop_environment_set(const char *environment);
-int               efreet_desktop_command_progress_get(Efreet_Desktop *desktop,
+EAPI void              efreet_desktop_environment_set(const char *environment);
+EAPI const char       *efreet_desktop_environment_get(void);
+EAPI int               efreet_desktop_command_progress_get(Efreet_Desktop *desktop,
                                          Ecore_List *files,
                                          Efreet_Desktop_Command_Cb cb_command,
                                          Efreet_Desktop_Progress_Cb cb_prog,
                                          void *data);
-int               efreet_desktop_command_get(Efreet_Desktop *desktop,
+EAPI int               efreet_desktop_command_get(Efreet_Desktop *desktop,
                                          Ecore_List *files,
                                          Efreet_Desktop_Command_Cb func,
                                          void *data);
-Ecore_List *      efreet_desktop_command_local_get(Efreet_Desktop *desktop,
+EAPI Ecore_List *      efreet_desktop_command_local_get(Efreet_Desktop *desktop,
                                          Ecore_List *files);
 
-unsigned int      efreet_desktop_category_count_get(Efreet_Desktop *desktop);
-void              efreet_desktop_category_add(Efreet_Desktop *desktop,
+EAPI unsigned int      efreet_desktop_category_count_get(Efreet_Desktop *desktop);
+EAPI void              efreet_desktop_category_add(Efreet_Desktop *desktop,
                                               const char *category);
-int               efreet_desktop_category_del(Efreet_Desktop *desktop,
+EAPI int               efreet_desktop_category_del(Efreet_Desktop *desktop,
                                               const char *category);
 
-int               efreet_desktop_type_add(const char *type, 
-                                    Efreet_Desktop_Type_Parse_Cb parse_func, 
-                                    Efreet_Desktop_Type_Save_Cb save_func, 
+EAPI int               efreet_desktop_type_add(const char *type,
+                                    Efreet_Desktop_Type_Parse_Cb parse_func,
+                                    Efreet_Desktop_Type_Save_Cb save_func,
                                     Efreet_Desktop_Type_Free_Cb free_func);
-int               efreet_desktop_type_alias (int from_type,
+EAPI int               efreet_desktop_type_alias (int from_type,
                                              const char *alias);
-void             *efreet_desktop_type_data_get(Efreet_Desktop *desktop);
+EAPI void             *efreet_desktop_type_data_get(Efreet_Desktop *desktop);
 
-Ecore_List       *efreet_desktop_string_list_parse(const char *string);
-char             *efreet_desktop_string_list_join(Ecore_List *list);
-void              efreet_desktop_cache_flush(void);
-    
-/** 
+EAPI Ecore_List       *efreet_desktop_string_list_parse(const char *string);
+EAPI char             *efreet_desktop_string_list_join(Ecore_List *list);
+
+EAPI void              efreet_desktop_cache_flush(void);
+
+/**
  * @}
  */
 
 #endif
-

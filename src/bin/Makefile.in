@@ -38,11 +38,14 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = efreet_test$(EXEEXT) efreet_spec_test$(EXEEXT) \
 	efreet_cache_test$(EXEEXT)
+@DEFAULT_VISIBILITY_TRUE@am__append_1 = \
+@DEFAULT_VISIBILITY_TRUE@ef_locale.c
+
 subdir = src/bin
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_attribute.m4 \
-	$(top_srcdir)/m4/ac_define_dir.m4 $(top_srcdir)/configure.in
+	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -55,10 +58,13 @@ am_efreet_cache_test_OBJECTS = ef_cache.$(OBJEXT)
 efreet_cache_test_OBJECTS = $(am_efreet_cache_test_OBJECTS)
 am_efreet_spec_test_OBJECTS = efreet_spec_test.$(OBJEXT)
 efreet_spec_test_OBJECTS = $(am_efreet_spec_test_OBJECTS)
+am__efreet_test_SOURCES_DIST = ef_data_dirs.c ef_icon_theme.c ef_ini.c \
+	ef_utils.c ef_desktop.c ef_menu.c ef_mime.c main.c ef_locale.c
+@DEFAULT_VISIBILITY_TRUE@am__objects_1 = ef_locale.$(OBJEXT)
 am_efreet_test_OBJECTS = ef_data_dirs.$(OBJEXT) \
-	ef_icon_theme.$(OBJEXT) ef_ini.$(OBJEXT) ef_locale.$(OBJEXT) \
-	ef_desktop.$(OBJEXT) ef_menu.$(OBJEXT) ef_utils.$(OBJEXT) \
-	ef_mime.$(OBJEXT) main.$(OBJEXT)
+	ef_icon_theme.$(OBJEXT) ef_ini.$(OBJEXT) ef_utils.$(OBJEXT) \
+	ef_desktop.$(OBJEXT) ef_menu.$(OBJEXT) ef_mime.$(OBJEXT) \
+	main.$(OBJEXT) $(am__objects_1)
 efreet_test_OBJECTS = $(am_efreet_test_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -74,7 +80,7 @@ LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 SOURCES = $(efreet_cache_test_SOURCES) $(efreet_spec_test_SOURCES) \
 	$(efreet_test_SOURCES)
 DIST_SOURCES = $(efreet_cache_test_SOURCES) \
-	$(efreet_spec_test_SOURCES) $(efreet_test_SOURCES)
+	$(efreet_spec_test_SOURCES) $(am__efreet_test_SOURCES_DIST)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-exec-recursive install-info-recursive \
@@ -91,6 +97,7 @@ AMDEP_FALSE = @AMDEP_FALSE@
 AMDEP_TRUE = @AMDEP_TRUE@
 AMTAR = @AMTAR@
 AR = @AR@
+AS = @AS@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -100,13 +107,12 @@ CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
-CXX = @CXX@
-CXXCPP = @CXXCPP@
-CXXDEPMODE = @CXXDEPMODE@
-CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
+DEFAULT_VISIBILITY_FALSE = @DEFAULT_VISIBILITY_FALSE@
+DEFAULT_VISIBILITY_TRUE = @DEFAULT_VISIBILITY_TRUE@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -115,8 +121,6 @@ ECORE_CFLAGS = @ECORE_CFLAGS@
 ECORE_LIBS = @ECORE_LIBS@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-F77 = @F77@
-FFLAGS = @FFLAGS@
 GREP = @GREP@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -129,10 +133,10 @@ LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
-PACKAGE_DATA_DIR = @PACKAGE_DATA_DIR@
 PACKAGE_NAME = @PACKAGE_NAME@
 PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
@@ -140,17 +144,14 @@ PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 RANLIB = @RANLIB@
+SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
 ac_ct_CC = @ac_ct_CC@
-ac_ct_CXX = @ac_ct_CXX@
-ac_ct_F77 = @ac_ct_F77@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
 am__fastdepCC_TRUE = @am__fastdepCC_TRUE@
-am__fastdepCXX_FALSE = @am__fastdepCXX_FALSE@
-am__fastdepCXX_TRUE = @am__fastdepCXX_TRUE@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -192,10 +193,16 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
+version_info = @version_info@
 SUBDIRS = data compare
 MAINTAINERCLEANFILES = Makefile.in
-INCLUDES = \
--I. -I$(top_srcdir)/src/lib @ECORE_CFLAGS@
+AM_CPPFLAGS = \
+-I. \
+-I$(top_srcdir)/src/lib \
+@ECORE_CFLAGS@ \
+-DPACKAGE_BIN_DIR=\"$(bindir)\" \
+-DPACKAGE_LIB_DIR=\"$(libdir)\" \
+-DPACKAGE_DATA_DIR=\"$(datadir)/$(PACKAGE)\"
 
 efreet_test_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la \
                            $(top_builddir)/src/lib/libefreet_mime.la
@@ -204,17 +211,9 @@ efreet_test_LDADD = $(top_builddir)/src/lib/libefreet.la \
                     $(top_builddir)/src/lib/libefreet_mime.la \
                     @ECORE_LIBS@
 
-efreet_test_SOURCES = \
-ef_data_dirs.c \
-ef_icon_theme.c \
-ef_ini.c \
-ef_locale.c \
-ef_desktop.c \
-ef_menu.c \
-ef_utils.c \
-ef_mime.c \
-main.c
-
+efreet_test_SOURCES = ef_data_dirs.c ef_icon_theme.c ef_ini.c \
+	ef_utils.c ef_desktop.c ef_menu.c ef_mime.c main.c \
+	$(am__append_1)
 efreet_spec_test_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
 efreet_spec_test_LDADD = $(top_builddir)/src/lib/libefreet.la
 efreet_spec_test_SOURCES = \

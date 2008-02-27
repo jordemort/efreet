@@ -119,7 +119,7 @@ enum Efreet_Menu_Filter_Type
 typedef enum Efreet_Menu_Filter_Type Efreet_Menu_Filter_Type;
 
 /**
- * Efreet_Menu_Filter_Op 
+ * Efreet_Menu_Filter_Op
  */
 typedef struct Efreet_Menu_Filter_Op Efreet_Menu_Filter_Op;
 
@@ -145,7 +145,7 @@ typedef struct Efreet_Menu_Filter Efreet_Menu_Filter;
 
 /**
  * Efreet_Menu_Filter
- * Stores information on a filter 
+ * Stores information on a filter
  */
 struct Efreet_Menu_Filter
 {
@@ -176,7 +176,7 @@ typedef struct Efreet_Menu_Layout Efreet_Menu_Layout;
 
 /**
  * Efreet_Menu_Layout
- * Stores information on a layout 
+ * Stores information on a layout
  */
 struct Efreet_Menu_Layout
 {
@@ -222,7 +222,7 @@ static Ecore_Hash *efreet_menu_layout_cbs = NULL;
 static const char *efreet_menu_prefix_get(void);
 
 static Efreet_Menu_Internal *efreet_menu_by_name_find(Efreet_Menu_Internal *internal,
-                                                    const char *name, 
+                                                    const char *name,
                                                     Efreet_Menu_Internal **parent);
 static int efreet_menu_cb_compare_names(Efreet_Menu_Internal *internal, const char *name);
 static int efreet_menu_cb_md_compare_ids(Efreet_Menu_Desktop *md, const char *name);
@@ -235,17 +235,17 @@ static int efreet_menu_cb_move_compare(Efreet_Menu_Move *move, const char *old);
 static int efreet_menu_process(Efreet_Menu_Internal *internal, unsigned int only_unallocated);
 static int efreet_menu_process_dirs(Efreet_Menu_Internal *internal);
 static int efreet_menu_app_dirs_process(Efreet_Menu_Internal *internal);
-static int efreet_menu_app_dir_scan(Efreet_Menu_Internal *internal, 
+static int efreet_menu_app_dir_scan(Efreet_Menu_Internal *internal,
                                         const char *path,
                                         const char *id,
                                         int legacy);
 static int efreet_menu_directory_dirs_process(Efreet_Menu_Internal *internal);
-static int efreet_menu_directory_dir_scan(const char *path, 
-                                            const char *relative_path, 
+static int efreet_menu_directory_dir_scan(const char *path,
+                                            const char *relative_path,
                                             Ecore_Hash *cache);
-static Efreet_Desktop *efreet_menu_directory_get(Efreet_Menu_Internal *internal, 
+static Efreet_Desktop *efreet_menu_directory_get(Efreet_Menu_Internal *internal,
                                                     const char *path);
-static void efreet_menu_process_filters(Efreet_Menu_Internal *internal, 
+static void efreet_menu_process_filters(Efreet_Menu_Internal *internal,
                                             unsigned int only_unallocated);
 static void efreet_menu_process_app_pool(Ecore_List *pool, Ecore_List *applications,
                                         Ecore_Hash *matches,
@@ -264,6 +264,7 @@ static Efreet_Menu *efreet_menu_layout_menu(Efreet_Menu_Internal *internal);
 static Efreet_Menu *efreet_menu_layout_desktop(Efreet_Menu_Desktop *md);
 static void efreet_menu_layout_entries_get(Efreet_Menu *entry, Efreet_Menu_Internal *internal,
                                             Efreet_Menu_Layout *layout);
+static int efreet_menu_layout_is_empty(Efreet_Menu *entry);
 
 static Efreet_Menu_Internal *efreet_menu_internal_new(void);
 static void efreet_menu_internal_free(Efreet_Menu_Internal *internal);
@@ -322,9 +323,9 @@ static int efreet_menu_handle_merge_file(Efreet_Menu_Internal *parent, Efreet_Xm
 static int efreet_menu_handle_merge_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml);
 static int efreet_menu_handle_default_merge_dirs(Efreet_Menu_Internal *parent, Efreet_Xml *xml);
 static int efreet_menu_handle_legacy_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml);
-static Efreet_Menu_Internal *efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root, 
-                                                Efreet_Menu_Internal *parent, 
-                                                const char *legacy_dir, 
+static Efreet_Menu_Internal *efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
+                                                Efreet_Menu_Internal *parent,
+                                                const char *legacy_dir,
                                                 const char *prefix);
 static int efreet_menu_handle_kde_legacy_dirs(Efreet_Menu_Internal *parent, Efreet_Xml *xml);
 static int efreet_menu_handle_move(Efreet_Menu_Internal *parent, Efreet_Xml *xml);
@@ -333,10 +334,10 @@ static int efreet_menu_handle_new(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 static int efreet_menu_handle_layout(Efreet_Menu_Internal *parent, Efreet_Xml *xml);
 static int efreet_menu_handle_default_layout(Efreet_Menu_Internal *parent, Efreet_Xml *xml);
 
-static int efreet_menu_handle_filter(Efreet_Menu_Internal *parent, Efreet_Xml *xml, 
+static int efreet_menu_handle_filter(Efreet_Menu_Internal *parent, Efreet_Xml *xml,
                                                     Efreet_Menu_Filter_Type type);
 static int efreet_menu_handle_filter_op(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml);
-static int efreet_menu_handle_filter_child_op(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml, 
+static int efreet_menu_handle_filter_child_op(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml,
                                                       Efreet_Menu_Filter_Op_Type type);
 
 static int efreet_menu_handle_layout_menuname(Efreet_Menu_Internal *parent, Efreet_Xml *xml, int def);
@@ -441,17 +442,17 @@ efreet_menu_init(void)
     efreet_menu_filter_cbs = ecore_hash_new(NULL, NULL);
     efreet_menu_move_cbs = ecore_hash_new(NULL, NULL);
     efreet_menu_layout_cbs = ecore_hash_new(NULL, NULL);
-    if (!efreet_menu_handle_cbs || !efreet_menu_filter_cbs 
-            || !efreet_menu_move_cbs || !efreet_menu_layout_cbs) 
+    if (!efreet_menu_handle_cbs || !efreet_menu_filter_cbs
+            || !efreet_menu_move_cbs || !efreet_menu_layout_cbs)
         return 0;
 
-    ecore_hash_free_key_cb_set(efreet_menu_handle_cbs, 
+    ecore_hash_free_key_cb_set(efreet_menu_handle_cbs,
                         ECORE_FREE_CB(ecore_string_release));
-    ecore_hash_free_key_cb_set(efreet_menu_filter_cbs, 
+    ecore_hash_free_key_cb_set(efreet_menu_filter_cbs,
                         ECORE_FREE_CB(ecore_string_release));
-    ecore_hash_free_key_cb_set(efreet_menu_move_cbs, 
+    ecore_hash_free_key_cb_set(efreet_menu_move_cbs,
                         ECORE_FREE_CB(ecore_string_release));
-    ecore_hash_free_key_cb_set(efreet_menu_layout_cbs, 
+    ecore_hash_free_key_cb_set(efreet_menu_layout_cbs,
                         ECORE_FREE_CB(ecore_string_release));
 
     /* set Menu into it's own so we can check the XML is valid before trying
@@ -459,22 +460,22 @@ efreet_menu_init(void)
     efreet_tag_menu = ecore_string_instance(menu_cbs[0].key);
 
     for (i = 0; menu_cbs[i].key != NULL; i++)
-        ecore_hash_set(efreet_menu_handle_cbs, 
+        ecore_hash_set(efreet_menu_handle_cbs,
                         (void *)ecore_string_instance(menu_cbs[i].key),
                         menu_cbs[i].cb);
 
     for (i = 0; filter_cbs[i].key != NULL; i++)
-        ecore_hash_set(efreet_menu_filter_cbs, 
+        ecore_hash_set(efreet_menu_filter_cbs,
                         (void *)ecore_string_instance(filter_cbs[i].key),
                         filter_cbs[i].cb);
 
     for (i = 0; move_cbs[i].key != NULL; i++)
-        ecore_hash_set(efreet_menu_move_cbs, 
+        ecore_hash_set(efreet_menu_move_cbs,
                         (void *)ecore_string_instance(move_cbs[i].key),
                         move_cbs[i].cb);
 
     for (i = 0; layout_cbs[i].key != NULL; i++)
-        ecore_hash_set(efreet_menu_layout_cbs, 
+        ecore_hash_set(efreet_menu_layout_cbs,
                         (void *)ecore_string_instance(layout_cbs[i].key),
                         layout_cbs[i].cb);
 
@@ -483,26 +484,26 @@ efreet_menu_init(void)
 
 /**
  * @return Returns no value
- * @brief Initialize legacy kde support. This function blocks while 
+ * @brief Initialize legacy kde support. This function blocks while
  * the kde-config script is run.
  */
-int
+EAPI int
 efreet_menu_kde_legacy_init(void)
 {
     FILE *f;
     char buf[PATH_MAX];
     char *p, *s;
-    
+
     IF_FREE_LIST(efreet_menu_kde_legacy_dirs);
 
     f = popen("kde-config --path apps", "r");
     if (!f) return 0;
 
     efreet_menu_kde_legacy_dirs = ecore_list_new();
-    ecore_list_free_cb_set(efreet_menu_kde_legacy_dirs, 
+    ecore_list_free_cb_set(efreet_menu_kde_legacy_dirs,
                             ECORE_FREE_CB(ecore_string_release));
 
-    /* XXX if the return from kde-config is a line longer than PATH_MAX, 
+    /* XXX if the return from kde-config is a line longer than PATH_MAX,
      * this won't be correct (increase buffer and get the rest...) */
     if (!fgets(buf, PATH_MAX, f))
     {
@@ -515,14 +516,14 @@ efreet_menu_kde_legacy_init(void)
     while (p)
     {
         *p = '\0';
-        ecore_list_append(efreet_menu_kde_legacy_dirs, 
+        ecore_list_append(efreet_menu_kde_legacy_dirs,
                             (void *)ecore_string_instance(s));
         s = p + 1;
         p = strchr(s, ':');
     }
 
-    if (*s) 
-        ecore_list_append(efreet_menu_kde_legacy_dirs, 
+    if (*s)
+        ecore_list_append(efreet_menu_kde_legacy_dirs,
                             (void *)ecore_string_instance(s));
 
     pclose(f);
@@ -554,7 +555,7 @@ efreet_menu_shutdown(void)
     ecore_string_shutdown();
 }
 
-Efreet_Menu *
+EAPI Efreet_Menu *
 efreet_menu_new(void)
 {
     Efreet_Menu *menu;
@@ -568,7 +569,7 @@ efreet_menu_new(void)
  * NULL if none found
  * @brief Creates the default menu representation
  */
-Efreet_Menu *
+EAPI Efreet_Menu *
 efreet_menu_get(void)
 {
     char menu[PATH_MAX];
@@ -576,7 +577,7 @@ efreet_menu_get(void)
     Ecore_List *config_dirs;
 
     /* check the users config directory first */
-    snprintf(menu, sizeof(menu), "%s/menus/%sapplications.menu", 
+    snprintf(menu, sizeof(menu), "%s/menus/%sapplications.menu",
                         efreet_config_home_get(), efreet_menu_prefix_get());
     if (ecore_file_exists(menu))
         return efreet_menu_parse(menu);
@@ -586,7 +587,7 @@ efreet_menu_get(void)
     ecore_list_first_goto(config_dirs);
     while ((dir = ecore_list_next(config_dirs)))
     {
-        snprintf(menu, sizeof(menu), "%s/menus/%sapplications.menu", 
+        snprintf(menu, sizeof(menu), "%s/menus/%sapplications.menu",
                                     dir, efreet_menu_prefix_get());
         if (ecore_file_exists(menu))
             return efreet_menu_parse(menu);
@@ -601,7 +602,7 @@ efreet_menu_get(void)
  * failure
  * @brief Parses the given .menu file and creates the menu representation
  */
-Efreet_Menu *
+EAPI Efreet_Menu *
 efreet_menu_parse(const char *path)
 {
     Efreet_Xml *xml;
@@ -683,7 +684,7 @@ efreet_menu_parse(const char *path)
  * @return Returns 1 on success, 0 on failure
  * @brief Saves the menu to file
  */
-int
+EAPI int
 efreet_menu_save(Efreet_Menu *menu, const char *path)
 {
     FILE *f;
@@ -802,7 +803,7 @@ efreet_menu_save_indent(FILE *f, int indent)
  * @brief Insert a desktop element in a menu structure. Only accepts desktop files
  * in default directories.
  */
-int
+EAPI int
 efreet_menu_desktop_insert(Efreet_Menu *menu, Efreet_Desktop *desktop, int pos)
 {
     Efreet_Menu *entry;
@@ -842,8 +843,8 @@ efreet_menu_desktop_insert(Efreet_Menu *menu, Efreet_Desktop *desktop, int pos)
  * @brief Remove a desktop element in a menu structure. Only accepts desktop files
  * in default directories.
  */
-int 
-efreet_menu_desktop_remove(Efreet_Menu *menu, Efreet_Desktop *desktop) 
+EAPI int
+efreet_menu_desktop_remove(Efreet_Menu *menu, Efreet_Desktop *desktop)
 {
     Efreet_Menu *entry;
 
@@ -868,7 +869,7 @@ efreet_menu_desktop_remove(Efreet_Menu *menu, Efreet_Desktop *desktop)
  * @return Returns no value
  * @brief Dumps the contents of the menu to the command line
  */
-void
+EAPI void
 efreet_menu_dump(Efreet_Menu *menu, const char *indent)
 {
     printf("%s%s: ", indent, menu->name);
@@ -912,7 +913,7 @@ efreet_menu_dump(Efreet_Menu *menu, const char *indent)
  * dir, system dirs and given suffix.
  */
 Ecore_List *
-efreet_default_dirs_get(const char *user_dir, Ecore_List *system_dirs, 
+efreet_default_dirs_get(const char *user_dir, Ecore_List *system_dirs,
                                                     const char *suffix)
 {
     const char *xdg_dir;
@@ -938,7 +939,7 @@ efreet_default_dirs_get(const char *user_dir, Ecore_List *system_dirs,
 /**
  * @internal
  * @return Returns a new Efreet_Menu_Internal struct
- * @brief Allocates and initializes a new Efreet_Menu_Internal structure 
+ * @brief Allocates and initializes a new Efreet_Menu_Internal structure
  */
 static Efreet_Menu_Internal *
 efreet_menu_internal_new(void)
@@ -958,13 +959,13 @@ efreet_menu_internal_new(void)
 /**
  * @param menu: The menu to free
  * @return Returns no value
- * @brief Frees up the given menu structure 
+ * @brief Frees up the given menu structure
  */
 void
 efreet_menu_internal_free(Efreet_Menu_Internal *internal)
 {
     if (!internal) return;
-    
+
     IF_FREE(internal->file.path);
     IF_FREE(internal->file.name);
 
@@ -1015,7 +1016,7 @@ efreet_menu_prefix_get(void)
  * @param xml: The xml dom tree to populate from
  * @return Returns 1 if this XML tree is valid, 0 otherwise
  * @brief Populates the given menu from the given xml structure
- * 
+ *
  * We walk the Menu children backwards. The reason for this is so that we
  * can deal with all the things that make us select the 'last' element
  * (MergeFile, Directory, etc). We'll see the last one first and can deal
@@ -1050,8 +1051,8 @@ efreet_menu_handle_menu(Efreet_Menu_Internal *internal, Efreet_Xml *xml)
  * @param parent: The parent Menu
  * @param xml: The xml that defines the menu
  * @return Returns 1 on success or 0 on failure
- * @brief Handles the sub-menu nodes of the XML file 
- */ 
+ * @brief Handles the sub-menu nodes of the XML file
+ */
 static int
 efreet_menu_handle_sub_menu(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 {
@@ -1069,7 +1070,7 @@ efreet_menu_handle_sub_menu(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 
     /* if this menu already exists we just take this one and stick it on the
      * start of the existing one */
-    if ((match = ecore_list_find(parent->sub_menus, 
+    if ((match = ecore_list_find(parent->sub_menus,
                 ECORE_COMPARE_CB(efreet_menu_cb_menu_compare), internal)))
     {
 
@@ -1087,7 +1088,7 @@ efreet_menu_handle_sub_menu(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
  * @param parent: The parent menu
  * @param xml: The xml tree
  * @return Returns 1 on success or 0 on failure
- * @brief Handles the AppDir tag 
+ * @brief Handles the AppDir tag
  */
 static int
 efreet_menu_handle_app_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
@@ -1102,7 +1103,7 @@ efreet_menu_handle_app_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
     if (!path) return 0;
 
     /* we've already got this guy in our list we can skip it */
-    if (ecore_list_find(parent->app_dirs, 
+    if (ecore_list_find(parent->app_dirs,
             ECORE_COMPARE_CB(efreet_menu_cb_app_dirs_compare), path))
     {
         FREE(path);
@@ -1141,7 +1142,7 @@ efreet_menu_handle_default_app_dirs(Efreet_Menu_Internal *parent, Efreet_Xml *xm
     {
         Efreet_Menu_App_Dir *app_dir;
 
-        if (ecore_list_find(parent->app_dirs, 
+        if (ecore_list_find(parent->app_dirs,
                     ECORE_COMPARE_CB(efreet_menu_cb_app_dirs_compare), dir))
             continue;
 
@@ -1203,7 +1204,7 @@ efreet_menu_handle_default_directory_dirs(Efreet_Menu_Internal *parent, Efreet_X
     if (!parent) return 0;
 
     efreet_menu_create_directory_dirs_list(parent);
-    dirs = efreet_default_dirs_get(efreet_data_home_get(), efreet_data_dirs_get(), 
+    dirs = efreet_default_dirs_get(efreet_data_home_get(), efreet_data_dirs_get(),
                                                             "desktop-directories");
     ecore_list_first_goto(dirs);
     while ((dir = ecore_list_next(dirs)))
@@ -1230,7 +1231,7 @@ static int
 efreet_menu_handle_name(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 {
     /* not allowed to have two Name settings in a menu */
-    if (parent->name.internal) 
+    if (parent->name.internal)
     {
         printf("efreet_menu_handle_name() setting second name into menu\n");
         return 0;
@@ -1354,12 +1355,12 @@ efreet_menu_handle_not_deleted(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
  * @param parent: The parent menu
  * @param xml: The XML tree to work with
  * @return Returns 1 on success or 0 on failure
- * @brief Handles parsing the Include tag and all subtags 
+ * @brief Handles parsing the Include tag and all subtags
  */
 static int
 efreet_menu_handle_include(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 {
-    return efreet_menu_handle_filter(parent, xml, 
+    return efreet_menu_handle_filter(parent, xml,
                                 EFREET_MENU_FILTER_INCLUDE);
 }
 
@@ -1373,7 +1374,7 @@ efreet_menu_handle_include(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 static int
 efreet_menu_handle_exclude(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 {
-    return efreet_menu_handle_filter(parent, xml, 
+    return efreet_menu_handle_filter(parent, xml,
                                 EFREET_MENU_FILTER_EXCLUDE);
 }
 
@@ -1442,7 +1443,7 @@ efreet_menu_handle_all(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml)
 
 /**
  * @internal
- * @param op: The filter operation 
+ * @param op: The filter operation
  * @param xml: The xml tree
  * @return Returns 1 on success or 0 on failure
  * @brief Handles the And tag and all subtags
@@ -1452,7 +1453,7 @@ efreet_menu_handle_and(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml)
 {
     if (!op || !xml) return 0;
 
-    return efreet_menu_handle_filter_child_op(op, xml, 
+    return efreet_menu_handle_filter_child_op(op, xml,
                             EFREET_MENU_FILTER_OP_AND);
 }
 
@@ -1468,7 +1469,7 @@ efreet_menu_handle_or(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml)
 {
     if (!op || !xml) return 0;
 
-    return efreet_menu_handle_filter_child_op(op, xml, 
+    return efreet_menu_handle_filter_child_op(op, xml,
                             EFREET_MENU_FILTER_OP_OR);
 }
 
@@ -1484,7 +1485,7 @@ efreet_menu_handle_not(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml)
 {
     if (!op || !xml) return 0;
 
-    return efreet_menu_handle_filter_child_op(op, xml, 
+    return efreet_menu_handle_filter_child_op(op, xml,
                             EFREET_MENU_FILTER_OP_NOT);
 }
 
@@ -1522,7 +1523,7 @@ efreet_menu_handle_merge_file(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
         const char *dir, *p;
         int len = 0;
 
-        if (!parent->file.path) 
+        if (!parent->file.path)
         {
             printf("efreet_menu_handle_merge_file() missing menu path ...\n");
             return 0;
@@ -1567,9 +1568,9 @@ efreet_menu_handle_merge_file(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
         {
             char file[PATH_MAX];
 
-            snprintf(file, sizeof(file), "%s/%s/%s", dir, (p ? p : ""), 
-                                                        parent->file.name); 
-            if (ecore_file_exists(file))        
+            snprintf(file, sizeof(file), "%s/%s/%s", dir, (p ? p : ""),
+                                                        parent->file.name);
+            if (ecore_file_exists(file))
             {
                 path = strdup(file);
                 break;
@@ -1592,7 +1593,7 @@ efreet_menu_handle_merge_file(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
  * @internal
  * @param parent: The parent menu to merge into
  * @param xml: The XML to be merged
- * @param path: The path to the .menu file to merge 
+ * @param path: The path to the .menu file to merge
  */
 static int
 efreet_menu_merge(Efreet_Menu_Internal *parent, Efreet_Xml *xml, const char *path)
@@ -1607,7 +1608,7 @@ efreet_menu_merge(Efreet_Menu_Internal *parent, Efreet_Xml *xml, const char *pat
     if (!ecore_file_exists(path)) return 1;
 
     realpath = ecore_file_realpath(path);
-    if (realpath[0] == '\0') 
+    if (realpath[0] == '\0')
     {
         printf("efreet_menu_merge() unable to get real path for %s\n", path);
         return 0;
@@ -1622,7 +1623,7 @@ efreet_menu_merge(Efreet_Menu_Internal *parent, Efreet_Xml *xml, const char *pat
     merge_xml = efreet_xml_new(realpath);
     FREE(realpath);
 
-    if (!merge_xml) 
+    if (!merge_xml)
     {
         printf("efreet_menu_merge() failed to read in the "
                 "merge file (%s)\n", realpath);
@@ -1657,7 +1658,7 @@ efreet_menu_handle_merge_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 
     path = efreet_menu_path_get(parent, xml->text);
     if (!path) return 1;
-    if (!ecore_file_exists(path)) 
+    if (!ecore_file_exists(path))
     {
         FREE(path);
         return 1;
@@ -1677,7 +1678,7 @@ efreet_menu_handle_merge_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
  * @return Returns 1 on success or 0 on failure
  * @brief Find all of the .menu files in the given directory and merge them
  * into the @a parent menu.
- */ 
+ */
 static int
 efreet_menu_merge_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml, const char *path)
 {
@@ -1727,17 +1728,17 @@ efreet_menu_handle_default_merge_dirs(Efreet_Menu_Internal *parent, Efreet_Xml *
     const char *prefix;
 
     if (!parent || !xml) return 0;
-  
+
     prefix = efreet_menu_prefix_get();
-    if (!strcmp(prefix, "gnome-") && 
+    if (!strcmp(prefix, "gnome-") &&
             (!strcmp(parent->file.name, "gnome-applications.menu")))
         p = strdup("applications");
 
-    else if ((!strcmp(prefix, "kde-") && 
+    else if ((!strcmp(prefix, "kde-") &&
             (!strcmp(parent->file.name, "kde-applications.menu"))))
         p = strdup("applications");
 
-    else 
+    else
     {
         char *s;
 
@@ -1748,7 +1749,7 @@ efreet_menu_handle_default_merge_dirs(Efreet_Menu_Internal *parent, Efreet_Xml *
     snprintf(path, sizeof(path), "menus/%s-merged", p);
     FREE(p);
 
-    dirs = efreet_default_dirs_get(efreet_config_home_get(), 
+    dirs = efreet_default_dirs_get(efreet_config_home_get(),
                                     efreet_config_dirs_get(), path);
     ecore_list_first_goto(dirs);
     while ((p = ecore_list_first_remove(dirs)))
@@ -1811,7 +1812,7 @@ efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
     path = efreet_menu_path_get(parent, legacy_dir);
 
     /* nothing to do if the legacy path doesn't exist */
-    if (!ecore_file_exists(path)) 
+    if (!ecore_file_exists(path))
     {
         FREE(path);
         return NULL;
@@ -1869,7 +1870,7 @@ efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
         ecore_strlcpy(file_path, path, PATH_MAX);
         ecore_strlcpy(file_path + path_len, "/", PATH_MAX - path_len);
         ecore_strlcpy(file_path + path_len + 1, file->d_name, PATH_MAX - path_len - 1);
-       
+
         /* recurse into sub directories */
         if (ecore_file_is_dir(file_path))
         {
@@ -1929,7 +1930,7 @@ efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
         efreet_desktop_free(desktop);
     }
     closedir(files);
-    
+
     FREE(path);
     return legacy_internal;
 }
@@ -1950,7 +1951,7 @@ efreet_menu_handle_kde_legacy_dirs(Efreet_Menu_Internal *parent, Efreet_Xml *xml
 
     if (!efreet_menu_kde_legacy_dirs) return 1;
 
-    /* XXX if one _helper() call succeeds, we return success. should this be flipped? 
+    /* XXX if one _helper() call succeeds, we return success. should this be flipped?
      * (return fail if on of them failed) */
     ecore_list_first_goto(efreet_menu_kde_legacy_dirs);
     while ((dir = ecore_list_next(efreet_menu_kde_legacy_dirs)))
@@ -1958,7 +1959,7 @@ efreet_menu_handle_kde_legacy_dirs(Efreet_Menu_Internal *parent, Efreet_Xml *xml
         Efreet_Menu_Internal *kde;
 
         kde = efreet_menu_handle_legacy_dir_helper(NULL, parent, dir, "kde");
-        if (kde) 
+        if (kde)
         {
             efreet_menu_concatenate(parent, kde);
             efreet_menu_internal_free(kde);
@@ -2023,7 +2024,7 @@ efreet_menu_handle_old(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 
     if (!parent || !xml || !xml->text) return 0;
 
-    if (parent->current_move) 
+    if (parent->current_move)
     {
         printf("efreet_menu_handle_old() saw second <Old> "
                 "before seeing <New>\n");
@@ -2291,13 +2292,13 @@ efreet_menu_handle_layout_merge(Efreet_Menu_Internal *parent, Efreet_Xml *xml, i
  * @brief Parses the given XML tree and adds the filter to the parent menu
  */
 static int
-efreet_menu_handle_filter(Efreet_Menu_Internal *parent, Efreet_Xml *xml, 
+efreet_menu_handle_filter(Efreet_Menu_Internal *parent, Efreet_Xml *xml,
                                         Efreet_Menu_Filter_Type type)
 {
     Efreet_Menu_Filter *filter;
 
     efreet_menu_create_filter_list(parent);
-    
+
     /* filters have a default or relationship */
     filter = efreet_menu_filter_new();
     filter->type = type;
@@ -2423,7 +2424,7 @@ efreet_menu_layout_free(Efreet_Menu_Layout *layout)
 /**
  * @internal
  * @return Returns a new Efreet_Menu_Filter_Op on success or NULL on failure
- * @brief Creates and initializes an Efreet_Menu_Filter_Op structure 
+ * @brief Creates and initializes an Efreet_Menu_Filter_Op structure
  */
 static Efreet_Menu_Filter_Op *
 efreet_menu_filter_op_new(void)
@@ -2445,7 +2446,7 @@ static void
 efreet_menu_filter_op_free(Efreet_Menu_Filter_Op *op)
 {
     if (!op) return;
-    
+
     IF_FREE_LIST(op->categories);
     IF_FREE_LIST(op->filenames);
     IF_FREE_LIST(op->filters);
@@ -2503,7 +2504,7 @@ efreet_menu_entry_new(void)
  * @return Returns no value
  * @brief Frees the given structure
  */
-void
+EAPI void
 efreet_menu_free(Efreet_Menu *entry)
 {
     IF_RELEASE(entry->name);
@@ -2523,7 +2524,7 @@ efreet_menu_free(Efreet_Menu *entry)
  * @brief Parses the given XML tree and populates a new child operation.
  */
 static int
-efreet_menu_handle_filter_child_op(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml, 
+efreet_menu_handle_filter_child_op(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml,
                                                 Efreet_Menu_Filter_Op_Type type)
 {
     Efreet_Menu_Filter_Op *child_op;
@@ -2540,7 +2541,7 @@ efreet_menu_handle_filter_child_op(Efreet_Menu_Filter_Op *op, Efreet_Xml *xml,
     if (!op->filters)
     {
         op->filters = ecore_list_new();
-        ecore_list_free_cb_set(op->filters, 
+        ecore_list_free_cb_set(op->filters,
                     ECORE_FREE_CB(efreet_menu_filter_op_free));
     }
 
@@ -2617,10 +2618,10 @@ efreet_menu_process_dirs(Efreet_Menu_Internal *internal)
  * @param menu: the menu to process
  * @param only_unallocated: Only handle menus taht deal with unallocated items
  * @return Returns no value
- * @brief Handles the processing of the filters attached to the given menu. 
+ * @brief Handles the processing of the filters attached to the given menu.
  *
  * For each include filter we'll add the items to our applications array. Each
- * exclude filter will remove items from the applications array 
+ * exclude filter will remove items from the applications array
  */
 static void
 efreet_menu_process_filters(Efreet_Menu_Internal *internal, unsigned int only_unallocated)
@@ -2659,7 +2660,7 @@ efreet_menu_process_filters(Efreet_Menu_Internal *internal, unsigned int only_un
 
                 parent = internal->parent;
                 do {
-                    efreet_menu_process_app_pool(parent->app_pool, 
+                    efreet_menu_process_app_pool(parent->app_pool,
                                                 internal->applications, matches, filter,
                                                 internal->only_unallocated);
                 } while ((parent = parent->parent));
@@ -2723,10 +2724,10 @@ efreet_menu_process_filters(Efreet_Menu_Internal *internal, unsigned int only_un
  * @brief This will iterate the items in @a pool and append them to @a
  * applications if they match the @a filter given and aren't previoulsy entered
  * in @a matches. If @a only_unallocated is set we'll only only at the
- * .desktop files that haven't been previoulsy matched 
+ * .desktop files that haven't been previoulsy matched
  */
 static
-void efreet_menu_process_app_pool(Ecore_List *pool, Ecore_List *applications, 
+void efreet_menu_process_app_pool(Ecore_List *pool, Ecore_List *applications,
                                         Ecore_Hash *matches,
                                         Efreet_Menu_Filter *filter,
                                         unsigned int only_unallocated)
@@ -2761,7 +2762,7 @@ efreet_menu_filter_matches(Efreet_Menu_Filter_Op *op, Efreet_Menu_Desktop *md)
 {
     if (op->type == EFREET_MENU_FILTER_OP_OR)
         return efreet_menu_filter_or_matches(op, md);
-        
+
     if (op->type == EFREET_MENU_FILTER_OP_AND)
         return efreet_menu_filter_and_matches(op, md);
 
@@ -2829,7 +2830,7 @@ efreet_menu_filter_and_matches(Efreet_Menu_Filter_Op *op, Efreet_Menu_Desktop *m
     Efreet_Menu_Filter_Op *child;
     char *t;
 
-    if (op->categories) 
+    if (op->categories)
     {
         if ((ecore_list_count(op->categories) > 0) && !md->desktop->categories)
             return 0;
@@ -2985,7 +2986,7 @@ efreet_menu_concatenate(Efreet_Menu_Internal *dest, Efreet_Menu_Internal *src)
         while ((submenu = ecore_list_last_remove(src->sub_menus)))
         {
             Efreet_Menu_Internal *match;
-    
+
             /* if this menu is in the list already we just add to that */
             if ((match = ecore_list_find(dest->sub_menus,
                         ECORE_COMPARE_CB(efreet_menu_cb_menu_compare), submenu)))
@@ -3021,7 +3022,7 @@ efreet_menu_resolve_moves(Efreet_Menu_Internal *internal)
 
     /* nothing to do if this menu has no moves */
     if (!internal->moves) return;
-    
+
     ecore_list_first_goto(internal->moves);
     while ((move = ecore_list_next(internal->moves)))
     {
@@ -3044,7 +3045,7 @@ efreet_menu_resolve_moves(Efreet_Menu_Internal *internal)
             /* if the dest path has /'s in it then we need to add menus to
              * fill out the paths */
             t = strdup(move->new_name);
-            tmp = t; 
+            tmp = t;
             path = strchr(tmp, '/');
             while (path)
             {
@@ -3104,7 +3105,7 @@ efreet_menu_by_name_find(Efreet_Menu_Internal *internal, const char *name, Efree
     {
         *part = '\0';
 
-        if (!ecore_list_find(internal->sub_menus, 
+        if (!ecore_list_find(internal->sub_menus,
                     ECORE_COMPARE_CB(efreet_menu_cb_compare_names), ptr))
         {
             FREE(tmp);
@@ -3119,7 +3120,7 @@ efreet_menu_by_name_find(Efreet_Menu_Internal *internal, const char *name, Efree
     if (parent) *parent = internal;
 
     /* find the menu in the parent list */
-    if (!ecore_list_find(internal->sub_menus, 
+    if (!ecore_list_find(internal->sub_menus,
                 ECORE_COMPARE_CB(efreet_menu_cb_compare_names), ptr))
     {
         FREE(tmp);
@@ -3199,7 +3200,7 @@ efreet_menu_app_dir_new(void)
  * @internal
  * @param dir: The app dir to free
  * @return Returns no value
- * @brief Frees @a dir 
+ * @brief Frees @a dir
  */
 static void
 efreet_menu_app_dir_free(Efreet_Menu_App_Dir *dir)
@@ -3217,7 +3218,7 @@ efreet_menu_app_dir_free(Efreet_Menu_App_Dir *dir)
  * @param a: The app dir to compare too
  * @param b: The path to compare too
  * @return Returns 1 if the strings are equals, 0 otherwise
- * @brief Compares the too strings 
+ * @brief Compares the too strings
  */
 static int
 efreet_menu_cb_app_dirs_compare(Efreet_Menu_App_Dir *a, const char *b)
@@ -3231,7 +3232,7 @@ efreet_menu_create_sub_menu_list(Efreet_Menu_Internal *internal)
     if (!internal || internal->sub_menus) return;
 
     internal->sub_menus = ecore_list_new();
-    ecore_list_free_cb_set(internal->sub_menus, 
+    ecore_list_free_cb_set(internal->sub_menus,
                         ECORE_FREE_CB(efreet_menu_internal_free));
 }
 
@@ -3241,7 +3242,7 @@ efreet_menu_create_app_dirs_list(Efreet_Menu_Internal *internal)
     if (!internal || internal->app_dirs) return;
 
     internal->app_dirs = ecore_list_new();
-    ecore_list_free_cb_set(internal->app_dirs, 
+    ecore_list_free_cb_set(internal->app_dirs,
                         ECORE_FREE_CB(efreet_menu_app_dir_free));
 }
 
@@ -3269,7 +3270,7 @@ efreet_menu_create_filter_list(Efreet_Menu_Internal *internal)
     if (!internal || internal->filters) return;
 
     internal->filters = ecore_list_new();
-    ecore_list_free_cb_set(internal->filters, 
+    ecore_list_free_cb_set(internal->filters,
                         ECORE_FREE_CB(efreet_menu_filter_free));
 }
 
@@ -3279,7 +3280,7 @@ efreet_menu_create_layout_list(Efreet_Menu_Internal *internal)
     if (!internal || internal->layout) return;
 
     internal->layout = ecore_list_new();
-    ecore_list_free_cb_set(internal->layout, 
+    ecore_list_free_cb_set(internal->layout,
                         ECORE_FREE_CB(efreet_menu_layout_free));
 }
 
@@ -3289,7 +3290,7 @@ efreet_menu_create_default_layout_list(Efreet_Menu_Internal *internal)
     if (!internal || internal->default_layout) return;
 
     internal->default_layout = ecore_list_new();
-    ecore_list_free_cb_set(internal->default_layout, 
+    ecore_list_free_cb_set(internal->default_layout,
                         ECORE_FREE_CB(efreet_menu_layout_free));
 }
 
@@ -3297,7 +3298,7 @@ static void
 efreet_menu_create_directories_list(Efreet_Menu_Internal *internal)
 {
     if (!internal || internal->directories) return;
-    
+
     internal->directories = ecore_dlist_new();
     ecore_list_free_cb_set(internal->directories, free);
 }
@@ -3314,7 +3315,7 @@ efreet_menu_path_get(Efreet_Menu_Internal *internal, const char *suffix)
 
     else
     {
-        if (!internal->file.path) 
+        if (!internal->file.path)
         {
             printf("efreet_menu_handle_app_dir() missing menu path ...\n");
             return NULL;
@@ -3456,11 +3457,11 @@ efreet_menu_directory_dirs_process(Efreet_Menu_Internal *internal)
  * @param relative_path: The relative portion of the path
  * @param cache: The cache to populate
  * @return Returns 1 on success or 0 on failure
- * @brief Scans the given directory dir for .directory files and adds the 
+ * @brief Scans the given directory dir for .directory files and adds the
  * applications to the cache
  */
 static int
-efreet_menu_directory_dir_scan(const char *path, const char *relative_path, 
+efreet_menu_directory_dir_scan(const char *path, const char *relative_path,
                                                             Ecore_Hash *cache)
 {
     Efreet_Desktop *desktop;
@@ -3712,7 +3713,7 @@ efreet_menu_layout_entries_get(Efreet_Menu *entry, Efreet_Menu_Internal *interna
             if (!(sub->directory && sub->directory->no_display) && !sub->deleted)
             {
                 sub_entry = efreet_menu_layout_menu(sub);
-                if (!show_empty && !sub_entry->entries)
+                if (!show_empty && efreet_menu_layout_is_empty(sub_entry))
                     efreet_menu_free(sub_entry);
                 else if (in_line &&
                         ((inline_limit == 0) ||
@@ -3815,7 +3816,7 @@ efreet_menu_layout_entries_get(Efreet_Menu *entry, Efreet_Menu_Internal *interna
                 if (!sub_entry)
                 {
                     sub_entry = efreet_menu_layout_menu(sub);
-                    if (!internal->show_empty && !sub_entry->entries)
+                    if (!internal->show_empty && efreet_menu_layout_is_empty(sub_entry))
                         efreet_menu_free(sub_entry);
                     else if (internal->in_line &&
                             ((internal->inline_limit == 0) ||
@@ -3874,7 +3875,7 @@ efreet_menu_layout_entries_get(Efreet_Menu *entry, Efreet_Menu_Internal *interna
         else if (internal->sub_menus && !strcmp(layout->name, "all"))
         {
             char *orig;
-           
+
             orig = layout->name;
             layout->name = "menus";
             efreet_menu_layout_entries_get(entry, internal, layout);
@@ -3911,3 +3912,18 @@ efreet_menu_cb_move_compare(Efreet_Menu_Move *move, const char *old)
     return ecore_str_compare(move->old_name, old);
 }
 
+static int
+efreet_menu_layout_is_empty(Efreet_Menu *entry)
+{
+    Efreet_Menu *sub_entry;
+
+    if (!entry->entries) return 1;
+
+    ecore_list_first_goto(entry->entries);
+    while ((sub_entry = ecore_list_next(entry->entries)))
+    {
+        if (sub_entry->type == EFREET_MENU_ENTRY_MENU) return 0;
+        if (sub_entry->type == EFREET_MENU_ENTRY_DESKTOP) return 0;
+    }
+    return 1;
+}

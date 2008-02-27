@@ -5,7 +5,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
-#include "../lib/efreet_private.h"
+
+#define IF_FREE(x) do { if (x) free(x); x = NULL; } while (0);
+#define NEW(x, c) calloc(c, sizeof(x))
 
 static void _cb_command(void *data, Efreet_Desktop *desktop, char *exec, int remaining);
 
@@ -17,7 +19,7 @@ ef_cb_desktop_parse(void)
     int ret = 1;
 
     desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/efreet/test/test.desktop");
-    if (!desktop) 
+    if (!desktop)
     {
         printf("No desktop found.\n");
         return 0;
@@ -29,7 +31,7 @@ ef_cb_desktop_parse(void)
         ret = 0;
     }
 
-    if (!desktop->generic_name || 
+    if (!desktop->generic_name ||
         strcmp(desktop->generic_name, "Test Application"))
     {
         printf("Incorrent GenericName\n");
@@ -51,7 +53,7 @@ ef_cb_desktop_parse(void)
         ecore_list_first_goto(desktop->categories);
         while ((cat = ecore_list_next(desktop->categories)))
         {
-            if (i >= num_categories) 
+            if (i >= num_categories)
             {
                 printf("Too many categories found.\n");
                 ret = 0;
@@ -318,7 +320,7 @@ ef_cb_desktop_command_get(void)
 
     ret = info->error > 0 ? 0 : 1;
     free(info);
- 
+
     chdir(olddir);
 
     return ret;
@@ -367,10 +369,10 @@ ef_cb_desktop_type_parse(void)
 
     /* add my custom desktop type to efreet */
     my_type = efreet_desktop_type_add("My_Type", cb_type_parse, NULL,
-                                        (Efreet_Desktop_Type_Free_Cb)free); 
+                                        (Efreet_Desktop_Type_Free_Cb)free);
 
     desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/efreet/test/test_type.desktop");
-    if (!desktop) 
+    if (!desktop)
     {
         printf("No desktop found.\n");
         return 0;
@@ -388,10 +390,7 @@ ef_cb_desktop_type_parse(void)
         printf("Invalid value of custom key (%s).\n", val);
         ret = 0;
     }
-    
+
     efreet_desktop_free(desktop);
     return ret;
 }
-
-
-
