@@ -1,0 +1,10 @@
+debian/tmp/usr/include/efreet/Efreet.h
+debian/tmp/usr/include/efreet/efreet_base.h
+debian/tmp/usr/include/efreet/efreet_desktop.h
+debian/tmp/usr/include/efreet/efreet_icon.h
+debian/tmp/usr/include/efreet/efreet_ini.h
+debian/tmp/usr/include/efreet/efreet_menu.h
+debian/tmp/usr/include/efreet/efreet_utils.h
+debian/tmp/usr/lib/pkgconfig/efreet.pc
+debian/tmp/usr/lib/libefreet.a
+debian/tmp/usr/lib/libefreet.so

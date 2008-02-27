@@ -1,0 +1,4 @@
+debian/tmp/usr/include/efreet/Efreet_Mime.h
+debian/tmp/usr/lib/pkgconfig/efreet-mime.pc
+debian/tmp/usr/lib/libefreet_mime.a
+debian/tmp/usr/lib/libefreet_mime.so
