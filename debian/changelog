@@ -1,6 +1,6 @@
-efreet (0.0.3.005-1) unstable; urgency=low
+efreet (0.0.3.005-1) experimental; urgency=low
 
-  * Initial Release
+  * Initial Release (Closes: #468315)
 
- -- Albin Tonnerre <lut1n.tne@gmail.com>  Sat, 04 Aug 2007 12:25:11 +0200
+ -- Albin Tonnerre <albin.tonnerre@gmail.com>  Thu, 28 Feb 2008 19:14:59 +0000
 

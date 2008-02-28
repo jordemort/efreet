@@ -2,8 +2,9 @@ Source: efreet
 Section: libs
 Priority: optional
 Maintainer:  Debian Pkg-e Team <pkg-e-devel@lists.alioth.debian.org>
-Build-Depends: debhelper (>= 5), cdbs, libecore-dev, libecore-file-dev, doxygen
-Standards-Version: 3.7.2
+Uploaders: Albin Tonnerre <albin.tonnerre@gmail.com>
+Build-Depends: debhelper (>= 6), cdbs, libecore-dev, libecore-file-dev, doxygen
+Standards-Version: 3.7.3
 
 Package: libefreet0
 Architecture: any
@@ -17,8 +18,6 @@ Description: Library that implements freedesktop.org specs for use with E17/EFL
   - Desktop Entry
   - Icon Theme
   - Menu
- .
- Efreet depends only on Ecore.
 
 Package: libefreet-mime0
 Architecture: any
@@ -26,8 +25,9 @@ Depends: ${shlibs:Depends}
 Description: Library that implements freedesktop.org specs for use with E17/EFL
  An implementation of several specifications from freedesktop.org intended for
  use in Enlightenment DR17 (e17) and other applications using the Enlightenment
- Foundation Libraries (EFL). This library provides function for dealing with
- mime.
+ Foundation Libraries (EFL).
+ .
+ This library provides function for dealing with mime.
 
 Package: libefreet-dev
 Section: libdevel
