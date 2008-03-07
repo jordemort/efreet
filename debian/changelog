@@ -1,6 +1,5 @@
-efreet (0.0.3.042-1) experimental; urgency=low
+efreet (0.0.3.042+doc-1) experimental; urgency=low
 
   * Initial Release (Closes: #468315)
 
- -- Albin Tonnerre <albin.tonnerre@gmail.com>  Thu, 28 Feb 2008 19:14:59 +0000
-
+ -- Jan Lübbe <jluebbe@debian.org>  Fri, 07 Mar 2008 20:45:04 +0100
