@@ -22,21 +22,14 @@ Description: Library that implements freedesktop.org specs for use with E17/EFL
   - Desktop Entry
   - Icon Theme
   - Menu
-
-Package: libefreet-mime0
-Architecture: any
-Depends: ${shlibs:Depends}
-Description: Library that implements freedesktop.org specs for use with E17/EFL
- An implementation of several specifications from freedesktop.org intended for
- use in Enlightenment DR17 (e17) and other applications using the Enlightenment
- Foundation Libraries (EFL).
- .
- This library provides function for dealing with mime.
+.
+ This package provides the libefreet0 and libefreet0-mime libraries, which
+ contains efreet-based functions for dealing with mime.
 
 Package: libefreet-dev
 Section: libdevel
 Architecture: any
-Depends: libefreet0 (= ${binary:Version}), libecore-dev, libecore-file-dev
+Depends: libefreet0 (= ${binary:Version}), libecore-dev
 Description: Development files for libefreet0
  An implementation of several specifications from freedesktop.org intended for
  use in Enlightenment DR17 (e17) and other applications using the Enlightenment
@@ -49,23 +42,11 @@ Description: Development files for libefreet0
  .
  This packages contains headers and static libraries for Efreet.
 
-Package: libefreet-mime-dev
-Section: libdevel
-Architecture: any
-Depends: libefreet-mime0 (= ${binary:Version})
-Description: Development files for libefreet0
- An implementation of several specifications from freedesktop.org intended for
- use in Enlightenment DR17 (e17) and other applications using the Enlightenment
- Foundation Libraries (EFL). This library provides function for dealing
- with mime.
- .
- This packages contains headers and static libraries for Efreet-mime
-
 Package: libefreet-doc
 Section: doc
 Architecture: all
-Enhances: libefreet-dev, libefreet-mime-dev
-Description: libefreet0 API documentation
+Enhances: libefreet-dev
+Description: libefreet and libfreet-mime API documentation
  An implementation of several specifications from freedesktop.org intended for
  use in Enlightenment DR17 (e17) and other applications using the Enlightenment
  Foundation Libraries (EFL). Currently, the following specifications are
@@ -75,4 +56,5 @@ Description: libefreet0 API documentation
   - Icon Theme
   - Menu
  .
- This package contains HTML documentation for development with libefreet.
+ This package contains HTML documentation for development with libefreet and
+ libefreet-mime.
