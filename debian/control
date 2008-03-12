@@ -22,7 +22,7 @@ Description: Library that implements freedesktop.org specs for use with E17/EFL
   - Desktop Entry
   - Icon Theme
   - Menu
-.
+ .
  This package provides the libefreet0 and libefreet0-mime libraries, which
  contains efreet-based functions for dealing with mime.
 
