@@ -1,5 +1,7 @@
 efreet (0.0.3.042+doc-1) experimental; urgency=low
 
   * Initial Release (Closes: #468315)
+  * debian/patches/01_menu_path: Allows E17 to find a menu provided by the e17
+    package if no menus are found after searching the FDO paths
 
- -- Albin Tonnerre <albin.tonnerre@gmail.com>  Sat, 08 Mar 2008 15:45:23 +0100
+ -- Albin Tonnerre <albin.tonnerre@gmail.com>  Tue, 01 Apr 2008 18:23:34 +0200

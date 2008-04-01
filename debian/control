@@ -30,7 +30,8 @@ Package: libefreet-dev
 Section: libdevel
 Architecture: any
 Depends: libefreet0 (= ${binary:Version}), libecore-dev
-Description: Development files for libefreet0
+Suggests: libefreet-doc
+Description: Development files for libefreet and libefreet-mime
  An implementation of several specifications from freedesktop.org intended for
  use in Enlightenment DR17 (e17) and other applications using the Enlightenment
  Foundation Libraries (EFL). Currently, the following specifications are
