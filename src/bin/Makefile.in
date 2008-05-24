@@ -58,8 +58,9 @@ am_efreet_cache_test_OBJECTS = ef_cache.$(OBJEXT)
 efreet_cache_test_OBJECTS = $(am_efreet_cache_test_OBJECTS)
 am_efreet_spec_test_OBJECTS = efreet_spec_test.$(OBJEXT)
 efreet_spec_test_OBJECTS = $(am_efreet_spec_test_OBJECTS)
-am__efreet_test_SOURCES_DIST = ef_data_dirs.c ef_icon_theme.c ef_ini.c \
-	ef_utils.c ef_desktop.c ef_menu.c ef_mime.c main.c ef_locale.c
+am__efreet_test_SOURCES_DIST = ef_test.h ef_data_dirs.c \
+	ef_icon_theme.c ef_ini.c ef_utils.c ef_desktop.c ef_menu.c \
+	ef_mime.c main.c ef_locale.c
 @DEFAULT_VISIBILITY_TRUE@am__objects_1 = ef_locale.$(OBJEXT)
 am_efreet_test_OBJECTS = ef_data_dirs.$(OBJEXT) \
 	ef_icon_theme.$(OBJEXT) ef_ini.$(OBJEXT) ef_utils.$(OBJEXT) \
@@ -113,6 +114,7 @@ DEFAULT_VISIBILITY_TRUE = @DEFAULT_VISIBILITY_TRUE@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
 ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
@@ -133,6 +135,7 @@ LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
+NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -211,8 +214,8 @@ efreet_test_LDADD = $(top_builddir)/src/lib/libefreet.la \
                     $(top_builddir)/src/lib/libefreet_mime.la \
                     @ECORE_LIBS@
 
-efreet_test_SOURCES = ef_data_dirs.c ef_icon_theme.c ef_ini.c \
-	ef_utils.c ef_desktop.c ef_menu.c ef_mime.c main.c \
+efreet_test_SOURCES = ef_test.h ef_data_dirs.c ef_icon_theme.c \
+	ef_ini.c ef_utils.c ef_desktop.c ef_menu.c ef_mime.c main.c \
 	$(am__append_1)
 efreet_spec_test_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
 efreet_spec_test_LDADD = $(top_builddir)/src/lib/libefreet.la

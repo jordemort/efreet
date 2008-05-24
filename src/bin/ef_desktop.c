@@ -5,11 +5,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
+#include "ef_test.h"
 
-#define IF_FREE(x) do { if (x) free(x); x = NULL; } while (0);
-#define NEW(x, c) calloc(c, sizeof(x))
-
-static void _cb_command(void *data, Efreet_Desktop *desktop, char *exec, int remaining);
+static void *_cb_command(void *data, Efreet_Desktop *desktop, char *exec, int remaining);
 
 
 int
@@ -18,7 +16,7 @@ ef_cb_desktop_parse(void)
     Efreet_Desktop *desktop;
     int ret = 1;
 
-    desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/efreet/test/test.desktop");
+    desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/test/test.desktop");
     if (!desktop)
     {
         printf("No desktop found.\n");
@@ -82,7 +80,7 @@ ef_cb_desktop_file_id(void)
     Efreet_Desktop *desktop;
     int ret = 1;
 
-    desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/efreet/test/test.desktop");
+    desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/test/test.desktop");
     if (desktop)
     {
         const char *id;
@@ -94,10 +92,10 @@ ef_cb_desktop_file_id(void)
             char *prefix;
             char *expected;
         } tests[] = {
-            {PACKAGE_DATA_DIR"/efreet/test/", 0, NULL, "test.desktop"},
-            {PACKAGE_DATA_DIR"/efreet/", 0, NULL, "test-test.desktop"},
-            {PACKAGE_DATA_DIR"/efreet/", 1, NULL, "test.desktop"},
-            {PACKAGE_DATA_DIR"/efreet/", 1, "prefix", "prefix-test.desktop"},
+            {PACKAGE_DATA_DIR"/test/", 0, NULL, "test.desktop"},
+            {PACKAGE_DATA_DIR"/", 0, NULL, "test-test.desktop"},
+            {PACKAGE_DATA_DIR"/", 1, NULL, "test.desktop"},
+            {PACKAGE_DATA_DIR"/", 1, "prefix", "prefix-test.desktop"},
             {NULL, 0, NULL, NULL}
         };
 
@@ -128,7 +126,7 @@ ef_cb_desktop_save(void)
     Efreet_Desktop *desktop;
 
     printf("\n");
-    desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/efreet/test/test.desktop");
+    desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/test/test.desktop");
     if (!desktop)
     {
         printf("Failed to get Desktop file\n");
@@ -326,8 +324,9 @@ ef_cb_desktop_command_get(void)
     return ret;
 }
 
-static void
-_cb_command(void *data, Efreet_Desktop *desktop, char *exec, int remaining)
+static void *
+_cb_command(void *data, Efreet_Desktop *desktop __UNUSED__,
+            char *exec, int remaining __UNUSED__)
 {
   Test_Info *info = data;
   char *expected;
@@ -348,10 +347,11 @@ _cb_command(void *data, Efreet_Desktop *desktop, char *exec, int remaining)
   }
 
   free(exec);
+  return NULL;
 }
 
 static void *
-cb_type_parse(Efreet_Desktop *desktop, Efreet_Ini *ini)
+cb_type_parse(Efreet_Desktop *desktop __UNUSED__, Efreet_Ini *ini)
 {
     const char *val;
     val = efreet_ini_string_get(ini, "X-Test");
@@ -371,7 +371,7 @@ ef_cb_desktop_type_parse(void)
     my_type = efreet_desktop_type_add("My_Type", cb_type_parse, NULL,
                                         (Efreet_Desktop_Type_Free_Cb)free);
 
-    desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/efreet/test/test_type.desktop");
+    desktop = efreet_desktop_get(PACKAGE_DATA_DIR"/test/test_type.desktop");
     if (!desktop)
     {
         printf("No desktop found.\n");
