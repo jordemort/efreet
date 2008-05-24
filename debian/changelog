@@ -1,8 +1,8 @@
-efreet (0.5.0.043-1) UNRELEASED; urgency=low
+efreet (0.5.0.043+doc-1) UNRELEASED; urgency=low
 
   * New upstream release
 
- -- Jan Lübbe <jluebbe@debian.org>  Sat, 24 May 2008 17:01:36 +0200
+ -- Jan Lübbe <jluebbe@debian.org>  Sat, 24 May 2008 18:15:41 +0200
 
 efreet (0.0.3.042+doc-1) experimental; urgency=low
 
