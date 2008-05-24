@@ -54,6 +54,9 @@ efreet_ini_new(const char *file)
     ini = NEW(Efreet_Ini, 1);
     if (!ini) return NULL;
 
+    /* This can validly be NULL at the moment as _parse() will return NULL
+     * if the input file doesn't exist. Should we change _parse() to create
+     * the hash and only return NULL on failed parse? */
     ini->data = efreet_ini_parse(file);
 
     return ini;
@@ -62,107 +65,98 @@ efreet_ini_new(const char *file)
 /**
  * @internal
  * @param file The file to parse
- * @return Returns an Ecore_Hash with the contents of @a file, or NULL on failure
+ * @return Returns an Ecore_Hash with the contents of @a file, or NULL if the
+ *         file fails to parse or if the file doesn't exist
  * @brief Parses the ini file @a file into an Ecore_Hash
  */
 static Ecore_Hash *
 efreet_ini_parse(const char *file)
 {
+    const char *buffer, *line_start;
     FILE *f;
-
-    /* a static buffer for quick reading of lines that fit */
-    char static_buf[4096];
-    int static_buf_len = 4096;
-
-    /* a big buffer to allocate for lines that are larger than the static one */
-    char *big_buf = NULL;
-    int big_buf_len = 0;
-    int big_buf_step = static_buf_len;
-
-    /* the current location to read into (with fgets) and the amount to read */
-    char *read_buf;
-    int read_len;
-
-    /* the current buffer to parse */
-    char *buf;
-
     Ecore_Hash *data, *section = NULL;
-
-    /* start with the static buffer */
-    buf = read_buf = static_buf;
-    read_len = static_buf_len;
+    struct stat file_stat;
+    int line_length, left;
 
     f = fopen(file, "rb");
     if (!f) return NULL;
+
+    if (fstat(fileno(f), &file_stat) || file_stat.st_size < 1)
+    {
+        fclose(f);
+        return NULL;
+    }
+
+    left = file_stat.st_size;
+    buffer = mmap(NULL, left, PROT_READ, MAP_SHARED, fileno(f), 0);
+    if (!buffer)
+    {
+        fclose(f);
+        return NULL;
+    }
 
     data = ecore_hash_new(ecore_str_hash, ecore_str_compare);
     ecore_hash_free_key_cb_set(data, ECORE_FREE_CB(ecore_string_release));
     ecore_hash_free_value_cb_set(data, ECORE_FREE_CB(ecore_hash_destroy));
 
-    /* if a line is longer than the buffer size, this \n will get overwritten. */
-    read_buf[read_len - 2] = '\n';
-    while (fgets(read_buf, read_len, f) != NULL)
+    line_start = buffer;
+    while (left > 0)
     {
-        char *key, *value, *p;
-        char *sep;
+        int sep;
 
-        /* handle lines longer than the buffer size */
-        if (read_buf[read_len-2] != '\n')
+        /* find the end of line */
+        for (line_length = 0; 
+                (line_length < left) && 
+                (line_start[line_length] != '\n'); ++line_length)
+            ;
+
+        /* check for all white space */
+        while (isspace(line_start[0]) && (line_length > 0))
         {
-            int len;
-            len = strlen(buf);
-
-            if (!big_buf)
-            {
-              /* create new big buffer and copy in contents of static buf */
-              big_buf_len = 2 * big_buf_step;
-              big_buf = malloc(big_buf_len * sizeof(char));
-              strncpy(big_buf, buf, len + 1);
-            }
-            else if (buf == big_buf)
-            {
-              /* already using the big buffer. increase its size for the next read */
-              big_buf_len += big_buf_step;
-              big_buf = realloc(big_buf, big_buf_len);
-            }
-            else
-            {
-              /* the big buffer exists, but we aren't using it yet. copy contents of static buf in */
-              strncpy(big_buf, buf, len);
-            }
-
-            /* use big_buffer for next fgets and subsequent parsing */
-            buf = big_buf;
-            read_buf = big_buf + len;
-            read_len = big_buf_len - len;
-            read_buf[read_len-2] = '\n';
-
-            continue;
+            line_start++;
+            line_length--;
         }
 
         /* skip empty lines and comments */
-        if (buf[0] == '\0' || buf[0] == '\n' || buf[0] == '#') goto next_line;
+        if ((line_length == 0) || (line_start[0] == '\r') || 
+                (line_start[0] == '\n') || (line_start[0] == '#') ||
+                (line_start[0] == '\0')) 
+            goto next_line;
 
         /* new section */
-        if (buf[0] == '[')
+        if (line_start[0] == '[')
         {
-            char *header, *p;
-            header = buf + 1;
+            int header_length;
 
-            p = strchr(header, ']');
-            if (p)
+            /* find the ']' */
+            for (header_length = 1; 
+                    (header_length < line_length) && 
+                    (line_start[header_length] != ']'); ++header_length)
+                ;
+
+            if (line_start[header_length] == ']')
             {
                 Ecore_Hash *old;
-                *p = '\0';
+                const char *header;
+
+                header = alloca(header_length * sizeof(unsigned char));
+                if (!header) goto next_line;
+
+                memcpy((char*)header, line_start + 1, header_length - 1);
+                ((char*)header)[header_length - 1] = '\0';
+
                 section = ecore_hash_new(ecore_str_hash, ecore_str_compare);
-                ecore_hash_free_key_cb_set(section, ECORE_FREE_CB(ecore_string_release));
+                ecore_hash_free_key_cb_set(section,
+                            ECORE_FREE_CB(ecore_string_release));
                 ecore_hash_free_value_cb_set(section, ECORE_FREE_CB(free));
 
                 old = ecore_hash_remove(data, header);
-                //if (old) printf("[efreet] Warning: duplicate section '%s' in file '%s'\n", header, file);
+                if (old) printf("[efreet] Warning: duplicate section '%s' "
+                                "in file '%s'\n", header, file);
+
                 IF_FREE_HASH(old);
                 ecore_hash_set(data, (void *)ecore_string_instance(header),
-                                                                section);
+                                section);
             }
             else
             {
@@ -173,68 +167,86 @@ efreet_ini_parse(const char *file)
             goto next_line;
         }
 
-        /* parse key=value pair */
-        sep = strchr(buf, '=');
-        key = buf;
-
-        if (sep)
+        if (section == NULL)
         {
-            /* trim whitespace from end of key */
-            p = sep;
-            while (p > key && isspace(*(p - 1))) p--;
-            *p = '\0';
+            printf("Invalid file (%s) (missing section)\n", file);
+            goto next_line;
+        }
 
-            value = sep + 1;
+        /* find for '=' */
+        for (sep = 0; (sep < line_length) && (line_start[sep] != '='); ++sep)
+            ;
+
+        if (sep < line_length)
+        {
+            const char *key, *value;
+            char *old;
+            int key_end, value_start, value_end;
+
+            /* trim whitespace from end of key */
+            for (key_end = sep - 1; 
+                    (key_end > 0) && isspace(line_start[key_end]); --key_end)
+                ;
+
+            if (!isspace(line_start[key_end])) key_end++;
 
             /* trim whitespace from start of value */
-            while (*value && isspace(*value)) value++;
+            for (value_start = sep + 1; 
+                    (value_start < line_length) && 
+                    isspace(line_start[value_start]); ++value_start)
+                ;
 
             /* trim \n off of end of value */
-            p = value + strlen(value) - 1;
-            while (p > value && (*p == '\n' || *p == '\r')) p--;
-            *(p + 1) = '\0';
+            for (value_end = line_length; 
+                    (value_end > value_start) &&
+                    ((line_start[value_end] == '\n') ||
+                        (line_start[value_end] == '\r')); --value_end)
+                ;
 
-            if (key && value && *key && *value)
+            if (line_start[value_end] != '\n'
+                    && line_start[value_end] != '\r'
+                    && value_end < line_length)
+                value_end++;
+
+            /* make sure we have a key. blank values are allowed */
+            if (key_end == 0)
             {
-                char *old;
+                /* invalid file... */
+                printf("Invalid file (%s) (invalid key=value pair)\n", file);
 
-                old = ecore_hash_remove(section, key);
-                //if (old) printf("[efreet] Warning: duplicate key '%s' in file '%s'\n", key, file);
-                IF_FREE(old);
-
-                ecore_hash_set(section, (void *)ecore_string_instance(key),
-                               efreet_ini_unescape(value));
+                goto next_line;
             }
+
+            key = alloca((key_end + 1) * sizeof(unsigned char));
+            value = alloca((value_end - value_start + 1) * sizeof(unsigned char));
+            if (!key || !value) goto next_line;
+
+            memcpy((char*)key, line_start, key_end);
+            ((char*)key)[key_end] = '\0';
+
+            memcpy((char*)value, line_start + value_start, 
+                    value_end - value_start);
+            ((char*)value)[value_end - value_start] = '\0';
+
+            old = ecore_hash_remove(section, key);
+            IF_FREE(old);
+
+            ecore_hash_set(section, (void *)ecore_string_instance(key),
+                           efreet_ini_unescape(value));
         }
         else
         {
-            /* check if line is all whitespace, if so, skip it */
-            int nonwhite = 0;
-            p = buf;
-            while (*p)
-            {
-                if (!isspace(*p))
-                {
-                    nonwhite = 1;
-                    break;
-                }
-                p++;
-            }
-            if (!nonwhite) goto next_line;
-
             /* invalid file... */
             printf("Invalid file (%s) (missing = from key=value pair)\n", file);
         }
 
 next_line:
-        /* finished parsing a line. use static buffer for next line */
-        buf = read_buf = static_buf;
-        read_len = static_buf_len;
-        read_buf[read_len - 2] = '\n';
+        left -= line_length + 1;
+        line_start += line_length + 1;
     }
 
+    munmap((char*) buffer, file_stat.st_size);
     fclose(f);
-    if (big_buf) free(big_buf);
 
     return data;
 }
@@ -587,7 +599,7 @@ efreet_ini_unescape(const char *str)
     dest = buf;
     while(*p)
     {
-        if (*p == '\\')
+        if ((*p == '\\') && (p[1] != '\0'))
         {
             p++;
             switch (*p)

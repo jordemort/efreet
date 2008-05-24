@@ -97,12 +97,12 @@ static int efreet_desktop_cb_download_progress(void *data, const char *file,
                                            long int ultotal, long int ulnow);
 
 
-static void efreet_desktop_exec_cb(void *data, Efreet_Desktop *desktop,
+static void *efreet_desktop_exec_cb(void *data, Efreet_Desktop *desktop,
                                             char *exec, int remaining);
 
 static void efreet_desktop_type_info_free(Efreet_Desktop_Type_Info *info);
 static int efreet_desktop_command_flags_get(Efreet_Desktop *desktop);
-static void efreet_desktop_command_execs_process(Efreet_Desktop_Command *command, Ecore_List *execs);
+static void *efreet_desktop_command_execs_process(Efreet_Desktop_Command *command, Ecore_List *execs);
 
 /**
  * @internal
@@ -520,12 +520,13 @@ efreet_desktop_exec(Efreet_Desktop *desktop, Ecore_List *files, void *data)
     efreet_desktop_command_get(desktop, files, efreet_desktop_exec_cb, data);
 }
 
-static void
+static void *
 efreet_desktop_exec_cb(void *data, Efreet_Desktop *desktop __UNUSED__,
                                 char *exec, int remaining __UNUSED__)
 {
     ecore_exe_run(exec, data);
     free(exec);
+    return NULL;
 }
 
 /**
@@ -1094,10 +1095,10 @@ efreet_desktop_environment_check(Efreet_Ini *ini)
  * relative paths, or uris
  * @param func: a callback to call for each prepared command line
  * @param data: user data passed to the callback
- * @return Returns 1 on success or 0 on failure
+ * @return Returns the return value of @p func on success or NULL on failure
  * @brief Get a command to use to execute a desktop entry.
  */
-EAPI int
+EAPI void *
 efreet_desktop_command_get(Efreet_Desktop *desktop, Ecore_List *files,
                             Efreet_Desktop_Command_Cb func, void *data)
 {
@@ -1168,7 +1169,7 @@ efreet_desktop_command_local_get(Efreet_Desktop *desktop, Ecore_List *files)
  * @brief Get a command to use to execute a desktop entry, and receive progress
  * updates for downloading of remote URI's passed in.
  */
-EAPI int
+EAPI void *
 efreet_desktop_command_progress_get(Efreet_Desktop *desktop, Ecore_List *files,
                                     Efreet_Desktop_Command_Cb cb_command,
                                     Efreet_Desktop_Progress_Cb cb_progress,
@@ -1176,11 +1177,12 @@ efreet_desktop_command_progress_get(Efreet_Desktop *desktop, Ecore_List *files,
 {
     Efreet_Desktop_Command *command;
     char *file;
+    void *ret = NULL;
 
-    if (!desktop || !cb_command || !desktop->exec) return 0;
+    if (!desktop || !cb_command || !desktop->exec) return NULL;
 
     command = NEW(Efreet_Desktop_Command, 1);
-    if (!command) return 0;
+    if (!command) return NULL;
 
     command->cb_command = cb_command;
     command->cb_progress = cb_progress;
@@ -1211,12 +1213,12 @@ efreet_desktop_command_progress_get(Efreet_Desktop *desktop, Ecore_List *files,
     {
         Ecore_List *execs;
         execs = efreet_desktop_command_build(command);
-        efreet_desktop_command_execs_process(command, execs);
+        ret = efreet_desktop_command_execs_process(command, execs);
         ecore_list_destroy(execs);
         efreet_desktop_command_free(command);
     }
 
-    return 1;
+    return ret;
 }
 
 /**
@@ -1283,17 +1285,20 @@ efreet_desktop_command_flags_get(Efreet_Desktop *desktop)
  * @param command
  * @param execs
  */
-static void
+static void *
 efreet_desktop_command_execs_process(Efreet_Desktop_Command *command, Ecore_List *execs)
 {
     char *exec;
     int num;
+    void *ret = NULL;
+   
     num = ecore_list_count(execs);
     ecore_list_first_goto(execs);
     while ((exec = ecore_list_next(execs)))
     {
-        command->cb_command(command->data, command->desktop, exec, --num);
+        ret = command->cb_command(command->data, command->desktop, exec, --num);
     }
+    return ret;
 }
 
 
@@ -1761,6 +1766,7 @@ efreet_desktop_cb_download_complete(void *data, const char *file __UNUSED__,
     {
         Ecore_List *execs;
         execs = efreet_desktop_command_build(f->command);
+        /* TODO: Need to handle the return value from efreet_desktop_command_execs_process */
         efreet_desktop_command_execs_process(f->command, execs);
         ecore_list_destroy(execs);
         efreet_desktop_command_free(f->command);
@@ -1800,8 +1806,12 @@ efreet_desktop_command_path_absolute(const char *path)
     /* relative url */
     if (path[0] != '/')
     {
-        buf = malloc(size);
-        if (!getcwd(buf, size)) return NULL;
+        if (!(buf = malloc(size))) return NULL;
+        if (!getcwd(buf, size))
+        {
+            FREE(buf);
+            return NULL;
+        }
         len = strlen(buf);
 
         if (buf[len-1] != '/') buf = efreet_string_append(buf, &size, &len, "/");
@@ -1810,6 +1820,6 @@ efreet_desktop_command_path_absolute(const char *path)
         return buf;
     }
 
-    /* just dup an alreaady absolute buffer */
+    /* just dup an already absolute buffer */
     return strdup(path);
 }
