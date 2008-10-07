@@ -1,0 +1,475 @@
+\section{Efreet\_\-Desktop: The FDO Desktop Entry}
+\label{group__Efreet__Desktop}\index{Efreet\_\-Desktop: The FDO Desktop Entry@{Efreet\_\-Desktop: The FDO Desktop Entry}}
+
+
+\subsection{Detailed Description}
+Specification functions and structures 
+
+\subsection*{Data Structures}
+\begin{CompactItemize}
+\item 
+struct {\bf Efreet\_\-Desktop}
+\begin{CompactList}\small\item\em a parsed representation of a .desktop file \item\end{CompactList}\end{CompactItemize}
+\subsection*{Typedefs}
+\begin{CompactItemize}
+\item 
+typedef struct {\bf Efreet\_\-Desktop} {\bf Efreet\_\-Desktop}
+\item 
+typedef void $\ast$($\ast$ {\bf Efreet\_\-Desktop\_\-Command\_\-Cb} )(void $\ast$data, {\bf Efreet\_\-Desktop} $\ast$desktop, char $\ast$command, int remaining)
+\item 
+typedef int($\ast$ {\bf Efreet\_\-Desktop\_\-Progress\_\-Cb} )(void $\ast$data, {\bf Efreet\_\-Desktop} $\ast$desktop, char $\ast$uri, long int total, long int current)
+\item 
+typedef enum {\bf Efreet\_\-Desktop\_\-Type} {\bf Efreet\_\-Desktop\_\-Type}
+\item 
+typedef void $\ast$($\ast$ {\bf Efreet\_\-Desktop\_\-Type\_\-Free\_\-Cb} )(void $\ast$data)
+\item 
+typedef void $\ast$($\ast$ {\bf Efreet\_\-Desktop\_\-Type\_\-Parse\_\-Cb} )({\bf Efreet\_\-Desktop} $\ast$desktop, {\bf Efreet\_\-Ini} $\ast$ini)
+\item 
+typedef void($\ast$ {\bf Efreet\_\-Desktop\_\-Type\_\-Save\_\-Cb} )({\bf Efreet\_\-Desktop} $\ast$desktop, {\bf Efreet\_\-Ini} $\ast$ini)
+\end{CompactItemize}
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+EAPI void {\bf efreet\_\-desktop\_\-cache\_\-flush} (void)
+\begin{CompactList}\small\item\em Tell Efreet to flush any cached desktop entries so it reloads on get. \item\end{CompactList}\item 
+EAPI void {\bf efreet\_\-desktop\_\-category\_\-add} ({\bf Efreet\_\-Desktop} $\ast$desktop, const char $\ast$category)
+\begin{CompactList}\small\item\em add a category to a desktop \item\end{CompactList}\item 
+EAPI unsigned int {\bf efreet\_\-desktop\_\-category\_\-count\_\-get} ({\bf Efreet\_\-Desktop} $\ast$desktop)
+\begin{CompactList}\small\item\em Retrieves the number of categories the given {\em desktop\/} belongs too. \item\end{CompactList}\item 
+EAPI int {\bf efreet\_\-desktop\_\-category\_\-del} ({\bf Efreet\_\-Desktop} $\ast$desktop, const char $\ast$category)
+\begin{CompactList}\small\item\em removes a category from a desktop \item\end{CompactList}\item 
+EAPI void $\ast$ {\bf efreet\_\-desktop\_\-command\_\-get} ({\bf Efreet\_\-Desktop} $\ast$desktop, Ecore\_\-List $\ast$files, {\bf Efreet\_\-Desktop\_\-Command\_\-Cb} func, void $\ast$data)
+\begin{CompactList}\small\item\em Get a command to use to execute a desktop entry. \item\end{CompactList}\item 
+EAPI Ecore\_\-List $\ast$ {\bf efreet\_\-desktop\_\-command\_\-local\_\-get} ({\bf Efreet\_\-Desktop} $\ast$desktop, Ecore\_\-List $\ast$files)
+\begin{CompactList}\small\item\em Get the command to use to execute a desktop entry. \item\end{CompactList}\item 
+EAPI void $\ast$ {\bf efreet\_\-desktop\_\-command\_\-progress\_\-get} ({\bf Efreet\_\-Desktop} $\ast$desktop, Ecore\_\-List $\ast$files, {\bf Efreet\_\-Desktop\_\-Command\_\-Cb} cb\_\-command, {\bf Efreet\_\-Desktop\_\-Progress\_\-Cb} cb\_\-prog, void $\ast$data)
+\begin{CompactList}\small\item\em Get a command to use to execute a desktop entry, and receive progress updates for downloading of remote URI's passed in. \item\end{CompactList}\item 
+EAPI {\bf Efreet\_\-Desktop} $\ast$ {\bf efreet\_\-desktop\_\-empty\_\-new} (const char $\ast$file)
+\begin{CompactList}\small\item\em Creates a new empty \doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} structure or NULL on failure. \item\end{CompactList}\item 
+EAPI const char $\ast$ {\bf efreet\_\-desktop\_\-environment\_\-get} (void)
+\begin{CompactList}\small\item\em sets the global desktop environment name \item\end{CompactList}\item 
+EAPI void {\bf efreet\_\-desktop\_\-environment\_\-set} (const char $\ast$environment)
+\begin{CompactList}\small\item\em sets the global desktop environment name \item\end{CompactList}\item 
+EAPI void {\bf efreet\_\-desktop\_\-exec} ({\bf Efreet\_\-Desktop} $\ast$desktop, Ecore\_\-List $\ast$files, void $\ast$data)
+\begin{CompactList}\small\item\em Parses the {\em desktop\/} exec line and returns an Ecore\_\-Exe. \item\end{CompactList}\item 
+EAPI void {\bf efreet\_\-desktop\_\-free} ({\bf Efreet\_\-Desktop} $\ast$desktop)
+\item 
+EAPI {\bf Efreet\_\-Desktop} $\ast$ {\bf efreet\_\-desktop\_\-get} (const char $\ast$file)
+\begin{CompactList}\small\item\em Gets a reference to an \doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} structure representing the contents of {\em file\/} or NULL if {\em file\/} is not a valid .desktop file. \item\end{CompactList}\item 
+EAPI {\bf Efreet\_\-Desktop} $\ast$ {\bf efreet\_\-desktop\_\-new} (const char $\ast$file)
+\item 
+EAPI int {\bf efreet\_\-desktop\_\-ref} ({\bf Efreet\_\-Desktop} $\ast$desktop)
+\item 
+EAPI int {\bf efreet\_\-desktop\_\-save} ({\bf Efreet\_\-Desktop} $\ast$desktop)
+\begin{CompactList}\small\item\em Saves any changes made to {\em desktop\/} back to the file on the filesystem. \item\end{CompactList}\item 
+EAPI int {\bf efreet\_\-desktop\_\-save\_\-as} ({\bf Efreet\_\-Desktop} $\ast$desktop, const char $\ast$file)
+\begin{CompactList}\small\item\em Saves {\em desktop\/} to {\em file\/}. \item\end{CompactList}\item 
+EAPI char $\ast$ {\bf efreet\_\-desktop\_\-string\_\-list\_\-join} (Ecore\_\-List $\ast$list)
+\begin{CompactList}\small\item\em Create a ';' separate list of strings according to the desktop spec. \item\end{CompactList}\item 
+EAPI Ecore\_\-List $\ast$ {\bf efreet\_\-desktop\_\-string\_\-list\_\-parse} (const char $\ast$string)
+\begin{CompactList}\small\item\em Parse ';' separate list of strings according to the desktop spec. \item\end{CompactList}\item 
+EAPI int {\bf efreet\_\-desktop\_\-type\_\-add} (const char $\ast$type, {\bf Efreet\_\-Desktop\_\-Type\_\-Parse\_\-Cb} parse\_\-func, {\bf Efreet\_\-Desktop\_\-Type\_\-Save\_\-Cb} save\_\-func, {\bf Efreet\_\-Desktop\_\-Type\_\-Free\_\-Cb} free\_\-func)
+\begin{CompactList}\small\item\em Adds the given type to the list of types in the system. \item\end{CompactList}\item 
+EAPI int {\bf efreet\_\-desktop\_\-type\_\-alias} (int from\_\-type, const char $\ast$alias)
+\begin{CompactList}\small\item\em Add an alias for an existing desktop type. \item\end{CompactList}\item 
+EAPI void $\ast$ {\bf efreet\_\-desktop\_\-type\_\-data\_\-get} ({\bf Efreet\_\-Desktop} $\ast$desktop)
+\begin{CompactList}\small\item\em get type specific data for custom desktop types \item\end{CompactList}\end{CompactItemize}
+\subsection*{Variables}
+\begin{CompactItemize}
+\item 
+EAPI int {\bf EFREET\_\-DESKTOP\_\-TYPE\_\-APPLICATION}
+\item 
+EAPI int {\bf EFREET\_\-DESKTOP\_\-TYPE\_\-DIRECTORY}
+\item 
+EAPI int {\bf EFREET\_\-DESKTOP\_\-TYPE\_\-LINK}
+\end{CompactItemize}
+
+
+\subsection{Typedef Documentation}
+\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!Efreet\_\-Desktop@{Efreet\_\-Desktop}}
+\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Desktop} {\bf Efreet\_\-Desktop}}\label{group__Efreet__Desktop_g868d9a75c53c5470ee3d31deb70fb51c}
+
+
+\doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!Efreet\_\-Desktop\_\-Command\_\-Cb@{Efreet\_\-Desktop\_\-Command\_\-Cb}}
+\index{Efreet\_\-Desktop\_\-Command\_\-Cb@{Efreet\_\-Desktop\_\-Command\_\-Cb}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef void$\ast$($\ast$ {\bf Efreet\_\-Desktop\_\-Command\_\-Cb})(void $\ast$data, {\bf Efreet\_\-Desktop} $\ast$desktop, char $\ast$command, int remaining)}\label{group__Efreet__Desktop_g43de4c99c798902b45ec98d4ec306048}
+
+
+A callback used with \doxyref{efreet\_\-desktop\_\-command\_\-get()}{p.}{group__Efreet__Desktop_g1f3900a4f1a34c73d1743a6a1b46c334} \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!Efreet\_\-Desktop\_\-Progress\_\-Cb@{Efreet\_\-Desktop\_\-Progress\_\-Cb}}
+\index{Efreet\_\-Desktop\_\-Progress\_\-Cb@{Efreet\_\-Desktop\_\-Progress\_\-Cb}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef int($\ast$ {\bf Efreet\_\-Desktop\_\-Progress\_\-Cb})(void $\ast$data, {\bf Efreet\_\-Desktop} $\ast$desktop, char $\ast$uri, long int total, long int current)}\label{group__Efreet__Desktop_g540dda3e25a4c1f5e114264051bb1520}
+
+
+A callback used to get download progress of remote uris \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!Efreet\_\-Desktop\_\-Type@{Efreet\_\-Desktop\_\-Type}}
+\index{Efreet\_\-Desktop\_\-Type@{Efreet\_\-Desktop\_\-Type}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf Efreet\_\-Desktop\_\-Type} {\bf Efreet\_\-Desktop\_\-Type}}\label{group__Efreet__Desktop_gdbf84fa276a7ee909002d18f66818fc6}
+
+
+Efreet\_\-Desktop\_\-Type \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!Efreet\_\-Desktop\_\-Type\_\-Free\_\-Cb@{Efreet\_\-Desktop\_\-Type\_\-Free\_\-Cb}}
+\index{Efreet\_\-Desktop\_\-Type\_\-Free\_\-Cb@{Efreet\_\-Desktop\_\-Type\_\-Free\_\-Cb}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef void$\ast$($\ast$ {\bf Efreet\_\-Desktop\_\-Type\_\-Free\_\-Cb})(void $\ast$data)}\label{group__Efreet__Desktop_ga4fe25cbec2a880f8eb73582c4001b46}
+
+
+A callback used to free data for custom types \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!Efreet\_\-Desktop\_\-Type\_\-Parse\_\-Cb@{Efreet\_\-Desktop\_\-Type\_\-Parse\_\-Cb}}
+\index{Efreet\_\-Desktop\_\-Type\_\-Parse\_\-Cb@{Efreet\_\-Desktop\_\-Type\_\-Parse\_\-Cb}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef void$\ast$($\ast$ {\bf Efreet\_\-Desktop\_\-Type\_\-Parse\_\-Cb})({\bf Efreet\_\-Desktop} $\ast$desktop, {\bf Efreet\_\-Ini} $\ast$ini)}\label{group__Efreet__Desktop_g9ae3789b0deb60e0ec22215210b4621f}
+
+
+A callback used to parse data for custom types \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!Efreet\_\-Desktop\_\-Type\_\-Save\_\-Cb@{Efreet\_\-Desktop\_\-Type\_\-Save\_\-Cb}}
+\index{Efreet\_\-Desktop\_\-Type\_\-Save\_\-Cb@{Efreet\_\-Desktop\_\-Type\_\-Save\_\-Cb}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef void($\ast$ {\bf Efreet\_\-Desktop\_\-Type\_\-Save\_\-Cb})({\bf Efreet\_\-Desktop} $\ast$desktop, {\bf Efreet\_\-Ini} $\ast$ini)}\label{group__Efreet__Desktop_ge8f0014dc5fcba6b748803cff7501eff}
+
+
+A callback used to save data for custom types 
+
+\subsection{Function Documentation}
+\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-cache\_\-flush@{efreet\_\-desktop\_\-cache\_\-flush}}
+\index{efreet\_\-desktop\_\-cache\_\-flush@{efreet\_\-desktop\_\-cache\_\-flush}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-desktop\_\-cache\_\-flush (void)}\label{group__Efreet__Desktop_gea429d3594896f62437b7c8d732b868b}
+
+
+Tell Efreet to flush any cached desktop entries so it reloads on get. 
+
+This flags the cache to be invalid, so next time a desktop file is fetched it will force it to be re-read off disk next time \doxyref{efreet\_\-desktop\_\-get()}{p.}{group__Efreet__Desktop_gc699737258129d367dbe4958315a635d} is called. \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-category\_\-add@{efreet\_\-desktop\_\-category\_\-add}}
+\index{efreet\_\-desktop\_\-category\_\-add@{efreet\_\-desktop\_\-category\_\-add}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-desktop\_\-category\_\-add ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop}, \/  const char $\ast$ {\em category})}\label{group__Efreet__Desktop_g26ec043ed53964b1603383d1bcba81f7}
+
+
+add a category to a desktop 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]the desktop \item[{\em category,:}]the category name \end{description}
+\end{Desc}
+
+
+References categories.\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-category\_\-count\_\-get@{efreet\_\-desktop\_\-category\_\-count\_\-get}}
+\index{efreet\_\-desktop\_\-category\_\-count\_\-get@{efreet\_\-desktop\_\-category\_\-count\_\-get}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI unsigned int efreet\_\-desktop\_\-category\_\-count\_\-get ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop})}\label{group__Efreet__Desktop_g110ad74dbaf70845ae8a77631f9c114d}
+
+
+Retrieves the number of categories the given {\em desktop\/} belongs too. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]The desktop to work with \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns the number of categories assigned to this desktop \end{Desc}
+
+
+References categories.\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-category\_\-del@{efreet\_\-desktop\_\-category\_\-del}}
+\index{efreet\_\-desktop\_\-category\_\-del@{efreet\_\-desktop\_\-category\_\-del}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-desktop\_\-category\_\-del ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop}, \/  const char $\ast$ {\em category})}\label{group__Efreet__Desktop_g2e87d6fa5aee7f3fe8195f19ef067f8d}
+
+
+removes a category from a desktop 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]the desktop \item[{\em category,:}]the category name \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]1 if the desktop had his category listed, 0 otherwise \end{Desc}
+
+
+References categories.\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-command\_\-get@{efreet\_\-desktop\_\-command\_\-get}}
+\index{efreet\_\-desktop\_\-command\_\-get@{efreet\_\-desktop\_\-command\_\-get}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void$\ast$ efreet\_\-desktop\_\-command\_\-get ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop}, \/  Ecore\_\-List $\ast$ {\em files}, \/  {\bf Efreet\_\-Desktop\_\-Command\_\-Cb} {\em func}, \/  void $\ast$ {\em data})}\label{group__Efreet__Desktop_g1f3900a4f1a34c73d1743a6a1b46c334}
+
+
+Get a command to use to execute a desktop entry. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]the desktop entry \item[{\em files,:}]an ecore list of file names to execute, as either absolute paths, relative paths, or uris \item[{\em func,:}]a callback to call for each prepared command line \item[{\em data,:}]user data passed to the callback \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns the return value of {\tt func} on success or NULL on failure \end{Desc}
+
+
+References efreet\_\-desktop\_\-command\_\-progress\_\-get().
+
+Referenced by efreet\_\-desktop\_\-exec().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-command\_\-local\_\-get@{efreet\_\-desktop\_\-command\_\-local\_\-get}}
+\index{efreet\_\-desktop\_\-command\_\-local\_\-get@{efreet\_\-desktop\_\-command\_\-local\_\-get}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI Ecore\_\-List$\ast$ efreet\_\-desktop\_\-command\_\-local\_\-get ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop}, \/  Ecore\_\-List $\ast$ {\em files})}\label{group__Efreet__Desktop_gaee168805abd316b7e1e624c70c4e018}
+
+
+Get the command to use to execute a desktop entry. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]the desktop entry \item[{\em files}]an ecore list of local files, as absolute paths, local paths, or {\tt file://} uris (or NULL to get exec string with no files appended) \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns an ecore list of exec strings The returned list and each of its elements must be freed. \end{Desc}
+
+
+References Efreet\_\-Desktop\_\-Command::desktop, exec, Efreet\_\-Desktop\_\-Command::files, Efreet\_\-Desktop\_\-Command::flags, NEW, and Efreet\_\-Desktop\_\-Command\_\-File::pending.\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-command\_\-progress\_\-get@{efreet\_\-desktop\_\-command\_\-progress\_\-get}}
+\index{efreet\_\-desktop\_\-command\_\-progress\_\-get@{efreet\_\-desktop\_\-command\_\-progress\_\-get}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void$\ast$ efreet\_\-desktop\_\-command\_\-progress\_\-get ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop}, \/  Ecore\_\-List $\ast$ {\em files}, \/  {\bf Efreet\_\-Desktop\_\-Command\_\-Cb} {\em cb\_\-command}, \/  {\bf Efreet\_\-Desktop\_\-Progress\_\-Cb} {\em cb\_\-progress}, \/  void $\ast$ {\em data})}\label{group__Efreet__Desktop_g999043f62976314e15bb4dd0c3aeb2f4}
+
+
+Get a command to use to execute a desktop entry, and receive progress updates for downloading of remote URI's passed in. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]the desktop entry \item[{\em files,:}]an ecore list of file names to execute, as either absolute paths, relative paths, or uris \item[{\em cb\_\-command,:}]a callback to call for each prepared command line \item[{\em cb\_\-progress,:}]a callback to get progress for the downloads \item[{\em data,:}]user data passed to the callback \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns 1 on success or 0 on failure \end{Desc}
+
+
+References Efreet\_\-Desktop\_\-Command::cb\_\-command, Efreet\_\-Desktop\_\-Command::cb\_\-progress, Efreet\_\-Desktop\_\-Command::data, Efreet\_\-Desktop\_\-Command::desktop, exec, Efreet\_\-Desktop\_\-Command::files, Efreet\_\-Desktop\_\-Command::flags, NEW, Efreet\_\-Desktop\_\-Command::num\_\-pending, and Efreet\_\-Desktop\_\-Command\_\-File::pending.
+
+Referenced by efreet\_\-desktop\_\-command\_\-get().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-empty\_\-new@{efreet\_\-desktop\_\-empty\_\-new}}
+\index{efreet\_\-desktop\_\-empty\_\-new@{efreet\_\-desktop\_\-empty\_\-new}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Desktop}$\ast$ efreet\_\-desktop\_\-empty\_\-new (const char $\ast$ {\em file})}\label{group__Efreet__Desktop_g6044189da04223cbd61c2563410ad327}
+
+
+Creates a new empty \doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} structure or NULL on failure. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em file,:}]The file to create the \doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} from \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns a new empty\_\-Efreet\_\-Desktop on success, NULL on failure \end{Desc}
+
+
+References load\_\-time, NEW, orig\_\-path, and ref.\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-environment\_\-get@{efreet\_\-desktop\_\-environment\_\-get}}
+\index{efreet\_\-desktop\_\-environment\_\-get@{efreet\_\-desktop\_\-environment\_\-get}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI const char$\ast$ efreet\_\-desktop\_\-environment\_\-get (void)}\label{group__Efreet__Desktop_g95a0975d8ba893692f63a80ae6784ac3}
+
+
+sets the global desktop environment name 
+
+\begin{Desc}
+\item[Returns:]environment: the environment name \end{Desc}
+\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-environment\_\-set@{efreet\_\-desktop\_\-environment\_\-set}}
+\index{efreet\_\-desktop\_\-environment\_\-set@{efreet\_\-desktop\_\-environment\_\-set}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-desktop\_\-environment\_\-set (const char $\ast$ {\em environment})}\label{group__Efreet__Desktop_g811892ec6c109a4708a94c0c0c329245}
+
+
+sets the global desktop environment name 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em environment,:}]the environment name \end{description}
+\end{Desc}
+\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-exec@{efreet\_\-desktop\_\-exec}}
+\index{efreet\_\-desktop\_\-exec@{efreet\_\-desktop\_\-exec}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-desktop\_\-exec ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop}, \/  Ecore\_\-List $\ast$ {\em files}, \/  void $\ast$ {\em data})}\label{group__Efreet__Desktop_gd7844c12bd0c5eaef077f898ec6175eb}
+
+
+Parses the {\em desktop\/} exec line and returns an Ecore\_\-Exe. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]The desktop file to work with \item[{\em files,:}]The files to be substituted into the exec line \item[{\em data,:}]The data pointer to pass \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns the Ecore\_\-Exce for {\em desktop\/} \end{Desc}
+
+
+References efreet\_\-desktop\_\-command\_\-get().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-free@{efreet\_\-desktop\_\-free}}
+\index{efreet\_\-desktop\_\-free@{efreet\_\-desktop\_\-free}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-desktop\_\-free ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop})}\label{group__Efreet__Desktop_g7842cc5c55c4c74c254b41ecc143a8b6}
+
+
+
+
+References cached, categories, comment, exec, FREE, Efreet\_\-Desktop\_\-Type\_\-Info::free\_\-func, generic\_\-name, icon, IF\_\-FREE, IF\_\-FREE\_\-HASH, IF\_\-FREE\_\-LIST, mime\_\-types, name, not\_\-show\_\-in, only\_\-show\_\-in, orig\_\-path, path, ref, startup\_\-wm\_\-class, try\_\-exec, type, type\_\-data, url, and x.
+
+Referenced by efreet\_\-desktop\_\-new(), and efreet\_\-menu\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-get@{efreet\_\-desktop\_\-get}}
+\index{efreet\_\-desktop\_\-get@{efreet\_\-desktop\_\-get}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Desktop}$\ast$ efreet\_\-desktop\_\-get (const char $\ast$ {\em file})}\label{group__Efreet__Desktop_gc699737258129d367dbe4958315a635d}
+
+
+Gets a reference to an \doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} structure representing the contents of {\em file\/} or NULL if {\em file\/} is not a valid .desktop file. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em file,:}]The file to get the \doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} from \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns a reference to a cached \doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} on success, NULL on failure. This reference should not be freed. \end{Desc}
+
+
+References cache\_\-flush, cached, efreet\_\-desktop\_\-new(), and ref.
+
+Referenced by efreet\_\-util\_\-desktop\_\-file\_\-id\_\-find().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-new@{efreet\_\-desktop\_\-new}}
+\index{efreet\_\-desktop\_\-new@{efreet\_\-desktop\_\-new}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Desktop}$\ast$ efreet\_\-desktop\_\-new (const char $\ast$ {\em file})}\label{group__Efreet__Desktop_g5e091f8933e40c35bbc47fa0682545a2}
+
+
+
+
+References cache\_\-flush, efreet\_\-desktop\_\-free(), NEW, orig\_\-path, and ref.
+
+Referenced by efreet\_\-desktop\_\-get().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-ref@{efreet\_\-desktop\_\-ref}}
+\index{efreet\_\-desktop\_\-ref@{efreet\_\-desktop\_\-ref}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-desktop\_\-ref ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop})}\label{group__Efreet__Desktop_g9c463841ec3ad0eebd1d1871360d0232}
+
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]The \doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} to ref \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns the new reference count \end{Desc}
+
+
+References ref.
+
+Referenced by efreet\_\-menu\_\-desktop\_\-insert(), and efreet\_\-util\_\-desktop\_\-file\_\-id\_\-find().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-save@{efreet\_\-desktop\_\-save}}
+\index{efreet\_\-desktop\_\-save@{efreet\_\-desktop\_\-save}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-desktop\_\-save ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop})}\label{group__Efreet__Desktop_gedecdeec52f1119fe5d46eb06c639980}
+
+
+Saves any changes made to {\em desktop\/} back to the file on the filesystem. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]The desktop file to save \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns 1 on success or 0 on failure \end{Desc}
+
+
+References cached, DESKTOP\_\-VERSION, efreet\_\-desktop\_\-string\_\-list\_\-join(), efreet\_\-ini\_\-double\_\-set(), efreet\_\-ini\_\-free(), efreet\_\-ini\_\-new(), efreet\_\-ini\_\-save(), efreet\_\-ini\_\-section\_\-add(), efreet\_\-ini\_\-section\_\-set(), efreet\_\-ini\_\-string\_\-set(), FREE, not\_\-show\_\-in, only\_\-show\_\-in, orig\_\-path, Efreet\_\-Desktop\_\-Type\_\-Info::save\_\-func, Efreet\_\-Desktop\_\-Type\_\-Info::type, and type.
+
+Referenced by efreet\_\-desktop\_\-save\_\-as().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-save\_\-as@{efreet\_\-desktop\_\-save\_\-as}}
+\index{efreet\_\-desktop\_\-save\_\-as@{efreet\_\-desktop\_\-save\_\-as}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-desktop\_\-save\_\-as ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop}, \/  const char $\ast$ {\em file})}\label{group__Efreet__Desktop_g6b454c8c1e216e5a6c252e1f1a93fd73}
+
+
+Saves {\em desktop\/} to {\em file\/}. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop,:}]The desktop file to save \item[{\em file,:}]The filename to save as \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns 1 on success or 0 on failure \end{Desc}
+
+
+References cached, efreet\_\-desktop\_\-save(), FREE, and orig\_\-path.\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-string\_\-list\_\-join@{efreet\_\-desktop\_\-string\_\-list\_\-join}}
+\index{efreet\_\-desktop\_\-string\_\-list\_\-join@{efreet\_\-desktop\_\-string\_\-list\_\-join}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI char$\ast$ efreet\_\-desktop\_\-string\_\-list\_\-join (Ecore\_\-List $\ast$ {\em list})}\label{group__Efreet__Desktop_gb28f663342e6fc27951712cef1f75487}
+
+
+Create a ';' separate list of strings according to the desktop spec. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em list,:}]Ecore\_\-List with strings \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]a raw string list \end{Desc}
+
+
+Referenced by efreet\_\-desktop\_\-save().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-string\_\-list\_\-parse@{efreet\_\-desktop\_\-string\_\-list\_\-parse}}
+\index{efreet\_\-desktop\_\-string\_\-list\_\-parse@{efreet\_\-desktop\_\-string\_\-list\_\-parse}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI Ecore\_\-List$\ast$ efreet\_\-desktop\_\-string\_\-list\_\-parse (const char $\ast$ {\em string})}\label{group__Efreet__Desktop_gc8a8dd6520696dd971d7939931f58ccb}
+
+
+Parse ';' separate list of strings according to the desktop spec. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em string,:}]the raw string list \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]an Ecore\_\-List of ecore string's \end{Desc}
+\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-type\_\-add@{efreet\_\-desktop\_\-type\_\-add}}
+\index{efreet\_\-desktop\_\-type\_\-add@{efreet\_\-desktop\_\-type\_\-add}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-desktop\_\-type\_\-add (const char $\ast$ {\em type}, \/  {\bf Efreet\_\-Desktop\_\-Type\_\-Parse\_\-Cb} {\em parse\_\-func}, \/  {\bf Efreet\_\-Desktop\_\-Type\_\-Save\_\-Cb} {\em save\_\-func}, \/  {\bf Efreet\_\-Desktop\_\-Type\_\-Free\_\-Cb} {\em free\_\-func})}\label{group__Efreet__Desktop_g14d1a184071d903b83691699ed6b205c}
+
+
+Adds the given type to the list of types in the system. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em type,:}]The type to add to the list of matching types \item[{\em parse\_\-func,:}]a function to parse out custom fields \item[{\em save\_\-func,:}]a function to save data returned from {\em parse\_\-func\/} \item[{\em free\_\-func,:}]a function to free data returned from {\em parse\_\-func\/} \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]Returns the id of the new type \end{Desc}
+
+
+References Efreet\_\-Desktop\_\-Type\_\-Info::free\_\-func, Efreet\_\-Desktop\_\-Type\_\-Info::id, NEW, Efreet\_\-Desktop\_\-Type\_\-Info::parse\_\-func, Efreet\_\-Desktop\_\-Type\_\-Info::save\_\-func, and Efreet\_\-Desktop\_\-Type\_\-Info::type.
+
+Referenced by efreet\_\-desktop\_\-init(), and efreet\_\-desktop\_\-type\_\-alias().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-type\_\-alias@{efreet\_\-desktop\_\-type\_\-alias}}
+\index{efreet\_\-desktop\_\-type\_\-alias@{efreet\_\-desktop\_\-type\_\-alias}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-desktop\_\-type\_\-alias (int {\em from\_\-type}, \/  const char $\ast$ {\em alias})}\label{group__Efreet__Desktop_g24d92c10cb6441cb54bc1e00b6f90e56}
+
+
+Add an alias for an existing desktop type. 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em from\_\-type}]the type to alias (e.g. EFREE\_\-DESKTOP\_\-TYPE\_\-APPLICATION) \item[{\em alias}]the alias \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]the new type id, or -1 if {\tt from\_\-type} was not valid\end{Desc}
+This allows applications to add non-standard types that behave exactly as standard types. 
+
+References efreet\_\-desktop\_\-type\_\-add(), Efreet\_\-Desktop\_\-Type\_\-Info::free\_\-func, Efreet\_\-Desktop\_\-Type\_\-Info::parse\_\-func, and Efreet\_\-Desktop\_\-Type\_\-Info::save\_\-func.\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!efreet\_\-desktop\_\-type\_\-data\_\-get@{efreet\_\-desktop\_\-type\_\-data\_\-get}}
+\index{efreet\_\-desktop\_\-type\_\-data\_\-get@{efreet\_\-desktop\_\-type\_\-data\_\-get}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void$\ast$ efreet\_\-desktop\_\-type\_\-data\_\-get ({\bf Efreet\_\-Desktop} $\ast$ {\em desktop})}\label{group__Efreet__Desktop_g3bdf27d349650a3c936469e662c54152}
+
+
+get type specific data for custom desktop types 
+
+\begin{Desc}
+\item[Parameters:]
+\begin{description}
+\item[{\em desktop}]the desktop \end{description}
+\end{Desc}
+\begin{Desc}
+\item[Returns:]type specific data, or NULL if there is none \end{Desc}
+
+
+References type\_\-data.
+
+\subsection{Variable Documentation}
+\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!EFREET\_\-DESKTOP\_\-TYPE\_\-APPLICATION@{EFREET\_\-DESKTOP\_\-TYPE\_\-APPLICATION}}
+\index{EFREET\_\-DESKTOP\_\-TYPE\_\-APPLICATION@{EFREET\_\-DESKTOP\_\-TYPE\_\-APPLICATION}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int {\bf EFREET\_\-DESKTOP\_\-TYPE\_\-APPLICATION}}\label{group__Efreet__Desktop_gdacc26c08b93f0cba5838215341a902f}
+
+
+
+
+Referenced by efreet\_\-desktop\_\-init().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!EFREET\_\-DESKTOP\_\-TYPE\_\-DIRECTORY@{EFREET\_\-DESKTOP\_\-TYPE\_\-DIRECTORY}}
+\index{EFREET\_\-DESKTOP\_\-TYPE\_\-DIRECTORY@{EFREET\_\-DESKTOP\_\-TYPE\_\-DIRECTORY}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int {\bf EFREET\_\-DESKTOP\_\-TYPE\_\-DIRECTORY}}\label{group__Efreet__Desktop_g5c53a36a0d46b6728401d1b778c772e3}
+
+
+
+
+Referenced by efreet\_\-desktop\_\-init().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!EFREET\_\-DESKTOP\_\-TYPE\_\-LINK@{EFREET\_\-DESKTOP\_\-TYPE\_\-LINK}}
+\index{EFREET\_\-DESKTOP\_\-TYPE\_\-LINK@{EFREET\_\-DESKTOP\_\-TYPE\_\-LINK}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int {\bf EFREET\_\-DESKTOP\_\-TYPE\_\-LINK}}\label{group__Efreet__Desktop_g5c999d5d7e05d0a0fe43e2681087c546}
+
+
+
+
+Referenced by efreet\_\-desktop\_\-init().

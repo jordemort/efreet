@@ -1,0 +1,58 @@
+\section{lib/efreet\_\-menu.h File Reference}
+\label{efreet__menu_8h}\index{lib/efreet\_\-menu.h@{lib/efreet\_\-menu.h}}
+
+
+\subsection{Detailed Description}
+Contains the structures and methods to support the Desktop Menu Specification. 
+
+
+
+
+
+This graph shows which files directly or indirectly include this file:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=420pt]{efreet__menu_8h__dep__incl}
+\end{center}
+\end{figure}
+\subsection*{Data Structures}
+\begin{CompactItemize}
+\item 
+struct {\bf Efreet\_\-Menu}
+\end{CompactItemize}
+\subsection*{Typedefs}
+\begin{CompactItemize}
+\item 
+typedef struct {\bf Efreet\_\-Menu} {\bf Efreet\_\-Menu}
+\end{CompactItemize}
+\subsection*{Enumerations}
+\begin{CompactItemize}
+\item 
+enum {\bf Efreet\_\-Menu\_\-Entry\_\-Type} \{ {\bf EFREET\_\-MENU\_\-ENTRY\_\-MENU}, 
+{\bf EFREET\_\-MENU\_\-ENTRY\_\-DESKTOP}, 
+{\bf EFREET\_\-MENU\_\-ENTRY\_\-SEPARATOR}, 
+{\bf EFREET\_\-MENU\_\-ENTRY\_\-HEADER}
+ \}
+\end{CompactItemize}
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+EAPI int {\bf efreet\_\-menu\_\-desktop\_\-insert} ({\bf Efreet\_\-Menu} $\ast$menu, {\bf Efreet\_\-Desktop} $\ast$desktop, int pos)
+\begin{CompactList}\small\item\em Insert a desktop element in a menu structure. Only accepts desktop files in default directories. \item\end{CompactList}\item 
+EAPI int {\bf efreet\_\-menu\_\-desktop\_\-remove} ({\bf Efreet\_\-Menu} $\ast$menu, {\bf Efreet\_\-Desktop} $\ast$desktop)
+\begin{CompactList}\small\item\em Remove a desktop element in a menu structure. Only accepts desktop files in default directories. \item\end{CompactList}\item 
+EAPI void {\bf efreet\_\-menu\_\-dump} ({\bf Efreet\_\-Menu} $\ast$menu, const char $\ast$indent)
+\begin{CompactList}\small\item\em Dumps the contents of the menu to the command line. \item\end{CompactList}\item 
+EAPI void {\bf efreet\_\-menu\_\-free} ({\bf Efreet\_\-Menu} $\ast$menu)
+\item 
+EAPI {\bf Efreet\_\-Menu} $\ast$ {\bf efreet\_\-menu\_\-get} (void)
+\begin{CompactList}\small\item\em Creates the default menu representation. \item\end{CompactList}\item 
+EAPI int {\bf efreet\_\-menu\_\-kde\_\-legacy\_\-init} (void)
+\begin{CompactList}\small\item\em Initialize legacy kde support. This function blocks while the kde-config script is run. \item\end{CompactList}\item 
+EAPI {\bf Efreet\_\-Menu} $\ast$ {\bf efreet\_\-menu\_\-new} (void)
+\item 
+EAPI {\bf Efreet\_\-Menu} $\ast$ {\bf efreet\_\-menu\_\-parse} (const char $\ast$path)
+\begin{CompactList}\small\item\em Parses the given .menu file and creates the menu representation. \item\end{CompactList}\item 
+EAPI int {\bf efreet\_\-menu\_\-save} ({\bf Efreet\_\-Menu} $\ast$menu, const char $\ast$path)
+\begin{CompactList}\small\item\em Saves the menu to file. \item\end{CompactList}\end{CompactItemize}

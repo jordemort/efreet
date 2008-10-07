@@ -22,6 +22,9 @@
  * @li Icon Theme Specification
  * @li Desktop Entry Specification
  * @li Desktop Menu Specification
+ * @li FDO URI Specification
+ * @li Shared Mime Info Specification
+ * @li Trash Specification
  */
 
 #ifdef EAPI
@@ -55,6 +58,7 @@ extern "C" {
 #include "efreet_desktop.h"
 #include "efreet_menu.h"
 #include "efreet_utils.h"
+#include "efreet_uri.h"
 
 EAPI int efreet_init(void);
 EAPI int efreet_shutdown(void);

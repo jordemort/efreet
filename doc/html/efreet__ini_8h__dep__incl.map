@@ -1,0 +1,13 @@
+<area shape="rect" href="$Efreet_8h.html" title="The file that must be included by any project wishing to use Efreet. Efreet.h provides..." alt="" coords="625,82,708,106">
+<area shape="rect" href="$efreet__private_8h.html" title="Contains methods and defines that are private to the Efreet implementaion." alt="" coords="732,82,860,106">
+<area shape="rect" href="$efreet_8c.html" title="lib/efreet.c" alt="" coords="688,156,771,180">
+<area shape="rect" href="$efreet__base_8c.html" title="lib/efreet_base.c" alt="" coords="795,156,912,180">
+<area shape="rect" href="$efreet__desktop_8c.html" title="lib/efreet_desktop.c" alt="" coords="936,156,1072,180">
+<area shape="rect" href="$efreet__icon_8c.html" title="lib/efreet_icon.c" alt="" coords="1096,156,1208,180">
+<area shape="rect" href="$efreet__ini_8c.html" title="lib/efreet_ini.c" alt="" coords="1232,156,1333,180">
+<area shape="rect" href="$efreet__menu_8c.html" title="lib/efreet_menu.c" alt="" coords="1357,156,1477,180">
+<area shape="rect" href="$efreet__mime_8c.html" title="lib/efreet_mime.c" alt="" coords="5,156,125,180">
+<area shape="rect" href="$efreet__trash_8c.html" title="lib/efreet_trash.c" alt="" coords="149,156,267,180">
+<area shape="rect" href="$efreet__uri_8c.html" title="lib/efreet_uri.c" alt="" coords="291,156,395,180">
+<area shape="rect" href="$efreet__utils_8c.html" title="lib/efreet_utils.c" alt="" coords="419,156,531,180">
+<area shape="rect" href="$efreet__xml_8c.html" title="lib/efreet_xml.c" alt="" coords="555,156,664,180">

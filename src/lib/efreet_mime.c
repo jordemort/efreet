@@ -152,21 +152,15 @@ efreet_mime_type_get(const char *file)
     if ((type = efreet_mime_special_check(file)))
         return type;
 
-    /*
-     * Check magics with priority > 80
-     */
+    /* Check magics with priority > 80 */
     if ((type = efreet_mime_magic_check_priority(file, 0, 80)))
         return type;
 
-    /*
-     * Check globs
-     */
+    /* Check globs */
     if ((type = efreet_mime_globs_type_get(file)))
         return type;
 
-    /*
-     * Check rest of magics
-     */
+    /* Check rest of magics */
     if ((type = efreet_mime_magic_check_priority(file, 80, 0)))
         return type;
 
@@ -174,12 +168,14 @@ efreet_mime_type_get(const char *file)
 }
 
 /**
- * @param file: The file to find the mime type icon
+ * @param mime: The name of the mime type
+ * @param theme: The name of the theme to search icons in
+ * @param size: The wanted size of the icon
  * @return Returns mime type icon path as a string
  * @brief Retreive the mime type icon for a file
  */
 EAPI char *
-efreet_mime_type_icon_get(const char *mime, const char *theme, const char *size)
+efreet_mime_type_icon_get(const char *mime, const char *theme, unsigned int size)
 {
     char *icon = NULL;
     Ecore_List *icons  = NULL;
@@ -198,8 +194,7 @@ efreet_mime_type_icon_get(const char *mime, const char *theme, const char *size)
     pp = p;
     while (*pp)
     {
-        if (*pp == '/')
-            *pp = '-';
+        if (*pp == '/') *pp = '-';
         pp++;
     }
     ecore_list_append(icons, p);
@@ -234,7 +229,6 @@ efreet_mime_type_icon_get(const char *mime, const char *theme, const char *size)
 
     /* Search for icons using list */
     icon = efreet_icon_list_find(theme, icons, size);
-
     ecore_list_destroy(icons);
 
     return icon;
@@ -264,9 +258,7 @@ efreet_mime_globs_type_get(const char *file)
     const char *s;
     char *ext, *mime;
 
-    /*
-     * Check in the extension hash for the type
-     */
+    /* Check in the extension hash for the type */
     ext = strchr(file, '.');
     if (ext)
     {
@@ -282,9 +274,7 @@ efreet_mime_globs_type_get(const char *file)
         }
     }
 
-    /*
-     * Fallback to the other globs if not found
-     */
+    /* Fallback to the other globs if not found */
     ecore_list_first_goto(globs);
     while ((g = ecore_list_next(globs)))
     {
@@ -306,7 +296,6 @@ efreet_mime_globs_type_get(const char *file)
 
 /**
  * @param file: The file to check the mime type
- * @param methods: The methods to use, see Efreet_Mime_Method structure
  * @return Returns mime type as a string
  * @brief Retreive the special mime type of a file
  */
@@ -318,7 +307,6 @@ efreet_mime_special_type_get(const char *file)
 
 /**
  * @param file: The file to check the mime type
- * @param methods: The methods to use, see Efreet_Mime_Method structure
  * @return Returns mime type as a string
  * @brief Retreive the fallback mime type of a file
  */
@@ -602,14 +590,13 @@ efreet_mime_fallback_check(const char *file)
     char buf[32];
     int i;
 
-    if (!(f = fopen(file, "r")))
-        return NULL;
+    if (!(f = fopen(file, "r"))) return NULL;
 
     i = fread(buf, 1, sizeof(buf), f);
     fclose(f);
 
-    if (i == 0)
-        return "application/octet-stream";
+    if (i == 0) return "application/octet-stream";
+
     /*
      * Check for ASCII control characters in the first 32 bytes.
      * Line Feeds, carriage returns, and tabs are ignored as they are
@@ -826,7 +813,7 @@ efreet_mime_shared_mimeinfo_magic_load(const char *file)
     if (fd == -1) return;
 
     data = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
-    if (data == (void *)-1)
+    if (data == MAP_FAILED)
     {
         close(fd);
         return;
@@ -1105,7 +1092,6 @@ efreet_mime_magic_check_priority(const char *file,
             else if ((level > e->indent) && match)
             {
                 fclose(f);
-
                 if (last_mime) return last_mime;
             }
 
