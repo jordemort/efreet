@@ -510,7 +510,7 @@ efreet_desktop_free(Efreet_Desktop *desktop)
 /**
  * @param desktop: The desktop file to work with
  * @param files: The files to be substituted into the exec line
- * @aparam data: The data pointer to pass
+ * @param data: The data pointer to pass
  * @return Returns the Ecore_Exce for @a desktop
  * @brief Parses the @a desktop exec line and returns an Ecore_Exe.
  */
@@ -1467,7 +1467,7 @@ efreet_desktop_command_append_quoted(char *dest, int *size, int *len, char *src)
         while (*p)
         {
             if (*p == '\'')
-                dest = efreet_string_append_char(dest, size, len, '\\');
+                dest = efreet_string_append(dest, size, len, "\'\\\'");
 
             dest = efreet_string_append_char(dest, size, len, *p);
             p++;

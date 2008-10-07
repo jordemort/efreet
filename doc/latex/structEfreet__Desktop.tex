@@ -1,0 +1,244 @@
+\section{Efreet\_\-Desktop Struct Reference}
+\label{structEfreet__Desktop}\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}}
+{\tt \#include $<$efreet\_\-desktop.h$>$}
+
+
+
+\subsection{Detailed Description}
+a parsed representation of a .desktop file 
+
+\doxyref{Efreet\_\-Desktop}{p.}{structEfreet__Desktop} \subsection*{Data Fields}
+\begin{CompactItemize}
+\item 
+int {\bf cache\_\-flush}
+\item 
+unsigned char {\bf cached}:1
+\item 
+Ecore\_\-List $\ast$ {\bf categories}
+\item 
+char $\ast$ {\bf comment}
+\item 
+char $\ast$ {\bf exec}
+\item 
+char $\ast$ {\bf generic\_\-name}
+\item 
+unsigned char {\bf hidden}:1
+\item 
+char $\ast$ {\bf icon}
+\item 
+long long {\bf load\_\-time}
+\item 
+Ecore\_\-List $\ast$ {\bf mime\_\-types}
+\item 
+char $\ast$ {\bf name}
+\item 
+unsigned char {\bf no\_\-display}:1
+\item 
+Ecore\_\-List $\ast$ {\bf not\_\-show\_\-in}
+\item 
+Ecore\_\-List $\ast$ {\bf only\_\-show\_\-in}
+\item 
+char $\ast$ {\bf orig\_\-path}
+\item 
+char $\ast$ {\bf path}
+\item 
+int {\bf ref}
+\item 
+unsigned char {\bf startup\_\-notify}:1
+\item 
+char $\ast$ {\bf startup\_\-wm\_\-class}
+\item 
+unsigned char {\bf terminal}:1
+\item 
+char $\ast$ {\bf try\_\-exec}
+\item 
+int {\bf type}
+\item 
+void $\ast$ {\bf type\_\-data}
+\item 
+char $\ast$ {\bf url}
+\item 
+double {\bf version}
+\item 
+Ecore\_\-Hash $\ast$ {\bf x}
+\end{CompactItemize}
+
+
+\subsection{Field Documentation}
+\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!cache\_\-flush@{cache\_\-flush}}
+\index{cache\_\-flush@{cache\_\-flush}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf Efreet\_\-Desktop::cache\_\-flush}}\label{structEfreet__Desktop_347a0d55faf30d7c8ecfe335ed31a955}
+
+
+cache flush value - internal 
+
+Referenced by efreet\_\-desktop\_\-get(), and efreet\_\-desktop\_\-new().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!cached@{cached}}
+\index{cached@{cached}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned char {\bf Efreet\_\-Desktop::cached}}\label{structEfreet__Desktop_da9b21e059694f31130a4b751435f766}
+
+
+The desktop file is cached by Efreet 
+
+Referenced by efreet\_\-desktop\_\-free(), efreet\_\-desktop\_\-get(), efreet\_\-desktop\_\-save(), and efreet\_\-desktop\_\-save\_\-as().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!categories@{categories}}
+\index{categories@{categories}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Ecore\_\-List$\ast$ {\bf Efreet\_\-Desktop::categories}}\label{structEfreet__Desktop_b32e595bccf7506c16a4bb219f1551fe}
+
+
+Categories in which item should be shown 
+
+Referenced by efreet\_\-desktop\_\-category\_\-add(), efreet\_\-desktop\_\-category\_\-count\_\-get(), efreet\_\-desktop\_\-category\_\-del(), and efreet\_\-desktop\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!comment@{comment}}
+\index{comment@{comment}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::comment}}\label{structEfreet__Desktop_f6b40ba94e3c5b2b67dbf7afdbeb5e86}
+
+
+Tooltip for the entry 
+
+Referenced by efreet\_\-desktop\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!exec@{exec}}
+\index{exec@{exec}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::exec}}\label{structEfreet__Desktop_215ade220b331270fedc16b4a1303c42}
+
+
+Program to execute 
+
+Referenced by efreet\_\-desktop\_\-command\_\-local\_\-get(), efreet\_\-desktop\_\-command\_\-progress\_\-get(), and efreet\_\-desktop\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!generic\_\-name@{generic\_\-name}}
+\index{generic\_\-name@{generic\_\-name}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::generic\_\-name}}\label{structEfreet__Desktop_b04c9646164b21a029b890119d990d44}
+
+
+Generic name of the application 
+
+Referenced by efreet\_\-desktop\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!hidden@{hidden}}
+\index{hidden@{hidden}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned char {\bf Efreet\_\-Desktop::hidden}}\label{structEfreet__Desktop_48f13bc334215e1c064195e796f628fe}
+
+
+User delete the item \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!icon@{icon}}
+\index{icon@{icon}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::icon}}\label{structEfreet__Desktop_e2c4449795b44f1627b422924167cd78}
+
+
+Icon to display in file manager, menus, etc 
+
+Referenced by efreet\_\-desktop\_\-free(), and efreet\_\-menu\_\-desktop\_\-insert().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!load\_\-time@{load\_\-time}}
+\index{load\_\-time@{load\_\-time}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}long long {\bf Efreet\_\-Desktop::load\_\-time}}\label{structEfreet__Desktop_dff174f57eb3279998e632cd0c610843}
+
+
+modified time of .desktop on disk 
+
+Referenced by efreet\_\-desktop\_\-empty\_\-new().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!mime\_\-types@{mime\_\-types}}
+\index{mime\_\-types@{mime\_\-types}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Ecore\_\-List$\ast$ {\bf Efreet\_\-Desktop::mime\_\-types}}\label{structEfreet__Desktop_97fac61787b7630ba3d7d7e72236662a}
+
+
+The mime types supppored by this app 
+
+Referenced by efreet\_\-desktop\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!name@{name}}
+\index{name@{name}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::name}}\label{structEfreet__Desktop_9dbf22c83ca2e8683759fb0ba6dbb9ee}
+
+
+Specific name of the application 
+
+Referenced by efreet\_\-desktop\_\-free(), and efreet\_\-menu\_\-desktop\_\-insert().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!no\_\-display@{no\_\-display}}
+\index{no\_\-display@{no\_\-display}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned char {\bf Efreet\_\-Desktop::no\_\-display}}\label{structEfreet__Desktop_129e57631a604b5878cb1810c1700dcc}
+
+
+Don't display this application in menus \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!not\_\-show\_\-in@{not\_\-show\_\-in}}
+\index{not\_\-show\_\-in@{not\_\-show\_\-in}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Ecore\_\-List$\ast$ {\bf Efreet\_\-Desktop::not\_\-show\_\-in}}\label{structEfreet__Desktop_959def68f54d4331f0ada949c02fa492}
+
+
+list of environments that shoudn't display the icon 
+
+Referenced by efreet\_\-desktop\_\-free(), and efreet\_\-desktop\_\-save().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!only\_\-show\_\-in@{only\_\-show\_\-in}}
+\index{only\_\-show\_\-in@{only\_\-show\_\-in}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Ecore\_\-List$\ast$ {\bf Efreet\_\-Desktop::only\_\-show\_\-in}}\label{structEfreet__Desktop_f5499f52f38b70b10f397b11fcdaf5c3}
+
+
+list of environments that should display the icon 
+
+Referenced by efreet\_\-desktop\_\-free(), and efreet\_\-desktop\_\-save().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!orig\_\-path@{orig\_\-path}}
+\index{orig\_\-path@{orig\_\-path}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::orig\_\-path}}\label{structEfreet__Desktop_6b1d518884fba5e5d6d62052ae2cbbce}
+
+
+original path to .desktop file 
+
+Referenced by efreet\_\-desktop\_\-empty\_\-new(), efreet\_\-desktop\_\-free(), efreet\_\-desktop\_\-new(), efreet\_\-desktop\_\-save(), efreet\_\-desktop\_\-save\_\-as(), and efreet\_\-menu\_\-desktop\_\-insert().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!path@{path}}
+\index{path@{path}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::path}}\label{structEfreet__Desktop_d6d237b38ea6d6efd376e9f9ce993717}
+
+
+Working directory to run app in 
+
+Referenced by efreet\_\-desktop\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!ref@{ref}}
+\index{ref@{ref}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf Efreet\_\-Desktop::ref}}\label{structEfreet__Desktop_82dd15b7a08e9d52f6f083ced1c24b02}
+
+
+reference count - internal 
+
+Referenced by efreet\_\-desktop\_\-empty\_\-new(), efreet\_\-desktop\_\-free(), efreet\_\-desktop\_\-get(), efreet\_\-desktop\_\-new(), and efreet\_\-desktop\_\-ref().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!startup\_\-notify@{startup\_\-notify}}
+\index{startup\_\-notify@{startup\_\-notify}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned char {\bf Efreet\_\-Desktop::startup\_\-notify}}\label{structEfreet__Desktop_72fd8094d961ad63ace1d1ae0a4c6c1d}
+
+
+The starup notify settings of the app \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!startup\_\-wm\_\-class@{startup\_\-wm\_\-class}}
+\index{startup\_\-wm\_\-class@{startup\_\-wm\_\-class}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::startup\_\-wm\_\-class}}\label{structEfreet__Desktop_141378ddcd284d9e46cc4cd3df328601}
+
+
+If specified will map at least one window with the given string as it's WM class or WM name 
+
+Referenced by efreet\_\-desktop\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!terminal@{terminal}}
+\index{terminal@{terminal}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}unsigned char {\bf Efreet\_\-Desktop::terminal}}\label{structEfreet__Desktop_aeb96fb6d054aaa761ad057f255e6bfa}
+
+
+Does the program run in a terminal \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!try\_\-exec@{try\_\-exec}}
+\index{try\_\-exec@{try\_\-exec}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::try\_\-exec}}\label{structEfreet__Desktop_ade3c6db613226ce57d82956c5536eb0}
+
+
+Binary to determine if app is installed 
+
+Referenced by efreet\_\-desktop\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!type@{type}}
+\index{type@{type}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int {\bf Efreet\_\-Desktop::type}}\label{structEfreet__Desktop_7488f1065b51093e8fa7b1f9d66f152f}
+
+
+type of desktop file 
+
+Referenced by efreet\_\-desktop\_\-free(), and efreet\_\-desktop\_\-save().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!type\_\-data@{type\_\-data}}
+\index{type\_\-data@{type\_\-data}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}void$\ast$ {\bf Efreet\_\-Desktop::type\_\-data}}\label{structEfreet__Desktop_5bf9a93bf67a40706e0781ead060b07b}
+
+
+Type specific data for custom types 
+
+Referenced by efreet\_\-desktop\_\-free(), and efreet\_\-desktop\_\-type\_\-data\_\-get().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!url@{url}}
+\index{url@{url}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}char$\ast$ {\bf Efreet\_\-Desktop::url}}\label{structEfreet__Desktop_51521446eb68df89998e5f72fe4dc5e1}
+
+
+URL to access if type is EFREET\_\-TYPE\_\-LINK 
+
+Referenced by efreet\_\-desktop\_\-free().\index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!version@{version}}
+\index{version@{version}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double {\bf Efreet\_\-Desktop::version}}\label{structEfreet__Desktop_f022f39983e020c552f0a08cdcd05ddf}
+
+
+version of spec file conforms to \index{Efreet\_\-Desktop@{Efreet\_\-Desktop}!x@{x}}
+\index{x@{x}!Efreet_Desktop@{Efreet\_\-Desktop}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Ecore\_\-Hash$\ast$ {\bf Efreet\_\-Desktop::x}}\label{structEfreet__Desktop_b450c5c4dd641d29d85db151251061a5}
+
+
+Keep track of all user extensions, keys that begin with X- 
+
+Referenced by efreet\_\-desktop\_\-free().
+
+The documentation for this struct was generated from the following file:\begin{CompactItemize}
+\item 
+lib/{\bf efreet\_\-desktop.h}\end{CompactItemize}

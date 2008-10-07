@@ -1,0 +1,11 @@
+<area shape="rect" href="$Efreet_8h.html" title="The file that must be included by any project wishing to use Efreet. Efreet.h provides..." alt="" coords="1984,81,2051,105">
+<area shape="rect" href="$Efreet__Trash_8h.html" title="Contains the methods used to support the FDO trash specification." alt="" coords="2075,81,2181,105">
+<area shape="rect" href="$efreet__private_8h.html" title="Contains methods and defines that are private to the Efreet implementaion." alt="" coords="936,81,1048,105">
+<area shape="rect" href="$efreet__base_8h.html" title="Contains the methods used to support the FDO base directory specification." alt="" coords="2323,156,2421,180">
+<area shape="rect" href="$efreet__ini_8h.html" title="efreet_ini.h" alt="" coords="1715,156,1800,180">
+<area shape="rect" href="$efreet__icon_8h.html" title="Contains the structures and methods used to support the FDO icon theme specificiation..." alt="" coords="2445,156,2541,180">
+<area shape="rect" href="$efreet__desktop_8h.html" title="Contains the structures and methods used to support the FDO desktop entry specificiation..." alt="" coords="1824,156,1941,180">
+<area shape="rect" href="$efreet__menu_8h.html" title="Contains the structures and methods to support the Desktop Menu Specification." alt="" coords="1965,156,2069,180">
+<area shape="rect" href="$efreet__utils_8h.html" title="efreet_utils.h" alt="" coords="2093,156,2189,180">
+<area shape="rect" href="$efreet__uri_8h.html" title="Contains the methods used to support the FDO URI specification." alt="" coords="2213,156,2299,180">
+<area shape="rect" href="$efreet__xml_8h.html" title="efreet_xml.h" alt="" coords="1368,156,1461,180">
