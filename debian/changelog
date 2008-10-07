@@ -1,3 +1,14 @@
+efreet (0.5.0.050-1) UNRELEASED; urgency=low
+
+  * New upstream version
+  * Bump Standards-Version to 3.8.0
+  * documentation shipped in the upstream tarball
+    - remove b-d on doxygen
+    - no longer build and clean the documentation in debian/rules
+  * Add debian/libefreet0.shlibs
+
+ -- Albin Tonnerre <albin.tonnerre@gmail.com>  Tue, 07 Oct 2008 18:21:52 +0200
+
 efreet (0.5.0.043+doc-1) experimental; urgency=low
 
   * New upstream release
