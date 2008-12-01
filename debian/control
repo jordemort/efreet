@@ -4,7 +4,7 @@ Priority: optional
 Maintainer:  Debian Pkg-e Team <pkg-e-devel@lists.alioth.debian.org>
 Uploaders: Albin Tonnerre <albin.tonnerre@gmail.com>,
  Xavier Oswald <x.oswald@free.fr>, Jan Lübbe <jluebbe@debian.org>
-Build-Depends: debhelper (>= 6), cdbs, libecore-dev
+Build-Depends: debhelper (>= 6), cdbs, libecore-dev, libeina-dev
 Standards-Version: 3.8.0
 Vcs-Git: git://git.debian.org/pkg-e/libs/efreet.git
 Vcs-Browser: http://git.debian.org/?p=pkg-e/libs/efreet.git
@@ -12,7 +12,7 @@ Homepage: http://www.enlightenment.org
 
 Package: libefreet0
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Library that implements freedesktop.org specs for use with E17/EFL
  An implementation of several specifications from freedesktop.org intended for
  use in Enlightenment DR17 (e17) and other applications using the Enlightenment
@@ -29,7 +29,7 @@ Description: Library that implements freedesktop.org specs for use with E17/EFL
 Package: libefreet-dev
 Section: libdevel
 Architecture: any
-Depends: libefreet0 (= ${binary:Version}), libecore-dev
+Depends: ${misc:Depends}, libefreet0 (= ${binary:Version}), libecore-dev, libeina-dev
 Suggests: libefreet-doc
 Description: Development files for libefreet and libefreet-mime
  An implementation of several specifications from freedesktop.org intended for
@@ -45,6 +45,7 @@ Description: Development files for libefreet and libefreet-mime
 
 Package: libefreet-doc
 Section: doc
+Depends: ${misc:Depends}
 Architecture: all
 Enhances: libefreet-dev
 Description: libefreet and libfreet-mime API documentation
