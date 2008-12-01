@@ -25,6 +25,8 @@ struct {\bf Efreet\_\-Menu}
 \begin{CompactItemize}
 \item 
 typedef struct {\bf Efreet\_\-Menu} {\bf Efreet\_\-Menu}
+\item 
+typedef enum {\bf Efreet\_\-Menu\_\-Entry\_\-Type} {\bf Efreet\_\-Menu\_\-Entry\_\-Type}
 \end{CompactItemize}
 \subsection*{Enumerations}
 \begin{CompactItemize}
@@ -44,6 +46,8 @@ EAPI int {\bf efreet\_\-menu\_\-desktop\_\-remove} ({\bf Efreet\_\-Menu} $\ast$m
 \begin{CompactList}\small\item\em Remove a desktop element in a menu structure. Only accepts desktop files in default directories. \item\end{CompactList}\item 
 EAPI void {\bf efreet\_\-menu\_\-dump} ({\bf Efreet\_\-Menu} $\ast$menu, const char $\ast$indent)
 \begin{CompactList}\small\item\em Dumps the contents of the menu to the command line. \item\end{CompactList}\item 
+EAPI void {\bf efreet\_\-menu\_\-file\_\-set} (const char $\ast$file)
+\item 
 EAPI void {\bf efreet\_\-menu\_\-free} ({\bf Efreet\_\-Menu} $\ast$menu)
 \item 
 EAPI {\bf Efreet\_\-Menu} $\ast$ {\bf efreet\_\-menu\_\-get} (void)

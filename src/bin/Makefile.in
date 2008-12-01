@@ -41,9 +41,7 @@ subdir = src/bin
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_attribute.m4 \
-	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
-	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
-	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/configure.in
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -113,37 +111,33 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
-DUMPBIN = @DUMPBIN@
+ECHO = @ECHO@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 ECORE_CFLAGS = @ECORE_CFLAGS@
 ECORE_LIBS = @ECORE_LIBS@
 EGREP = @EGREP@
+EINA_CFLAGS = @EINA_CFLAGS@
+EINA_LIBS = @EINA_LIBS@
 EXEEXT = @EXEEXT@
-FGREP = @FGREP@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
-LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
-LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
-NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
-OTOOL = @OTOOL@
-OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -163,7 +157,6 @@ abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_CC = @ac_ct_CC@
-ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -194,7 +187,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
-lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -208,7 +200,6 @@ sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
 target_alias = @target_alias@
-top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 version_info = @version_info@
@@ -218,6 +209,7 @@ AM_CPPFLAGS = \
 -I. \
 -I$(top_srcdir)/src/lib \
 @ECORE_CFLAGS@ \
+@EINA_CFLAGS@ \
 -DPACKAGE_BIN_DIR=\"$(bindir)\" \
 -DPACKAGE_LIB_DIR=\"$(libdir)\" \
 -DPACKAGE_DATA_DIR=\"$(datadir)/$(PACKAGE)\"
@@ -227,18 +219,18 @@ efreet_test_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la \
 
 efreet_test_LDADD = $(top_builddir)/src/lib/libefreet.la \
                     $(top_builddir)/src/lib/libefreet_mime.la \
-                    @ECORE_LIBS@
+                    @ECORE_LIBS@ @EINA_LIBS@
 
 efreet_test_SOURCES = ef_test.h ef_data_dirs.c ef_icon_theme.c \
 	ef_ini.c ef_utils.c ef_desktop.c ef_menu.c ef_mime.c main.c \
 	$(am__append_1)
 efreet_spec_test_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
-efreet_spec_test_LDADD = $(top_builddir)/src/lib/libefreet.la
+efreet_spec_test_LDADD = $(top_builddir)/src/lib/libefreet.la @EINA_LIBS@
 efreet_spec_test_SOURCES = \
 efreet_spec_test.c
 
 efreet_cache_test_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
-efreet_cache_test_LDADD = $(top_builddir)/src/lib/libefreet.la @ECORE_LIBS@
+efreet_cache_test_LDADD = $(top_builddir)/src/lib/libefreet.la @ECORE_LIBS@ @EINA_LIBS@
 efreet_cache_test_SOURCES = \
 ef_cache.c
 

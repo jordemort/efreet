@@ -2,7 +2,7 @@ rm -f config.cache
 
 AC_INIT(efreet, 0.5.0.050, enlightenment-devel@lists.sourceforge.net)
 AC_PREREQ(2.52)
-AC_CONFIG_SRCDIR(configure.in)
+AC_CONFIG_SRCDIR(configure.ac)
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 
@@ -33,6 +33,7 @@ AC_FUNC_ALLOCA
 PCFLAGS=$CFLAGS
 
 PKG_CHECK_MODULES(ECORE, [ecore >= 0.9.9 ecore-file >= 0.9.9])
+PKG_CHECK_MODULES([EINA], [eina-0])
 
 CFLAGS=$ECORE_CFLAGS" "$CFLAGS
 

@@ -14,6 +14,8 @@ struct {\bf Efreet\_\-Menu}
 \begin{CompactItemize}
 \item 
 typedef struct {\bf Efreet\_\-Menu} {\bf Efreet\_\-Menu}
+\item 
+typedef enum {\bf Efreet\_\-Menu\_\-Entry\_\-Type} {\bf Efreet\_\-Menu\_\-Entry\_\-Type}
 \end{CompactItemize}
 \subsection*{Enumerations}
 \begin{CompactItemize}
@@ -33,6 +35,8 @@ EAPI int {\bf efreet\_\-menu\_\-desktop\_\-remove} ({\bf Efreet\_\-Menu} $\ast$m
 \begin{CompactList}\small\item\em Remove a desktop element in a menu structure. Only accepts desktop files in default directories. \item\end{CompactList}\item 
 EAPI void {\bf efreet\_\-menu\_\-dump} ({\bf Efreet\_\-Menu} $\ast$menu, const char $\ast$indent)
 \begin{CompactList}\small\item\em Dumps the contents of the menu to the command line. \item\end{CompactList}\item 
+EAPI void {\bf efreet\_\-menu\_\-file\_\-set} (const char $\ast$file)
+\item 
 EAPI void {\bf efreet\_\-menu\_\-free} ({\bf Efreet\_\-Menu} $\ast$menu)
 \item 
 EAPI {\bf Efreet\_\-Menu} $\ast$ {\bf efreet\_\-menu\_\-get} (void)
@@ -50,30 +54,33 @@ EAPI int {\bf efreet\_\-menu\_\-save} ({\bf Efreet\_\-Menu} $\ast$menu, const ch
 \subsection{Typedef Documentation}
 \index{Efreet\_\-Menu@{Efreet\_\-Menu}!Efreet\_\-Menu@{Efreet\_\-Menu}}
 \index{Efreet\_\-Menu@{Efreet\_\-Menu}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu} {\bf Efreet\_\-Menu}}\label{group__Efreet__Menu_g09908f95fe36f7e5c52f0b33bf22ebe7}
+\subsubsection[Efreet\_\-Menu]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu} {\bf Efreet\_\-Menu}}\label{group__Efreet__Menu_g09908f95fe36f7e5c52f0b33bf22ebe7}
 
 
-\doxyref{Efreet\_\-Menu}{p.}{structEfreet__Menu} 
+\doxyref{Efreet\_\-Menu}{p.}{structEfreet__Menu} \index{Efreet\_\-Menu@{Efreet\_\-Menu}!Efreet\_\-Menu\_\-Entry\_\-Type@{Efreet\_\-Menu\_\-Entry\_\-Type}}
+\index{Efreet\_\-Menu\_\-Entry\_\-Type@{Efreet\_\-Menu\_\-Entry\_\-Type}!Efreet_Menu@{Efreet\_\-Menu}}
+\subsubsection[Efreet\_\-Menu\_\-Entry\_\-Type]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf Efreet\_\-Menu\_\-Entry\_\-Type} {\bf Efreet\_\-Menu\_\-Entry\_\-Type}}\label{group__Efreet__Menu_gfcc34135a0afead16b11288bb84e1ee9}
+
+
+Efreet\_\-Menu\_\-Entry\_\-Type 
 
 \subsection{Enumeration Type Documentation}
 \index{Efreet\_\-Menu@{Efreet\_\-Menu}!Efreet\_\-Menu\_\-Entry\_\-Type@{Efreet\_\-Menu\_\-Entry\_\-Type}}
 \index{Efreet\_\-Menu\_\-Entry\_\-Type@{Efreet\_\-Menu\_\-Entry\_\-Type}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}enum typedef enum {\bf Efreet\_\-Menu\_\-Entry\_\-Type} {\bf Efreet\_\-Menu\_\-Entry\_\-Type}}\label{group__Efreet__Menu_gfcc34135a0afead16b11288bb84e1ee9}
+\subsubsection[Efreet\_\-Menu\_\-Entry\_\-Type]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Efreet\_\-Menu\_\-Entry\_\-Type}}\label{group__Efreet__Menu_g2991e288d08928c50a4da721f9845150}
 
 
-The type of entry
-
-Efreet\_\-Menu\_\-Entry\_\-Type \begin{Desc}
+The type of entry \begin{Desc}
 \item[Enumerator: ]\par
 \begin{description}
 \index{EFREET\_\-MENU\_\-ENTRY\_\-MENU@{EFREET\_\-MENU\_\-ENTRY\_\-MENU}!Efreet\_\-Menu@{Efreet\_\-Menu}}\index{Efreet\_\-Menu@{Efreet\_\-Menu}!EFREET\_\-MENU\_\-ENTRY\_\-MENU@{EFREET\_\-MENU\_\-ENTRY\_\-MENU}}\item[{\em 
-EFREET\_\-MENU\_\-ENTRY\_\-MENU\label{group__Efreet__Menu_ggfcc34135a0afead16b11288bb84e1ee995b99a26a7a29c6232a5d11852e553b0}
+EFREET\_\-MENU\_\-ENTRY\_\-MENU\label{group__Efreet__Menu_gg2991e288d08928c50a4da721f984515095b99a26a7a29c6232a5d11852e553b0}
 }]\index{EFREET\_\-MENU\_\-ENTRY\_\-DESKTOP@{EFREET\_\-MENU\_\-ENTRY\_\-DESKTOP}!Efreet\_\-Menu@{Efreet\_\-Menu}}\index{Efreet\_\-Menu@{Efreet\_\-Menu}!EFREET\_\-MENU\_\-ENTRY\_\-DESKTOP@{EFREET\_\-MENU\_\-ENTRY\_\-DESKTOP}}\item[{\em 
-EFREET\_\-MENU\_\-ENTRY\_\-DESKTOP\label{group__Efreet__Menu_ggfcc34135a0afead16b11288bb84e1ee97bc15931eec4e3eaadabbf8ff660846e}
+EFREET\_\-MENU\_\-ENTRY\_\-DESKTOP\label{group__Efreet__Menu_gg2991e288d08928c50a4da721f98451507bc15931eec4e3eaadabbf8ff660846e}
 }]\index{EFREET\_\-MENU\_\-ENTRY\_\-SEPARATOR@{EFREET\_\-MENU\_\-ENTRY\_\-SEPARATOR}!Efreet\_\-Menu@{Efreet\_\-Menu}}\index{Efreet\_\-Menu@{Efreet\_\-Menu}!EFREET\_\-MENU\_\-ENTRY\_\-SEPARATOR@{EFREET\_\-MENU\_\-ENTRY\_\-SEPARATOR}}\item[{\em 
-EFREET\_\-MENU\_\-ENTRY\_\-SEPARATOR\label{group__Efreet__Menu_ggfcc34135a0afead16b11288bb84e1ee9ab46ba48b96defa4a361586bd55fd372}
+EFREET\_\-MENU\_\-ENTRY\_\-SEPARATOR\label{group__Efreet__Menu_gg2991e288d08928c50a4da721f9845150ab46ba48b96defa4a361586bd55fd372}
 }]\index{EFREET\_\-MENU\_\-ENTRY\_\-HEADER@{EFREET\_\-MENU\_\-ENTRY\_\-HEADER}!Efreet\_\-Menu@{Efreet\_\-Menu}}\index{Efreet\_\-Menu@{Efreet\_\-Menu}!EFREET\_\-MENU\_\-ENTRY\_\-HEADER@{EFREET\_\-MENU\_\-ENTRY\_\-HEADER}}\item[{\em 
-EFREET\_\-MENU\_\-ENTRY\_\-HEADER\label{group__Efreet__Menu_ggfcc34135a0afead16b11288bb84e1ee9ff8d7a1d423f60192584b1f848b5111a}
+EFREET\_\-MENU\_\-ENTRY\_\-HEADER\label{group__Efreet__Menu_gg2991e288d08928c50a4da721f9845150ff8d7a1d423f60192584b1f848b5111a}
 }]\end{description}
 \end{Desc}
 
@@ -82,7 +89,7 @@ EFREET\_\-MENU\_\-ENTRY\_\-HEADER\label{group__Efreet__Menu_ggfcc34135a0afead16b
 \subsection{Function Documentation}
 \index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-desktop\_\-insert@{efreet\_\-menu\_\-desktop\_\-insert}}
 \index{efreet\_\-menu\_\-desktop\_\-insert@{efreet\_\-menu\_\-desktop\_\-insert}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-menu\_\-desktop\_\-insert ({\bf Efreet\_\-Menu} $\ast$ {\em menu}, \/  {\bf Efreet\_\-Desktop} $\ast$ {\em desktop}, \/  int {\em pos})}\label{group__Efreet__Menu_gf1c11a64afde454ca91eb3f633bbb40e}
+\subsubsection[efreet\_\-menu\_\-desktop\_\-insert]{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-menu\_\-desktop\_\-insert ({\bf Efreet\_\-Menu} $\ast$ {\em menu}, \/  {\bf Efreet\_\-Desktop} $\ast$ {\em desktop}, \/  int {\em pos})}\label{group__Efreet__Menu_gf1c11a64afde454ca91eb3f633bbb40e}
 
 
 Insert a desktop element in a menu structure. Only accepts desktop files in default directories. 
@@ -98,7 +105,7 @@ Insert a desktop element in a menu structure. Only accepts desktop files in defa
 
 References desktop, efreet\_\-desktop\_\-ref(), EFREET\_\-MENU\_\-ENTRY\_\-DESKTOP, efreet\_\-menu\_\-free(), efreet\_\-util\_\-path\_\-to\_\-file\_\-id(), entries, icon, Efreet\_\-Desktop::icon, id, Efreet\_\-Desktop::name, name, Efreet\_\-Desktop::orig\_\-path, and type.\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-desktop\_\-remove@{efreet\_\-menu\_\-desktop\_\-remove}}
 \index{efreet\_\-menu\_\-desktop\_\-remove@{efreet\_\-menu\_\-desktop\_\-remove}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-menu\_\-desktop\_\-remove ({\bf Efreet\_\-Menu} $\ast$ {\em menu}, \/  {\bf Efreet\_\-Desktop} $\ast$ {\em desktop})}\label{group__Efreet__Menu_g1bf348dcb934df0c68c66423e5f654e3}
+\subsubsection[efreet\_\-menu\_\-desktop\_\-remove]{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-menu\_\-desktop\_\-remove ({\bf Efreet\_\-Menu} $\ast$ {\em menu}, \/  {\bf Efreet\_\-Desktop} $\ast$ {\em desktop})}\label{group__Efreet__Menu_g1bf348dcb934df0c68c66423e5f654e3}
 
 
 Remove a desktop element in a menu structure. Only accepts desktop files in default directories. 
@@ -114,7 +121,7 @@ Remove a desktop element in a menu structure. Only accepts desktop files in defa
 
 References efreet\_\-menu\_\-free(), and entries.\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-dump@{efreet\_\-menu\_\-dump}}
 \index{efreet\_\-menu\_\-dump@{efreet\_\-menu\_\-dump}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-menu\_\-dump ({\bf Efreet\_\-Menu} $\ast$ {\em menu}, \/  const char $\ast$ {\em indent})}\label{group__Efreet__Menu_g445a9797e15c07aa1078049406642d4c}
+\subsubsection[efreet\_\-menu\_\-dump]{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-menu\_\-dump ({\bf Efreet\_\-Menu} $\ast$ {\em menu}, \/  const char $\ast$ {\em indent})}\label{group__Efreet__Menu_g445a9797e15c07aa1078049406642d4c}
 
 
 Dumps the contents of the menu to the command line. 
@@ -130,9 +137,16 @@ Dumps the contents of the menu to the command line.
 
 References efreet\_\-menu\_\-dump(), EFREET\_\-MENU\_\-ENTRY\_\-DESKTOP, EFREET\_\-MENU\_\-ENTRY\_\-HEADER, EFREET\_\-MENU\_\-ENTRY\_\-MENU, EFREET\_\-MENU\_\-ENTRY\_\-SEPARATOR, entries, FREE, icon, name, and type.
 
-Referenced by efreet\_\-menu\_\-dump().\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-free@{efreet\_\-menu\_\-free}}
+Referenced by efreet\_\-menu\_\-dump().\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-file\_\-set@{efreet\_\-menu\_\-file\_\-set}}
+\index{efreet\_\-menu\_\-file\_\-set@{efreet\_\-menu\_\-file\_\-set}!Efreet_Menu@{Efreet\_\-Menu}}
+\subsubsection[efreet\_\-menu\_\-file\_\-set]{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-menu\_\-file\_\-set (const char $\ast$ {\em file})}\label{group__Efreet__Menu_gadcdb186416a35f0df4549c13cf6f6cf}
+
+
+
+
+References IF\_\-FREE.\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-free@{efreet\_\-menu\_\-free}}
 \index{efreet\_\-menu\_\-free@{efreet\_\-menu\_\-free}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-menu\_\-free ({\bf Efreet\_\-Menu} $\ast$ {\em menu})}\label{group__Efreet__Menu_g4ba4b3356a67ccced67cbb3f928a5f71}
+\subsubsection[efreet\_\-menu\_\-free]{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-menu\_\-free ({\bf Efreet\_\-Menu} $\ast$ {\em menu})}\label{group__Efreet__Menu_g4ba4b3356a67ccced67cbb3f928a5f71}
 
 
 
@@ -141,7 +155,7 @@ References desktop, efreet\_\-desktop\_\-free(), entries, FREE, icon, id, IF\_\-
 
 Referenced by efreet\_\-menu\_\-desktop\_\-insert(), and efreet\_\-menu\_\-desktop\_\-remove().\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-get@{efreet\_\-menu\_\-get}}
 \index{efreet\_\-menu\_\-get@{efreet\_\-menu\_\-get}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Menu}$\ast$ efreet\_\-menu\_\-get (void)}\label{group__Efreet__Menu_gbcc191a4bdead7b3275b15c3e9ef4eb5}
+\subsubsection[efreet\_\-menu\_\-get]{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Menu}$\ast$ efreet\_\-menu\_\-get (void)}\label{group__Efreet__Menu_gbcc191a4bdead7b3275b15c3e9ef4eb5}
 
 
 Creates the default menu representation. 
@@ -152,7 +166,7 @@ Creates the default menu representation.
 
 References efreet\_\-config\_\-dirs\_\-get(), efreet\_\-config\_\-home\_\-get(), efreet\_\-menu\_\-parse(), and PATH\_\-MAX.\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-kde\_\-legacy\_\-init@{efreet\_\-menu\_\-kde\_\-legacy\_\-init}}
 \index{efreet\_\-menu\_\-kde\_\-legacy\_\-init@{efreet\_\-menu\_\-kde\_\-legacy\_\-init}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-menu\_\-kde\_\-legacy\_\-init (void)}\label{group__Efreet__Menu_g5f6bbd2bfcd4e5f0407131e73cc92fdc}
+\subsubsection[efreet\_\-menu\_\-kde\_\-legacy\_\-init]{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-menu\_\-kde\_\-legacy\_\-init (void)}\label{group__Efreet__Menu_g5f6bbd2bfcd4e5f0407131e73cc92fdc}
 
 
 Initialize legacy kde support. This function blocks while the kde-config script is run. 
@@ -163,14 +177,14 @@ Initialize legacy kde support. This function blocks while the kde-config script 
 
 References efreet\_\-menu\_\-kde\_\-legacy\_\-dirs, IF\_\-FREE\_\-LIST, and PATH\_\-MAX.\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-new@{efreet\_\-menu\_\-new}}
 \index{efreet\_\-menu\_\-new@{efreet\_\-menu\_\-new}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Menu}$\ast$ efreet\_\-menu\_\-new (void)}\label{group__Efreet__Menu_ga6bc44723abb9aa9f4cfdba407584365}
+\subsubsection[efreet\_\-menu\_\-new]{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Menu}$\ast$ efreet\_\-menu\_\-new (void)}\label{group__Efreet__Menu_ga6bc44723abb9aa9f4cfdba407584365}
 
 
 
 
 References EFREET\_\-MENU\_\-ENTRY\_\-MENU, and type.\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-parse@{efreet\_\-menu\_\-parse}}
 \index{efreet\_\-menu\_\-parse@{efreet\_\-menu\_\-parse}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Menu}$\ast$ efreet\_\-menu\_\-parse (const char $\ast$ {\em path})}\label{group__Efreet__Menu_gc8d3fa8eb7de1b0f8f96a9c5445a0fb3}
+\subsubsection[efreet\_\-menu\_\-parse]{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Menu}$\ast$ efreet\_\-menu\_\-parse (const char $\ast$ {\em path})}\label{group__Efreet__Menu_gc8d3fa8eb7de1b0f8f96a9c5445a0fb3}
 
 
 Parses the given .menu file and creates the menu representation. 
@@ -188,7 +202,7 @@ References efreet\_\-config\_\-dirs\_\-get(), efreet\_\-xml\_\-del(), efreet\_\-
 
 Referenced by efreet\_\-menu\_\-get().\index{Efreet\_\-Menu@{Efreet\_\-Menu}!efreet\_\-menu\_\-save@{efreet\_\-menu\_\-save}}
 \index{efreet\_\-menu\_\-save@{efreet\_\-menu\_\-save}!Efreet_Menu@{Efreet\_\-Menu}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-menu\_\-save ({\bf Efreet\_\-Menu} $\ast$ {\em menu}, \/  const char $\ast$ {\em path})}\label{group__Efreet__Menu_g28b19d718e24db680d97ee90fa76cd9e}
+\subsubsection[efreet\_\-menu\_\-save]{\setlength{\rightskip}{0pt plus 5cm}EAPI int efreet\_\-menu\_\-save ({\bf Efreet\_\-Menu} $\ast$ {\em menu}, \/  const char $\ast$ {\em path})}\label{group__Efreet__Menu_g28b19d718e24db680d97ee90fa76cd9e}
 
 
 Saves the menu to file. 

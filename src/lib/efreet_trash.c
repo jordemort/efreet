@@ -44,7 +44,7 @@ efreet_trash_dir_get(void)
         return NULL;
 
     IF_RELEASE(efreet_trash_dir);
-    efreet_trash_dir = ecore_string_instance(buf);
+    efreet_trash_dir = eina_stringshare_add(buf);
 
     snprintf(buf, sizeof(buf), "%s/files", efreet_trash_dir);
     if (!ecore_file_exists(buf) && !ecore_file_mkpath(buf))
@@ -113,7 +113,7 @@ efreet_trash_delete_uri(Efreet_Uri *uri, int force_delete)
     snprintf(dest, PATH_MAX, "%s/info/%s.trashinfo",
              efreet_trash_dir_get(), fname);
 
-    if (f = fopen(dest, "w"))
+    if ((f = fopen(dest, "w")))
     {
         fputs("[Trash Info]\n", f); //TODO is '\n' right?? (or \r\c??)
 
@@ -191,7 +191,7 @@ efreet_trash_ls(void)
     snprintf(buf, PATH_MAX, "%s/files", efreet_trash_dir_get());
     files = ecore_file_ls(buf);
 
-    while (infofile = ecore_list_next(files))
+    while ((infofile = ecore_list_next(files)))
         printf("FILE: %s\n", infofile);
 
     return files;

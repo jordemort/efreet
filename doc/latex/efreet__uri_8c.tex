@@ -19,6 +19,6 @@ Include dependency graph for efreet\_\-uri.c:\nopagebreak
 EAPI {\bf Efreet\_\-Uri} $\ast$ {\bf efreet\_\-uri\_\-decode} (const char $\ast$full\_\-uri)
 \begin{CompactList}\small\item\em Read a single uri and return an \doxyref{Efreet\_\-Uri}{p.}{structEfreet__Uri} struct. If there's no hostname in the uri then the hostname parameter will be NULL. All the uri escaped chars will be converted to normal. \item\end{CompactList}\item 
 EAPI const char $\ast$ {\bf efreet\_\-uri\_\-encode} ({\bf Efreet\_\-Uri} $\ast$uri)
-\begin{CompactList}\small\item\em Get the string rapresentation of the given uri struct escaping illegal caracters. Remember to free the string with ecore\_\-string\_\-release() when you don't need it anymore. \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em Get the string rapresentation of the given uri struct escaping illegal caracters. Remember to free the string with eina\_\-stringshare\_\-del() when you don't need it anymore. \item\end{CompactList}\item 
 EAPI void {\bf efreet\_\-uri\_\-free} ({\bf Efreet\_\-Uri} $\ast$uri)
 \begin{CompactList}\small\item\em Free the given uri structure. \item\end{CompactList}\end{CompactItemize}

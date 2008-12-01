@@ -18,7 +18,7 @@ typedef struct {\bf Efreet\_\-Uri} {\bf Efreet\_\-Uri}
 EAPI {\bf Efreet\_\-Uri} $\ast$ {\bf efreet\_\-uri\_\-decode} (const char $\ast$val)
 \begin{CompactList}\small\item\em Read a single uri and return an \doxyref{Efreet\_\-Uri}{p.}{structEfreet__Uri} struct. If there's no hostname in the uri then the hostname parameter will be NULL. All the uri escaped chars will be converted to normal. \item\end{CompactList}\item 
 EAPI const char $\ast$ {\bf efreet\_\-uri\_\-encode} ({\bf Efreet\_\-Uri} $\ast$uri)
-\begin{CompactList}\small\item\em Get the string rapresentation of the given uri struct escaping illegal caracters. Remember to free the string with ecore\_\-string\_\-release() when you don't need it anymore. \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em Get the string rapresentation of the given uri struct escaping illegal caracters. Remember to free the string with eina\_\-stringshare\_\-del() when you don't need it anymore. \item\end{CompactList}\item 
 EAPI void {\bf efreet\_\-uri\_\-free} ({\bf Efreet\_\-Uri} $\ast$uri)
 \begin{CompactList}\small\item\em Free the given uri structure. \item\end{CompactList}\end{CompactItemize}
 
@@ -26,7 +26,7 @@ EAPI void {\bf efreet\_\-uri\_\-free} ({\bf Efreet\_\-Uri} $\ast$uri)
 \subsection{Typedef Documentation}
 \index{Efreet\_\-Uri@{Efreet\_\-Uri}!Efreet\_\-Uri@{Efreet\_\-Uri}}
 \index{Efreet\_\-Uri@{Efreet\_\-Uri}!Efreet_Uri@{Efreet\_\-Uri}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Uri} {\bf Efreet\_\-Uri}}\label{group__Efreet__Uri_g9bc07d74f1c8d59c170855a97960d099}
+\subsubsection[Efreet\_\-Uri]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Uri} {\bf Efreet\_\-Uri}}\label{group__Efreet__Uri_g9bc07d74f1c8d59c170855a97960d099}
 
 
 \doxyref{Efreet\_\-Uri}{p.}{structEfreet__Uri} 
@@ -34,7 +34,7 @@ EAPI void {\bf efreet\_\-uri\_\-free} ({\bf Efreet\_\-Uri} $\ast$uri)
 \subsection{Function Documentation}
 \index{Efreet\_\-Uri@{Efreet\_\-Uri}!efreet\_\-uri\_\-decode@{efreet\_\-uri\_\-decode}}
 \index{efreet\_\-uri\_\-decode@{efreet\_\-uri\_\-decode}!Efreet_Uri@{Efreet\_\-Uri}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Uri}$\ast$ efreet\_\-uri\_\-decode (const char $\ast$ {\em full\_\-uri})}\label{group__Efreet__Uri_g06d8e290a64afd6b68e47b6b3cf75a2c}
+\subsubsection[efreet\_\-uri\_\-decode]{\setlength{\rightskip}{0pt plus 5cm}EAPI {\bf Efreet\_\-Uri}$\ast$ efreet\_\-uri\_\-decode (const char $\ast$ {\em full\_\-uri})}\label{group__Efreet__Uri_g06d8e290a64afd6b68e47b6b3cf75a2c}
 
 
 Read a single uri and return an \doxyref{Efreet\_\-Uri}{p.}{structEfreet__Uri} struct. If there's no hostname in the uri then the hostname parameter will be NULL. All the uri escaped chars will be converted to normal. 
@@ -50,10 +50,10 @@ Read a single uri and return an \doxyref{Efreet\_\-Uri}{p.}{structEfreet__Uri} s
 
 References hostname, NEW, path, PATH\_\-MAX, and protocol.\index{Efreet\_\-Uri@{Efreet\_\-Uri}!efreet\_\-uri\_\-encode@{efreet\_\-uri\_\-encode}}
 \index{efreet\_\-uri\_\-encode@{efreet\_\-uri\_\-encode}!Efreet_Uri@{Efreet\_\-Uri}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI const char$\ast$ efreet\_\-uri\_\-encode ({\bf Efreet\_\-Uri} $\ast$ {\em uri})}\label{group__Efreet__Uri_g668a8bf014f6a5113d625875459f88d7}
+\subsubsection[efreet\_\-uri\_\-encode]{\setlength{\rightskip}{0pt plus 5cm}EAPI const char$\ast$ efreet\_\-uri\_\-encode ({\bf Efreet\_\-Uri} $\ast$ {\em uri})}\label{group__Efreet__Uri_g668a8bf014f6a5113d625875459f88d7}
 
 
-Get the string rapresentation of the given uri struct escaping illegal caracters. Remember to free the string with ecore\_\-string\_\-release() when you don't need it anymore. 
+Get the string rapresentation of the given uri struct escaping illegal caracters. Remember to free the string with eina\_\-stringshare\_\-del() when you don't need it anymore. 
 
 \begin{Desc}
 \item[Parameters:]
@@ -70,7 +70,7 @@ References path, PATH\_\-MAX, and protocol.
 
 Referenced by efreet\_\-trash\_\-delete\_\-uri().\index{Efreet\_\-Uri@{Efreet\_\-Uri}!efreet\_\-uri\_\-free@{efreet\_\-uri\_\-free}}
 \index{efreet\_\-uri\_\-free@{efreet\_\-uri\_\-free}!Efreet_Uri@{Efreet\_\-Uri}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-uri\_\-free ({\bf Efreet\_\-Uri} $\ast$ {\em uri})}\label{group__Efreet__Uri_gee92487db4d3a36504e019f597a27914}
+\subsubsection[efreet\_\-uri\_\-free]{\setlength{\rightskip}{0pt plus 5cm}EAPI void efreet\_\-uri\_\-free ({\bf Efreet\_\-Uri} $\ast$ {\em uri})}\label{group__Efreet__Uri_gee92487db4d3a36504e019f597a27914}
 
 
 Free the given uri structure. 

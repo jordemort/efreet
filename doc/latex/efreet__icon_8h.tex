@@ -34,7 +34,11 @@ typedef struct {\bf Efreet\_\-Icon} {\bf Efreet\_\-Icon}
 \item 
 typedef struct {\bf Efreet\_\-Icon\_\-Point} {\bf Efreet\_\-Icon\_\-Point}
 \item 
+typedef enum {\bf Efreet\_\-Icon\_\-Size\_\-Type} {\bf Efreet\_\-Icon\_\-Size\_\-Type}
+\item 
 typedef struct {\bf Efreet\_\-Icon\_\-Theme} {\bf Efreet\_\-Icon\_\-Theme}
+\item 
+typedef enum {\bf Efreet\_\-Icon\_\-Theme\_\-Context} {\bf Efreet\_\-Icon\_\-Theme\_\-Context}
 \item 
 typedef struct {\bf Efreet\_\-Icon\_\-Theme\_\-Directory} {\bf Efreet\_\-Icon\_\-Theme\_\-Directory}
 \end{CompactItemize}
@@ -62,7 +66,7 @@ enum {\bf Efreet\_\-Icon\_\-Theme\_\-Context} \{ \par
 EAPI void {\bf efreet\_\-icon\_\-extension\_\-add} (const char $\ast$ext)
 \begin{CompactList}\small\item\em Adds the given extension to the list of possible icon extensions. \item\end{CompactList}\item 
 EAPI Ecore\_\-List $\ast$ {\bf efreet\_\-icon\_\-extra\_\-list\_\-get} (void)
-\begin{CompactList}\small\item\em Gets the list of all extra directories to look for icons. These directories are used to look for icons after looking in the user icon dir and before looking in standard system directories. The order of search is from first to last directory in this list. the strings in the list should be created with ecore\_\-string\_\-instance(). \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em Gets the list of all extra directories to look for icons. These directories are used to look for icons after looking in the user icon dir and before looking in standard system directories. The order of search is from first to last directory in this list. the strings in the list should be created with eina\_\-stringshare\_\-add(). \item\end{CompactList}\item 
 EAPI {\bf Efreet\_\-Icon} $\ast$ {\bf efreet\_\-icon\_\-find} (const char $\ast$theme\_\-name, const char $\ast$icon, unsigned int size)
 \begin{CompactList}\small\item\em Retrieves all of the information about the given icon. \item\end{CompactList}\item 
 EAPI void {\bf efreet\_\-icon\_\-free} ({\bf Efreet\_\-Icon} $\ast$icon)
