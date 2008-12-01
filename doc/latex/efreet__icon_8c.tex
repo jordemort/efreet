@@ -36,7 +36,7 @@ const char $\ast$ {\bf efreet\_\-icon\_\-deprecated\_\-user\_\-dir\_\-get} (void
 EAPI void {\bf efreet\_\-icon\_\-extension\_\-add} (const char $\ast$ext)
 \begin{CompactList}\small\item\em Adds the given extension to the list of possible icon extensions. \item\end{CompactList}\item 
 EAPI Ecore\_\-List $\ast$ {\bf efreet\_\-icon\_\-extra\_\-list\_\-get} (void)
-\begin{CompactList}\small\item\em Gets the list of all extra directories to look for icons. These directories are used to look for icons after looking in the user icon dir and before looking in standard system directories. The order of search is from first to last directory in this list. the strings in the list should be created with ecore\_\-string\_\-instance(). \item\end{CompactList}\item 
+\begin{CompactList}\small\item\em Gets the list of all extra directories to look for icons. These directories are used to look for icons after looking in the user icon dir and before looking in standard system directories. The order of search is from first to last directory in this list. the strings in the list should be created with eina\_\-stringshare\_\-add(). \item\end{CompactList}\item 
 EAPI {\bf Efreet\_\-Icon} $\ast$ {\bf efreet\_\-icon\_\-find} (const char $\ast$theme\_\-name, const char $\ast$icon, unsigned int size)
 \begin{CompactList}\small\item\em Retrieves all of the information about the given icon. \item\end{CompactList}\item 
 EAPI void {\bf efreet\_\-icon\_\-free} ({\bf Efreet\_\-Icon} $\ast$icon)
@@ -60,7 +60,7 @@ EAPI const char $\ast$ {\bf efreet\_\-icon\_\-user\_\-dir\_\-get} (void)
 \subsection{Define Documentation}
 \index{efreet\_\-icon.c@{efreet\_\-icon.c}!NON\_\-EXISTING@{NON\_\-EXISTING}}
 \index{NON\_\-EXISTING@{NON\_\-EXISTING}!efreet_icon.c@{efreet\_\-icon.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}\#define NON\_\-EXISTING~(void $\ast$)-1}\label{efreet__icon_8c_3da87339a2ab67dd100b8fc9efa92247}
+\subsubsection[NON\_\-EXISTING]{\setlength{\rightskip}{0pt plus 5cm}\#define NON\_\-EXISTING~(void $\ast$)-1}\label{efreet__icon_8c_3da87339a2ab67dd100b8fc9efa92247}
 
 
 
@@ -70,7 +70,7 @@ Referenced by efreet\_\-icon\_\-list\_\-find(), and efreet\_\-icon\_\-path\_\-fi
 \subsection{Typedef Documentation}
 \index{efreet\_\-icon.c@{efreet\_\-icon.c}!Efreet\_\-Icon\_\-Cache@{Efreet\_\-Icon\_\-Cache}}
 \index{Efreet\_\-Icon\_\-Cache@{Efreet\_\-Icon\_\-Cache}!efreet_icon.c@{efreet\_\-icon.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Icon\_\-Cache} {\bf Efreet\_\-Icon\_\-Cache}}\label{efreet__icon_8c_357003192381c449f058fd0380580be7}
+\subsubsection[Efreet\_\-Icon\_\-Cache]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Icon\_\-Cache} {\bf Efreet\_\-Icon\_\-Cache}}\label{efreet__icon_8c_357003192381c449f058fd0380580be7}
 
 
 
@@ -78,7 +78,7 @@ Referenced by efreet\_\-icon\_\-list\_\-find(), and efreet\_\-icon\_\-path\_\-fi
 \subsection{Function Documentation}
 \index{efreet\_\-icon.c@{efreet\_\-icon.c}!efreet\_\-icon\_\-deprecated\_\-user\_\-dir\_\-get@{efreet\_\-icon\_\-deprecated\_\-user\_\-dir\_\-get}}
 \index{efreet\_\-icon\_\-deprecated\_\-user\_\-dir\_\-get@{efreet\_\-icon\_\-deprecated\_\-user\_\-dir\_\-get}!efreet_icon.c@{efreet\_\-icon.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ efreet\_\-icon\_\-deprecated\_\-user\_\-dir\_\-get (void)}\label{efreet__icon_8c_cc8dbdb67b18a402ac80b3121bb590e5}
+\subsubsection[efreet\_\-icon\_\-deprecated\_\-user\_\-dir\_\-get]{\setlength{\rightskip}{0pt plus 5cm}const char$\ast$ efreet\_\-icon\_\-deprecated\_\-user\_\-dir\_\-get (void)}\label{efreet__icon_8c_cc8dbdb67b18a402ac80b3121bb590e5}
 
 
 Returns the user icon directory. 

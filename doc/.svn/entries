@@ -1,9 +1,9 @@
-8
+9
 
 dir
-36361
-svn+ssh://caro@svn.enlightenment.org/var/svn/e/trunk/efreet/doc
-svn+ssh://caro@svn.enlightenment.org/var/svn/e
+37879
+http://svn.enlightenment.org/svn/e/trunk/efreet/doc
+http://svn.enlightenment.org/svn/e
 
 
 
@@ -32,12 +32,33 @@ file
 
 
 
-2008-08-26T16:25:44.000000Z
+2008-11-30T23:29:37.000000Z
 7ca35254783a205d404dce560d7d9b99
 2008-08-02T22:39:43.000000Z
 35310
 dj2
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2207
 
 images
 dir
@@ -48,12 +69,33 @@ file
 
 
 
-2008-08-26T16:25:44.000000Z
+2008-11-30T23:29:37.000000Z
 0769406ae85ea7898a1edcab5c743908
 2007-03-27T01:31:55.000000Z
 29192
 dj2
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+162
 
 e.css
 file
@@ -61,12 +103,33 @@ file
 
 
 
-2008-08-26T16:25:44.000000Z
+2008-11-30T23:29:37.000000Z
 535bea3f1be30612d3c4c8c2e090dc4a
 2007-03-27T01:42:17.000000Z
 29193
 dj2
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3371
 
 .cvsignore
 file
@@ -74,10 +137,31 @@ file
 
 
 
-2008-08-26T16:25:44.000000Z
+2008-11-30T23:29:37.000000Z
 53af091acdc004aa3d70015b2cc3072f
 2007-03-27T01:31:55.000000Z
 29192
 dj2
 has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+11
 

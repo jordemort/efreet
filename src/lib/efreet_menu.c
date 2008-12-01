@@ -210,6 +210,7 @@ struct Efreet_Menu_Desktop
 static char *efreet_menu_prefix = NULL; /**< The $XDG_MENU_PREFIX env var */
 Ecore_List *efreet_menu_kde_legacy_dirs = NULL; /**< The directories to use for KDELegacy entries */
 static const char *efreet_tag_menu = NULL;
+static char *efreet_menu_file = NULL; /**< A menu file set explicityl as default */
 
 static Ecore_Hash *efreet_merged_menus = NULL;
 static Ecore_Hash *efreet_merged_dirs = NULL;
@@ -435,7 +436,7 @@ efreet_menu_init(void)
         {NULL, NULL}
     };
 
-    if (!ecore_string_init()) return 0;
+    if (!eina_stringshare_init()) return 0;
     if (!efreet_xml_init()) return 0;
 
     efreet_menu_handle_cbs = ecore_hash_new(NULL, NULL);
@@ -447,36 +448,36 @@ efreet_menu_init(void)
         return 0;
 
     ecore_hash_free_key_cb_set(efreet_menu_handle_cbs,
-                        ECORE_FREE_CB(ecore_string_release));
+                        ECORE_FREE_CB(eina_stringshare_del));
     ecore_hash_free_key_cb_set(efreet_menu_filter_cbs,
-                        ECORE_FREE_CB(ecore_string_release));
+                        ECORE_FREE_CB(eina_stringshare_del));
     ecore_hash_free_key_cb_set(efreet_menu_move_cbs,
-                        ECORE_FREE_CB(ecore_string_release));
+                        ECORE_FREE_CB(eina_stringshare_del));
     ecore_hash_free_key_cb_set(efreet_menu_layout_cbs,
-                        ECORE_FREE_CB(ecore_string_release));
+                        ECORE_FREE_CB(eina_stringshare_del));
 
     /* set Menu into it's own so we can check the XML is valid before trying
      * to handle it */
-    efreet_tag_menu = ecore_string_instance(menu_cbs[0].key);
+    efreet_tag_menu = eina_stringshare_add(menu_cbs[0].key);
 
     for (i = 0; menu_cbs[i].key != NULL; i++)
         ecore_hash_set(efreet_menu_handle_cbs,
-                        (void *)ecore_string_instance(menu_cbs[i].key),
+                        (void *)eina_stringshare_add(menu_cbs[i].key),
                         menu_cbs[i].cb);
 
     for (i = 0; filter_cbs[i].key != NULL; i++)
         ecore_hash_set(efreet_menu_filter_cbs,
-                        (void *)ecore_string_instance(filter_cbs[i].key),
+                        (void *)eina_stringshare_add(filter_cbs[i].key),
                         filter_cbs[i].cb);
 
     for (i = 0; move_cbs[i].key != NULL; i++)
         ecore_hash_set(efreet_menu_move_cbs,
-                        (void *)ecore_string_instance(move_cbs[i].key),
+                        (void *)eina_stringshare_add(move_cbs[i].key),
                         move_cbs[i].cb);
 
     for (i = 0; layout_cbs[i].key != NULL; i++)
         ecore_hash_set(efreet_menu_layout_cbs,
-                        (void *)ecore_string_instance(layout_cbs[i].key),
+                        (void *)eina_stringshare_add(layout_cbs[i].key),
                         layout_cbs[i].cb);
 
     return 1;
@@ -501,7 +502,7 @@ efreet_menu_kde_legacy_init(void)
 
     efreet_menu_kde_legacy_dirs = ecore_list_new();
     ecore_list_free_cb_set(efreet_menu_kde_legacy_dirs,
-                            ECORE_FREE_CB(ecore_string_release));
+                            ECORE_FREE_CB(eina_stringshare_del));
 
     /* XXX if the return from kde-config is a line longer than PATH_MAX,
      * this won't be correct (increase buffer and get the rest...) */
@@ -517,14 +518,14 @@ efreet_menu_kde_legacy_init(void)
     {
         *p = '\0';
         ecore_list_append(efreet_menu_kde_legacy_dirs,
-                            (void *)ecore_string_instance(s));
+                            (void *)eina_stringshare_add(s));
         s = p + 1;
         p = strchr(s, ':');
     }
 
     if (*s)
         ecore_list_append(efreet_menu_kde_legacy_dirs,
-                            (void *)ecore_string_instance(s));
+                            (void *)eina_stringshare_add(s));
 
     pclose(f);
     return 1;
@@ -538,6 +539,7 @@ void
 efreet_menu_shutdown(void)
 {
     IF_FREE(efreet_menu_prefix);
+    IF_FREE(efreet_menu_file);
 
     IF_FREE_HASH(efreet_menu_handle_cbs);
     IF_FREE_HASH(efreet_menu_filter_cbs);
@@ -552,7 +554,7 @@ efreet_menu_shutdown(void)
     IF_RELEASE(efreet_tag_menu);
 
     efreet_xml_shutdown();
-    ecore_string_shutdown();
+    eina_stringshare_shutdown();
 }
 
 EAPI Efreet_Menu *
@@ -562,6 +564,14 @@ efreet_menu_new(void)
     menu = efreet_menu_entry_new();
     menu->type = EFREET_MENU_ENTRY_MENU;
     return menu;
+}
+
+EAPI void
+efreet_menu_file_set(const char *file)
+{
+    IF_FREE(efreet_menu_file);
+    efreet_menu_file = NULL;
+    if (file) efreet_menu_file = strdup(file);
 }
 
 /**
@@ -581,6 +591,12 @@ efreet_menu_get(void)
                         efreet_config_home_get(), efreet_menu_prefix_get());
     if (ecore_file_exists(menu))
         return efreet_menu_parse(menu);
+
+    if (efreet_menu_file)
+    {
+        if (ecore_file_exists(efreet_menu_file))
+	  return efreet_menu_parse(efreet_menu_file);
+    }
 
     /* fallback to the XDG_CONFIG_DIRS */
     config_dirs = efreet_config_dirs_get();
@@ -816,9 +832,9 @@ efreet_menu_desktop_insert(Efreet_Menu *menu, Efreet_Desktop *desktop, int pos)
 
     entry = efreet_menu_entry_new();
     entry->type = EFREET_MENU_ENTRY_DESKTOP;
-    entry->id = ecore_string_instance(id);
-    entry->name = ecore_string_instance(desktop->name);
-    if (desktop->icon) entry->icon = ecore_string_instance(desktop->icon);
+    entry->id = eina_stringshare_add(id);
+    entry->name = eina_stringshare_add(desktop->name);
+    if (desktop->icon) entry->icon = eina_stringshare_add(desktop->icon);
     efreet_desktop_ref(desktop);
     entry->desktop = desktop;
 
@@ -1242,7 +1258,7 @@ efreet_menu_handle_name(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
     /* ignore the name if it contains a / */
     if (strchr(xml->text, '/')) return 1;
 
-    parent->name.internal = ecore_string_instance(xml->text);
+    parent->name.internal = eina_stringshare_add(xml->text);
 
     return 1;
 }
@@ -1821,7 +1837,7 @@ efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
     }
 
     legacy_internal = efreet_menu_internal_new();
-    legacy_internal->name.internal = ecore_string_instance(ecore_file_file_get(path));
+    legacy_internal->name.internal = eina_stringshare_add(ecore_file_file_get(path));
 
     /* add the legacy dir as an app dir */
     app_dir = efreet_menu_app_dir_new();
@@ -3056,7 +3072,7 @@ efreet_menu_resolve_moves(Efreet_Menu_Internal *internal)
                 *path = '\0';
 
                 ancestor = efreet_menu_internal_new();
-                ancestor->name.internal = ecore_string_instance(tmp);
+                ancestor->name.internal = eina_stringshare_add(tmp);
 
                 efreet_menu_create_sub_menu_list(parent);
                 ecore_list_append(parent->sub_menus, ancestor);
@@ -3067,7 +3083,7 @@ efreet_menu_resolve_moves(Efreet_Menu_Internal *internal)
             }
 
             IF_RELEASE(origin->name.internal);
-            origin->name.internal = ecore_string_instance(tmp);
+            origin->name.internal = eina_stringshare_add(tmp);
 
             efreet_menu_create_sub_menu_list(parent);
             ecore_list_append(parent->sub_menus, origin);
@@ -3405,7 +3421,7 @@ efreet_menu_app_dir_scan(Efreet_Menu_Internal *internal, const char *path, const
 
             menu_desktop = efreet_menu_desktop_new();
             menu_desktop->desktop = desktop;
-            menu_desktop->id = ecore_string_instance(buf2);
+            menu_desktop->id = eina_stringshare_add(buf2);
             ecore_list_prepend(internal->app_pool, menu_desktop);
         }
     }
@@ -3593,11 +3609,11 @@ efreet_menu_layout_menu(Efreet_Menu_Internal *internal)
     /* init entry */
     entry = efreet_menu_entry_new();
     entry->type = EFREET_MENU_ENTRY_MENU;
-    entry->id = ecore_string_instance(internal->name.internal);
-    entry->name = ecore_string_instance(internal->name.name);
+    entry->id = eina_stringshare_add(internal->name.internal);
+    entry->name = eina_stringshare_add(internal->name.name);
     if (internal->directory)
     {
-        entry->icon = ecore_string_instance(internal->directory->icon);
+        entry->icon = eina_stringshare_add(internal->directory->icon);
         efreet_desktop_ref(internal->directory);
         entry->desktop = internal->directory;
     }
@@ -3671,9 +3687,9 @@ efreet_menu_layout_desktop(Efreet_Menu_Desktop *md)
     /* init entry */
     entry = efreet_menu_entry_new();
     entry->type = EFREET_MENU_ENTRY_DESKTOP;
-    entry->id = ecore_string_instance(md->id);
-    entry->name = ecore_string_instance(md->desktop->name);
-    if (md->desktop->icon) entry->icon = ecore_string_instance(md->desktop->icon);
+    entry->id = eina_stringshare_add(md->id);
+    entry->name = eina_stringshare_add(md->desktop->name);
+    if (md->desktop->icon) entry->icon = eina_stringshare_add(md->desktop->icon);
     efreet_desktop_ref(md->desktop);
     entry->desktop = md->desktop;
 
@@ -3835,7 +3851,7 @@ efreet_menu_layout_entries_get(Efreet_Menu *entry, Efreet_Menu_Internal *interna
                             Efreet_Menu *tmp;
 
                             tmp = ecore_list_first_remove(sub_entry->entries);
-                            ecore_string_release(tmp->name);
+                            eina_stringshare_del(tmp->name);
                             tmp->name = sub_entry->name;
                             sub_entry->name = NULL;
                             IF_RELEASE(tmp->icon);

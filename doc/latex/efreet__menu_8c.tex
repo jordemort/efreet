@@ -41,9 +41,15 @@ typedef struct {\bf Efreet\_\-Menu\_\-Filter} {\bf Efreet\_\-Menu\_\-Filter}
 \item 
 typedef struct {\bf Efreet\_\-Menu\_\-Filter\_\-Op} {\bf Efreet\_\-Menu\_\-Filter\_\-Op}
 \item 
+typedef enum {\bf Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type} {\bf Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type}
+\item 
+typedef enum {\bf Efreet\_\-Menu\_\-Filter\_\-Type} {\bf Efreet\_\-Menu\_\-Filter\_\-Type}
+\item 
 typedef struct {\bf Efreet\_\-Menu\_\-Internal} {\bf Efreet\_\-Menu\_\-Internal}
 \item 
 typedef struct {\bf Efreet\_\-Menu\_\-Layout} {\bf Efreet\_\-Menu\_\-Layout}
+\item 
+typedef enum {\bf Efreet\_\-Menu\_\-Layout\_\-Type} {\bf Efreet\_\-Menu\_\-Layout\_\-Type}
 \item 
 typedef struct {\bf Efreet\_\-Menu\_\-Move} {\bf Efreet\_\-Menu\_\-Move}
 \end{CompactItemize}
@@ -76,6 +82,8 @@ EAPI int {\bf efreet\_\-menu\_\-desktop\_\-remove} ({\bf Efreet\_\-Menu} $\ast$m
 \begin{CompactList}\small\item\em Remove a desktop element in a menu structure. Only accepts desktop files in default directories. \item\end{CompactList}\item 
 EAPI void {\bf efreet\_\-menu\_\-dump} ({\bf Efreet\_\-Menu} $\ast$menu, const char $\ast$indent)
 \begin{CompactList}\small\item\em Dumps the contents of the menu to the command line. \item\end{CompactList}\item 
+EAPI void {\bf efreet\_\-menu\_\-file\_\-set} (const char $\ast$file)
+\item 
 EAPI void {\bf efreet\_\-menu\_\-free} ({\bf Efreet\_\-Menu} $\ast$entry)
 \item 
 EAPI {\bf Efreet\_\-Menu} $\ast$ {\bf efreet\_\-menu\_\-get} (void)
@@ -102,37 +110,52 @@ Ecore\_\-List $\ast$ {\bf efreet\_\-menu\_\-kde\_\-legacy\_\-dirs} = NULL
 \subsection{Typedef Documentation}
 \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-App\_\-Dir@{Efreet\_\-Menu\_\-App\_\-Dir}}
 \index{Efreet\_\-Menu\_\-App\_\-Dir@{Efreet\_\-Menu\_\-App\_\-Dir}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-App\_\-Dir} {\bf Efreet\_\-Menu\_\-App\_\-Dir}}\label{efreet__menu_8c_23c6785560d7a0a43d935314093483d3}
+\subsubsection[Efreet\_\-Menu\_\-App\_\-Dir]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-App\_\-Dir} {\bf Efreet\_\-Menu\_\-App\_\-Dir}}\label{efreet__menu_8c_23c6785560d7a0a43d935314093483d3}
 
 
 \doxyref{Efreet\_\-Menu\_\-App\_\-Dir}{p.}{structEfreet__Menu__App__Dir} \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Desktop@{Efreet\_\-Menu\_\-Desktop}}
 \index{Efreet\_\-Menu\_\-Desktop@{Efreet\_\-Menu\_\-Desktop}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Desktop} {\bf Efreet\_\-Menu\_\-Desktop}}\label{efreet__menu_8c_c877c0621e522920c23814c4294fb9bc}
+\subsubsection[Efreet\_\-Menu\_\-Desktop]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Desktop} {\bf Efreet\_\-Menu\_\-Desktop}}\label{efreet__menu_8c_c877c0621e522920c23814c4294fb9bc}
 
 
 \doxyref{Efreet\_\-Menu\_\-Desktop}{p.}{structEfreet__Menu__Desktop} \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Filter@{Efreet\_\-Menu\_\-Filter}}
 \index{Efreet\_\-Menu\_\-Filter@{Efreet\_\-Menu\_\-Filter}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Filter} {\bf Efreet\_\-Menu\_\-Filter}}\label{efreet__menu_8c_a9cd5143b9fe37defebef53e70521430}
+\subsubsection[Efreet\_\-Menu\_\-Filter]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Filter} {\bf Efreet\_\-Menu\_\-Filter}}\label{efreet__menu_8c_a9cd5143b9fe37defebef53e70521430}
 
 
 \doxyref{Efreet\_\-Menu\_\-Filter}{p.}{structEfreet__Menu__Filter} \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Filter\_\-Op@{Efreet\_\-Menu\_\-Filter\_\-Op}}
 \index{Efreet\_\-Menu\_\-Filter\_\-Op@{Efreet\_\-Menu\_\-Filter\_\-Op}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Filter\_\-Op} {\bf Efreet\_\-Menu\_\-Filter\_\-Op}}\label{efreet__menu_8c_36f68a85bfc8ae10d7ebca588dea1326}
+\subsubsection[Efreet\_\-Menu\_\-Filter\_\-Op]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Filter\_\-Op} {\bf Efreet\_\-Menu\_\-Filter\_\-Op}}\label{efreet__menu_8c_36f68a85bfc8ae10d7ebca588dea1326}
 
 
-\doxyref{Efreet\_\-Menu\_\-Filter\_\-Op}{p.}{structEfreet__Menu__Filter__Op} \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Internal@{Efreet\_\-Menu\_\-Internal}}
+\doxyref{Efreet\_\-Menu\_\-Filter\_\-Op}{p.}{structEfreet__Menu__Filter__Op} \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type@{Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type}}
+\index{Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type@{Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type}!efreet_menu.c@{efreet\_\-menu.c}}
+\subsubsection[Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type} {\bf Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type}}\label{efreet__menu_8c_0f9f22c605f924b0de617b4d61c34d7f}
+
+
+Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Filter\_\-Type@{Efreet\_\-Menu\_\-Filter\_\-Type}}
+\index{Efreet\_\-Menu\_\-Filter\_\-Type@{Efreet\_\-Menu\_\-Filter\_\-Type}!efreet_menu.c@{efreet\_\-menu.c}}
+\subsubsection[Efreet\_\-Menu\_\-Filter\_\-Type]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf Efreet\_\-Menu\_\-Filter\_\-Type} {\bf Efreet\_\-Menu\_\-Filter\_\-Type}}\label{efreet__menu_8c_00ce8b953addb70dff8cd5889b612644}
+
+
+Efreet\_\-Menu\_\-Filter\_\-Type \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Internal@{Efreet\_\-Menu\_\-Internal}}
 \index{Efreet\_\-Menu\_\-Internal@{Efreet\_\-Menu\_\-Internal}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Internal} {\bf Efreet\_\-Menu\_\-Internal}}\label{efreet__menu_8c_f24c644b3f8fc2a3d790a31c6d456c11}
+\subsubsection[Efreet\_\-Menu\_\-Internal]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Internal} {\bf Efreet\_\-Menu\_\-Internal}}\label{efreet__menu_8c_f24c644b3f8fc2a3d790a31c6d456c11}
 
 
 \doxyref{Efreet\_\-Menu\_\-Internal}{p.}{structEfreet__Menu__Internal} \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Layout@{Efreet\_\-Menu\_\-Layout}}
 \index{Efreet\_\-Menu\_\-Layout@{Efreet\_\-Menu\_\-Layout}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Layout} {\bf Efreet\_\-Menu\_\-Layout}}\label{efreet__menu_8c_fa544e237fe672513ba4b8572f5100d5}
+\subsubsection[Efreet\_\-Menu\_\-Layout]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Layout} {\bf Efreet\_\-Menu\_\-Layout}}\label{efreet__menu_8c_fa544e237fe672513ba4b8572f5100d5}
 
 
-\doxyref{Efreet\_\-Menu\_\-Layout}{p.}{structEfreet__Menu__Layout} \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Move@{Efreet\_\-Menu\_\-Move}}
+\doxyref{Efreet\_\-Menu\_\-Layout}{p.}{structEfreet__Menu__Layout} \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Layout\_\-Type@{Efreet\_\-Menu\_\-Layout\_\-Type}}
+\index{Efreet\_\-Menu\_\-Layout\_\-Type@{Efreet\_\-Menu\_\-Layout\_\-Type}!efreet_menu.c@{efreet\_\-menu.c}}
+\subsubsection[Efreet\_\-Menu\_\-Layout\_\-Type]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf Efreet\_\-Menu\_\-Layout\_\-Type} {\bf Efreet\_\-Menu\_\-Layout\_\-Type}}\label{efreet__menu_8c_73fc35c60b0f1f763abf1ac12e121037}
+
+
+Efreet\_\-Menu\_\-Layout\_\-Type \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Move@{Efreet\_\-Menu\_\-Move}}
 \index{Efreet\_\-Menu\_\-Move@{Efreet\_\-Menu\_\-Move}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Move} {\bf Efreet\_\-Menu\_\-Move}}\label{efreet__menu_8c_39f6df8696296a3b115d7ce6996231ea}
+\subsubsection[Efreet\_\-Menu\_\-Move]{\setlength{\rightskip}{0pt plus 5cm}typedef struct {\bf Efreet\_\-Menu\_\-Move} {\bf Efreet\_\-Menu\_\-Move}}\label{efreet__menu_8c_39f6df8696296a3b115d7ce6996231ea}
 
 
 \doxyref{Efreet\_\-Menu\_\-Move}{p.}{structEfreet__Menu__Move} 
@@ -140,58 +163,52 @@ Ecore\_\-List $\ast$ {\bf efreet\_\-menu\_\-kde\_\-legacy\_\-dirs} = NULL
 \subsection{Enumeration Type Documentation}
 \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type@{Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type}}
 \index{Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type@{Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}enum typedef enum {\bf Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type} {\bf Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type}}\label{efreet__menu_8c_0f9f22c605f924b0de617b4d61c34d7f}
+\subsubsection[Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type}}\label{efreet__menu_8c_1e679ddda66f54fa4c91a7c74ac76478}
 
 
-The type of operations we can perform with a filter
-
-Efreet\_\-Menu\_\-Filter\_\-Op\_\-Type \begin{Desc}
+The type of operations we can perform with a filter \begin{Desc}
 \item[Enumerator: ]\par
 \begin{description}
 \index{EFREET\_\-MENU\_\-FILTER\_\-OP\_\-OR@{EFREET\_\-MENU\_\-FILTER\_\-OP\_\-OR}!efreet\_\-menu.c@{efreet\_\-menu.c}}\index{efreet\_\-menu.c@{efreet\_\-menu.c}!EFREET\_\-MENU\_\-FILTER\_\-OP\_\-OR@{EFREET\_\-MENU\_\-FILTER\_\-OP\_\-OR}}\item[{\em 
-EFREET\_\-MENU\_\-FILTER\_\-OP\_\-OR\label{efreet__menu_8c_0f9f22c605f924b0de617b4d61c34d7f3700fd36389e252f41157294ca343912}
+EFREET\_\-MENU\_\-FILTER\_\-OP\_\-OR\label{efreet__menu_8c_1e679ddda66f54fa4c91a7c74ac764783700fd36389e252f41157294ca343912}
 }]\index{EFREET\_\-MENU\_\-FILTER\_\-OP\_\-AND@{EFREET\_\-MENU\_\-FILTER\_\-OP\_\-AND}!efreet\_\-menu.c@{efreet\_\-menu.c}}\index{efreet\_\-menu.c@{efreet\_\-menu.c}!EFREET\_\-MENU\_\-FILTER\_\-OP\_\-AND@{EFREET\_\-MENU\_\-FILTER\_\-OP\_\-AND}}\item[{\em 
-EFREET\_\-MENU\_\-FILTER\_\-OP\_\-AND\label{efreet__menu_8c_0f9f22c605f924b0de617b4d61c34d7f7b3897c6ccae078ee75b2e81f435b0ad}
+EFREET\_\-MENU\_\-FILTER\_\-OP\_\-AND\label{efreet__menu_8c_1e679ddda66f54fa4c91a7c74ac764787b3897c6ccae078ee75b2e81f435b0ad}
 }]\index{EFREET\_\-MENU\_\-FILTER\_\-OP\_\-NOT@{EFREET\_\-MENU\_\-FILTER\_\-OP\_\-NOT}!efreet\_\-menu.c@{efreet\_\-menu.c}}\index{efreet\_\-menu.c@{efreet\_\-menu.c}!EFREET\_\-MENU\_\-FILTER\_\-OP\_\-NOT@{EFREET\_\-MENU\_\-FILTER\_\-OP\_\-NOT}}\item[{\em 
-EFREET\_\-MENU\_\-FILTER\_\-OP\_\-NOT\label{efreet__menu_8c_0f9f22c605f924b0de617b4d61c34d7f8df187fe162c67455b71e3debe55969e}
+EFREET\_\-MENU\_\-FILTER\_\-OP\_\-NOT\label{efreet__menu_8c_1e679ddda66f54fa4c91a7c74ac764788df187fe162c67455b71e3debe55969e}
 }]\end{description}
 \end{Desc}
 
 \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Filter\_\-Type@{Efreet\_\-Menu\_\-Filter\_\-Type}}
 \index{Efreet\_\-Menu\_\-Filter\_\-Type@{Efreet\_\-Menu\_\-Filter\_\-Type}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}enum typedef enum {\bf Efreet\_\-Menu\_\-Filter\_\-Type} {\bf Efreet\_\-Menu\_\-Filter\_\-Type}}\label{efreet__menu_8c_00ce8b953addb70dff8cd5889b612644}
+\subsubsection[Efreet\_\-Menu\_\-Filter\_\-Type]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Efreet\_\-Menu\_\-Filter\_\-Type}}\label{efreet__menu_8c_ad5c39e69ccad840c687eececa27beb7}
 
 
-The type of filter
-
-Efreet\_\-Menu\_\-Filter\_\-Type \begin{Desc}
+The type of filter \begin{Desc}
 \item[Enumerator: ]\par
 \begin{description}
 \index{EFREET\_\-MENU\_\-FILTER\_\-INCLUDE@{EFREET\_\-MENU\_\-FILTER\_\-INCLUDE}!efreet\_\-menu.c@{efreet\_\-menu.c}}\index{efreet\_\-menu.c@{efreet\_\-menu.c}!EFREET\_\-MENU\_\-FILTER\_\-INCLUDE@{EFREET\_\-MENU\_\-FILTER\_\-INCLUDE}}\item[{\em 
-EFREET\_\-MENU\_\-FILTER\_\-INCLUDE\label{efreet__menu_8c_00ce8b953addb70dff8cd5889b612644dc7f42b31b865ac65d34295e1da53b0f}
+EFREET\_\-MENU\_\-FILTER\_\-INCLUDE\label{efreet__menu_8c_ad5c39e69ccad840c687eececa27beb7dc7f42b31b865ac65d34295e1da53b0f}
 }]\index{EFREET\_\-MENU\_\-FILTER\_\-EXCLUDE@{EFREET\_\-MENU\_\-FILTER\_\-EXCLUDE}!efreet\_\-menu.c@{efreet\_\-menu.c}}\index{efreet\_\-menu.c@{efreet\_\-menu.c}!EFREET\_\-MENU\_\-FILTER\_\-EXCLUDE@{EFREET\_\-MENU\_\-FILTER\_\-EXCLUDE}}\item[{\em 
-EFREET\_\-MENU\_\-FILTER\_\-EXCLUDE\label{efreet__menu_8c_00ce8b953addb70dff8cd5889b61264479b1d516e3327df7ebd7097b2a2a5a4f}
+EFREET\_\-MENU\_\-FILTER\_\-EXCLUDE\label{efreet__menu_8c_ad5c39e69ccad840c687eececa27beb779b1d516e3327df7ebd7097b2a2a5a4f}
 }]\end{description}
 \end{Desc}
 
 \index{efreet\_\-menu.c@{efreet\_\-menu.c}!Efreet\_\-Menu\_\-Layout\_\-Type@{Efreet\_\-Menu\_\-Layout\_\-Type}}
 \index{Efreet\_\-Menu\_\-Layout\_\-Type@{Efreet\_\-Menu\_\-Layout\_\-Type}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}enum typedef enum {\bf Efreet\_\-Menu\_\-Layout\_\-Type} {\bf Efreet\_\-Menu\_\-Layout\_\-Type}}\label{efreet__menu_8c_73fc35c60b0f1f763abf1ac12e121037}
+\subsubsection[Efreet\_\-Menu\_\-Layout\_\-Type]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf Efreet\_\-Menu\_\-Layout\_\-Type}}\label{efreet__menu_8c_8d4f408bf2b872954ced535aae809fc8}
 
 
-The type of layout
-
-Efreet\_\-Menu\_\-Layout\_\-Type \begin{Desc}
+The type of layout \begin{Desc}
 \item[Enumerator: ]\par
 \begin{description}
 \index{EFREET\_\-MENU\_\-LAYOUT\_\-MENUNAME@{EFREET\_\-MENU\_\-LAYOUT\_\-MENUNAME}!efreet\_\-menu.c@{efreet\_\-menu.c}}\index{efreet\_\-menu.c@{efreet\_\-menu.c}!EFREET\_\-MENU\_\-LAYOUT\_\-MENUNAME@{EFREET\_\-MENU\_\-LAYOUT\_\-MENUNAME}}\item[{\em 
-EFREET\_\-MENU\_\-LAYOUT\_\-MENUNAME\label{efreet__menu_8c_73fc35c60b0f1f763abf1ac12e121037a171a6ab85b71a1f0380268a92f3fa53}
+EFREET\_\-MENU\_\-LAYOUT\_\-MENUNAME\label{efreet__menu_8c_8d4f408bf2b872954ced535aae809fc8a171a6ab85b71a1f0380268a92f3fa53}
 }]\index{EFREET\_\-MENU\_\-LAYOUT\_\-FILENAME@{EFREET\_\-MENU\_\-LAYOUT\_\-FILENAME}!efreet\_\-menu.c@{efreet\_\-menu.c}}\index{efreet\_\-menu.c@{efreet\_\-menu.c}!EFREET\_\-MENU\_\-LAYOUT\_\-FILENAME@{EFREET\_\-MENU\_\-LAYOUT\_\-FILENAME}}\item[{\em 
-EFREET\_\-MENU\_\-LAYOUT\_\-FILENAME\label{efreet__menu_8c_73fc35c60b0f1f763abf1ac12e121037ac38ba5a0838b3020a24403c0ca0ec20}
+EFREET\_\-MENU\_\-LAYOUT\_\-FILENAME\label{efreet__menu_8c_8d4f408bf2b872954ced535aae809fc8ac38ba5a0838b3020a24403c0ca0ec20}
 }]\index{EFREET\_\-MENU\_\-LAYOUT\_\-SEPARATOR@{EFREET\_\-MENU\_\-LAYOUT\_\-SEPARATOR}!efreet\_\-menu.c@{efreet\_\-menu.c}}\index{efreet\_\-menu.c@{efreet\_\-menu.c}!EFREET\_\-MENU\_\-LAYOUT\_\-SEPARATOR@{EFREET\_\-MENU\_\-LAYOUT\_\-SEPARATOR}}\item[{\em 
-EFREET\_\-MENU\_\-LAYOUT\_\-SEPARATOR\label{efreet__menu_8c_73fc35c60b0f1f763abf1ac12e1210378fac297efba2e2b4f2b05c72e141b832}
+EFREET\_\-MENU\_\-LAYOUT\_\-SEPARATOR\label{efreet__menu_8c_8d4f408bf2b872954ced535aae809fc88fac297efba2e2b4f2b05c72e141b832}
 }]\index{EFREET\_\-MENU\_\-LAYOUT\_\-MERGE@{EFREET\_\-MENU\_\-LAYOUT\_\-MERGE}!efreet\_\-menu.c@{efreet\_\-menu.c}}\index{efreet\_\-menu.c@{efreet\_\-menu.c}!EFREET\_\-MENU\_\-LAYOUT\_\-MERGE@{EFREET\_\-MENU\_\-LAYOUT\_\-MERGE}}\item[{\em 
-EFREET\_\-MENU\_\-LAYOUT\_\-MERGE\label{efreet__menu_8c_73fc35c60b0f1f763abf1ac12e121037b29b0a0be5c8a7d7d4ec6c943f0962fd}
+EFREET\_\-MENU\_\-LAYOUT\_\-MERGE\label{efreet__menu_8c_8d4f408bf2b872954ced535aae809fc8b29b0a0be5c8a7d7d4ec6c943f0962fd}
 }]\end{description}
 \end{Desc}
 
@@ -200,7 +217,7 @@ EFREET\_\-MENU\_\-LAYOUT\_\-MERGE\label{efreet__menu_8c_73fc35c60b0f1f763abf1ac1
 \subsection{Variable Documentation}
 \index{efreet\_\-menu.c@{efreet\_\-menu.c}!efreet\_\-menu\_\-kde\_\-legacy\_\-dirs@{efreet\_\-menu\_\-kde\_\-legacy\_\-dirs}}
 \index{efreet\_\-menu\_\-kde\_\-legacy\_\-dirs@{efreet\_\-menu\_\-kde\_\-legacy\_\-dirs}!efreet_menu.c@{efreet\_\-menu.c}}
-\subsubsection{\setlength{\rightskip}{0pt plus 5cm}Ecore\_\-List$\ast$ {\bf efreet\_\-menu\_\-kde\_\-legacy\_\-dirs} = NULL}\label{efreet__menu_8c_6fc23c261ad670fbb00c0da9a10f25c5}
+\subsubsection[efreet\_\-menu\_\-kde\_\-legacy\_\-dirs]{\setlength{\rightskip}{0pt plus 5cm}Ecore\_\-List$\ast$ {\bf efreet\_\-menu\_\-kde\_\-legacy\_\-dirs} = NULL}\label{efreet__menu_8c_6fc23c261ad670fbb00c0da9a10f25c5}
 
 
 The directories to use for KDELegacy entries 

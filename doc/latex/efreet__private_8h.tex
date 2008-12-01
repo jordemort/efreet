@@ -20,7 +20,7 @@ Contains methods and defines that are private to the Efreet implementaion.
 {\tt \#include $<$dirent.h$>$}\par
 {\tt \#include $<$fnmatch.h$>$}\par
 {\tt \#include $<$limits.h$>$}\par
-{\tt \#include $<$alloca.h$>$}\par
+{\tt \#include $<$Eina.h$>$}\par
 {\tt \#include $<$Ecore.h$>$}\par
 {\tt \#include $<$Ecore\_\-File.h$>$}\par
 {\tt \#include $<$Ecore\_\-Str.h$>$}\par
@@ -54,8 +54,6 @@ struct {\bf Efreet\_\-Desktop\_\-Command\_\-File}
 \subsection*{Defines}
 \begin{CompactItemize}
 \item 
-\#define {\bf \_\-\_\-UNUSED\_\-\_\-}~\_\-\_\-attribute\_\-\_\-((unused))
-\item 
 \#define {\bf FREE}(x)~do \{ free(x); x = NULL; \} while (0)
 \item 
 \#define {\bf IF\_\-FREE}(x)~do \{ if (x) FREE(x); \} while (0)
@@ -78,6 +76,8 @@ struct {\bf Efreet\_\-Desktop\_\-Command\_\-File}
 typedef struct {\bf Efreet\_\-Desktop\_\-Command} {\bf Efreet\_\-Desktop\_\-Command}
 \item 
 typedef struct {\bf Efreet\_\-Desktop\_\-Command\_\-File} {\bf Efreet\_\-Desktop\_\-Command\_\-File}
+\item 
+typedef enum {\bf Efreet\_\-Desktop\_\-Command\_\-Flag} {\bf Efreet\_\-Desktop\_\-Command\_\-Flag}
 \end{CompactItemize}
 \subsection*{Enumerations}
 \begin{CompactItemize}
@@ -115,11 +115,11 @@ int {\bf efreet\_\-ini\_\-init} (void)
 \item 
 int {\bf efreet\_\-ini\_\-shutdown} (void)
 \item 
-const char $\ast$ {\bf efreet\_\-lang\_\-country\_\-get} (void)
+EAPI const char $\ast$ {\bf efreet\_\-lang\_\-country\_\-get} (void)
 \item 
-const char $\ast$ {\bf efreet\_\-lang\_\-get} (void)
+EAPI const char $\ast$ {\bf efreet\_\-lang\_\-get} (void)
 \item 
-const char $\ast$ {\bf efreet\_\-lang\_\-modifier\_\-get} (void)
+EAPI const char $\ast$ {\bf efreet\_\-lang\_\-modifier\_\-get} (void)
 \item 
 int {\bf efreet\_\-menu\_\-init} (void)
 \begin{CompactList}\small\item\em Initializes the Efreet Menu system. \item\end{CompactList}\item 

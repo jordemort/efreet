@@ -1,0 +1,3 @@
+/home/albin/devel/packages/pkg-e/efreet-0.5.0.050/src/lib/efreet_icon.c:421: Warning: argument 'theme' of command @param is not found in the argument list of efreet_icon_find(const char *theme_name, const char *icon, unsigned int size)
+/home/albin/devel/packages/pkg-e/efreet-0.5.0.050/src/lib/efreet_icon.c:421: Warning: The following parameters of efreet_icon_find(const char *theme_name, const char *icon, unsigned int size) are not documented:
+  parameter 'theme_name'

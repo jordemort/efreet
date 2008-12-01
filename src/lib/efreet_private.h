@@ -29,6 +29,7 @@
 #include <alloca.h>
 #endif
 
+#include <Eina.h>
 #include <Ecore.h>
 #include <Ecore_File.h>
 #include <Ecore_Str.h>
@@ -56,11 +57,11 @@
 
 /**
  * @def IF_RELEASE(x)
- * If x is set, ecore_string_release x and set to NULL
+ * If x is set, eina_stringshare_del x and set to NULL
  */
 #define IF_RELEASE(x) do { \
     if (x) { \
-        const char *__tmp; __tmp = (x); (x) = NULL; ecore_string_release(__tmp); \
+        const char *__tmp; __tmp = (x); (x) = NULL; eina_stringshare_del(__tmp); \
     } \
     (x) = NULL; \
 } while (0)
@@ -97,16 +98,6 @@
     } \
     (x) = NULL; \
 } while (0)
-
-/**
- * @def __UNUSED__
- * A flag to mark a function parameter as unused
- */
-#if HAVE___ATTRIBUTE__
-#define __UNUSED__ __attribute__((unused))
-#else
-#define __UNUSED__
-#endif
 
 #ifndef PATH_MAX
 /**
@@ -199,9 +190,9 @@ int efreet_desktop_shutdown(void);
 
 const char *efreet_home_dir_get(void);
 
-const char *efreet_lang_get(void);
-const char *efreet_lang_country_get(void);
-const char *efreet_lang_modifier_get(void);
+EAPI const char *efreet_lang_get(void);
+EAPI const char *efreet_lang_country_get(void);
+EAPI const char *efreet_lang_modifier_get(void);
 
 size_t efreet_array_cat(char *buffer, size_t size, const char *strs[]);
 
