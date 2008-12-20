@@ -1,7 +1,8 @@
-efreet (0.5.0.050+svn20081114) experimental; urgency=low
+efreet (0.5.0.050+svn20081114-1) experimental; urgency=low
 
   * Upstream SVN snapshot
-   - Build-depend on libeina-dev, and libefreet-dev depends on libeina-dev
+   - Build-depend and make libefreet-dev depend on libeina-0.0.1a-dev
+  * Update the libecore-dev dependencies to libecore-0.9.9.050a-dev
   * Bump shlibs for libefreet0 as a new symbol was added (efreet_menu_file_set)
   * [lintian] Add ${misc:Depends} to the packages dependencies
 
