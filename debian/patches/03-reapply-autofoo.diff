@@ -1,0 +1,560 @@
+diff --git a/INSTALL b/INSTALL
+index 5458714..d3c5b40 100644
+--- a/INSTALL
++++ b/INSTALL
+@@ -2,7 +2,7 @@ Installation Instructions
+ *************************
+ 
+ Copyright (C) 1994, 1995, 1996, 1999, 2000, 2001, 2002, 2004, 2005,
+-2006 Free Software Foundation, Inc.
++2006, 2007 Free Software Foundation, Inc.
+ 
+ This file is free documentation; the Free Software Foundation gives
+ unlimited permission to copy, distribute and modify it.
+@@ -67,6 +67,9 @@ The simplest way to compile this package is:
+      all sorts of other programs in order to regenerate files that came
+      with the distribution.
+ 
++  6. Often, you can also type `make uninstall' to remove the installed
++     files again.
++
+ Compilers and Options
+ =====================
+ 
+diff --git a/Makefile.in b/Makefile.in
+index ba068ee..f243401 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -126,6 +126,7 @@ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+ LN_S = @LN_S@
+ LTLIBOBJS = @LTLIBOBJS@
++MAINT = @MAINT@
+ MAKEINFO = @MAKEINFO@
+ MKDIR_P = @MKDIR_P@
+ NMEDIT = @NMEDIT@
+@@ -231,7 +232,7 @@ all: config.h
+ .SUFFIXES:
+ am--refresh:
+ 	@:
+-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
++$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+ 	@for dep in $?; do \
+ 	  case '$(am__configure_deps)' in \
+ 	    *$$dep*) \
+@@ -258,9 +259,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+ $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+ 	$(SHELL) ./config.status --recheck
+ 
+-$(top_srcdir)/configure:  $(am__configure_deps)
++$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+ 	cd $(srcdir) && $(AUTOCONF)
+-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
++$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+ 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
+ 
+ config.h: stamp-h1
+@@ -272,7 +273,7 @@ config.h: stamp-h1
+ stamp-h1: $(srcdir)/config.h.in $(top_builddir)/config.status
+ 	@rm -f stamp-h1
+ 	cd $(top_builddir) && $(SHELL) ./config.status config.h
+-$(srcdir)/config.h.in:  $(am__configure_deps) 
++$(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps) 
+ 	cd $(top_srcdir) && $(AUTOHEADER)
+ 	rm -f stamp-h1
+ 	touch $@
+diff --git a/aclocal.m4 b/aclocal.m4
+index 563d5e5..2950ba0 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -7376,6 +7376,35 @@ fi
+ rmdir .tst 2>/dev/null
+ AC_SUBST([am__leading_dot])])
+ 
++# Add --enable-maintainer-mode option to configure.         -*- Autoconf -*-
++# From Jim Meyering
++
++# Copyright (C) 1996, 1998, 2000, 2001, 2002, 2003, 2004, 2005
++# Free Software Foundation, Inc.
++#
++# This file is free software; the Free Software Foundation
++# gives unlimited permission to copy and/or distribute it,
++# with or without modifications, as long as this notice is preserved.
++
++# serial 4
++
++AC_DEFUN([AM_MAINTAINER_MODE],
++[AC_MSG_CHECKING([whether to enable maintainer-specific portions of Makefiles])
++  dnl maintainer-mode is disabled by default
++  AC_ARG_ENABLE(maintainer-mode,
++[  --enable-maintainer-mode  enable make rules and dependencies not useful
++			  (and sometimes confusing) to the casual installer],
++      USE_MAINTAINER_MODE=$enableval,
++      USE_MAINTAINER_MODE=no)
++  AC_MSG_RESULT([$USE_MAINTAINER_MODE])
++  AM_CONDITIONAL(MAINTAINER_MODE, [test $USE_MAINTAINER_MODE = yes])
++  MAINT=$MAINTAINER_MODE_TRUE
++  AC_SUBST(MAINT)dnl
++]
++)
++
++AU_DEFUN([jm_MAINTAINER_MODE], [AM_MAINTAINER_MODE])
++
+ # Check to see how 'make' treats includes.	            -*- Autoconf -*-
+ 
+ # Copyright (C) 2001, 2002, 2003, 2005  Free Software Foundation, Inc.
+diff --git a/configure b/configure
+index 1111d4a..8b71c3c 100755
+--- a/configure
++++ b/configure
+@@ -832,6 +832,9 @@ am__leading_dot
+ AMTAR
+ am__tar
+ am__untar
++MAINTAINER_MODE_TRUE
++MAINTAINER_MODE_FALSE
++MAINT
+ CC
+ CFLAGS
+ LDFLAGS
+@@ -1472,6 +1475,8 @@ if test -n "$ac_init_help"; then
+ Optional Features:
+   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
++  --enable-maintainer-mode  enable make rules and dependencies not useful
++			  (and sometimes confusing) to the casual installer
+   --disable-dependency-tracking  speeds up one-time build
+   --enable-dependency-tracking   do not reject slow dependency extractors
+   --enable-shared[=PKGS]  build shared libraries [default=yes]
+@@ -2511,6 +2516,28 @@ am__tar='${AMTAR} chof - "$$tardir"'; am__untar='${AMTAR} xf -'
+ 
+ 
+ 
++{ echo "$as_me:$LINENO: checking whether to enable maintainer-specific portions of Makefiles" >&5
++echo $ECHO_N "checking whether to enable maintainer-specific portions of Makefiles... $ECHO_C" >&6; }
++    # Check whether --enable-maintainer-mode was given.
++if test "${enable_maintainer_mode+set}" = set; then
++  enableval=$enable_maintainer_mode; USE_MAINTAINER_MODE=$enableval
++else
++  USE_MAINTAINER_MODE=no
++fi
++
++  { echo "$as_me:$LINENO: result: $USE_MAINTAINER_MODE" >&5
++echo "${ECHO_T}$USE_MAINTAINER_MODE" >&6; }
++   if test $USE_MAINTAINER_MODE = yes; then
++  MAINTAINER_MODE_TRUE=
++  MAINTAINER_MODE_FALSE='#'
++else
++  MAINTAINER_MODE_TRUE='#'
++  MAINTAINER_MODE_FALSE=
++fi
++
++  MAINT=$MAINTAINER_MODE_TRUE
++
++
+ ac_config_headers="$ac_config_headers config.h"
+ 
+ 
+@@ -6581,7 +6608,7 @@ ia64-*-hpux*)
+   ;;
+ *-*-irix6*)
+   # Find out which ABI we are using.
+-  echo '#line 6584 "configure"' > conftest.$ac_ext
++  echo '#line 6611 "configure"' > conftest.$ac_ext
+   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+   (eval $ac_compile) 2>&5
+   ac_status=$?
+@@ -8556,11 +8583,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8559: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8586: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:8563: \$? = $ac_status" >&5
++   echo "$as_me:8590: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -8846,11 +8873,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8849: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8876: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:8853: \$? = $ac_status" >&5
++   echo "$as_me:8880: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -8950,11 +8977,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8953: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8980: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:8957: \$? = $ac_status" >&5
++   echo "$as_me:8984: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -11327,7 +11354,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<EOF
+-#line 11330 "configure"
++#line 11357 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -11427,7 +11454,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<EOF
+-#line 11430 "configure"
++#line 11457 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -12227,11 +12254,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:12230: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:12257: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:12234: \$? = $ac_status" >&5
++   echo "$as_me:12261: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -12517,11 +12544,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:12520: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:12547: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:12524: \$? = $ac_status" >&5
++   echo "$as_me:12551: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -12621,11 +12648,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:12624: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:12651: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:12628: \$? = $ac_status" >&5
++   echo "$as_me:12655: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -16328,6 +16355,13 @@ LIBOBJS=$ac_libobjs
+ LTLIBOBJS=$ac_ltlibobjs
+ 
+ 
++if test -z "${MAINTAINER_MODE_TRUE}" && test -z "${MAINTAINER_MODE_FALSE}"; then
++  { { echo "$as_me:$LINENO: error: conditional \"MAINTAINER_MODE\" was never defined.
++Usually this means the macro was only invoked conditionally." >&5
++echo "$as_me: error: conditional \"MAINTAINER_MODE\" was never defined.
++Usually this means the macro was only invoked conditionally." >&2;}
++   { (exit 1); exit 1; }; }
++fi
+ if test -z "${AMDEP_TRUE}" && test -z "${AMDEP_FALSE}"; then
+   { { echo "$as_me:$LINENO: error: conditional \"AMDEP\" was never defined.
+ Usually this means the macro was only invoked conditionally." >&5
+@@ -16982,6 +17016,9 @@ am__leading_dot!$am__leading_dot$ac_delim
+ AMTAR!$AMTAR$ac_delim
+ am__tar!$am__tar$ac_delim
+ am__untar!$am__untar$ac_delim
++MAINTAINER_MODE_TRUE!$MAINTAINER_MODE_TRUE$ac_delim
++MAINTAINER_MODE_FALSE!$MAINTAINER_MODE_FALSE$ac_delim
++MAINT!$MAINT$ac_delim
+ CC!$CC$ac_delim
+ CFLAGS!$CFLAGS$ac_delim
+ LDFLAGS!$LDFLAGS$ac_delim
+@@ -17009,9 +17046,6 @@ RANLIB!$RANLIB$ac_delim
+ DSYMUTIL!$DSYMUTIL$ac_delim
+ NMEDIT!$NMEDIT$ac_delim
+ DLLTOOL!$DLLTOOL$ac_delim
+-AS!$AS$ac_delim
+-OBJDUMP!$OBJDUMP$ac_delim
+-LIBTOOL!$LIBTOOL$ac_delim
+ _ACEOF
+ 
+   if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 97; then
+@@ -17053,6 +17087,9 @@ _ACEOF
+ ac_delim='%!_!# '
+ for ac_last_try in false false false false false :; do
+   cat >conf$$subs.sed <<_ACEOF
++AS!$AS$ac_delim
++OBJDUMP!$OBJDUMP$ac_delim
++LIBTOOL!$LIBTOOL$ac_delim
+ version_info!$version_info$ac_delim
+ ALLOCA!$ALLOCA$ac_delim
+ PKG_CONFIG!$PKG_CONFIG$ac_delim
+@@ -17071,7 +17108,7 @@ LIBOBJS!$LIBOBJS$ac_delim
+ LTLIBOBJS!$LTLIBOBJS$ac_delim
+ _ACEOF
+ 
+-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 16; then
++  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 19; then
+     break
+   elif $ac_last_try; then
+     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
+diff --git a/doc/Makefile.in b/doc/Makefile.in
+index d8c8ece..0f7c956 100644
+--- a/doc/Makefile.in
++++ b/doc/Makefile.in
+@@ -86,6 +86,7 @@ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+ LN_S = @LN_S@
+ LTLIBOBJS = @LTLIBOBJS@
++MAINT = @MAINT@
+ MAKEINFO = @MAKEINFO@
+ MKDIR_P = @MKDIR_P@
+ NMEDIT = @NMEDIT@
+@@ -164,7 +165,7 @@ EXTRA_DIST = Doxyfile.in images e.css head.html foot.html
+ all: all-am
+ 
+ .SUFFIXES:
+-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
++$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+ 	@for dep in $?; do \
+ 	  case '$(am__configure_deps)' in \
+ 	    *$$dep*) \
+@@ -189,9 +190,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+ $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+-$(top_srcdir)/configure:  $(am__configure_deps)
++$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
++$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ Doxyfile: $(top_builddir)/config.status $(srcdir)/Doxyfile.in
+ 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
+diff --git a/src/Makefile.in b/src/Makefile.in
+index a731ce6..8cb8b90 100644
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -97,6 +97,7 @@ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+ LN_S = @LN_S@
+ LTLIBOBJS = @LTLIBOBJS@
++MAINT = @MAINT@
+ MAKEINFO = @MAKEINFO@
+ MKDIR_P = @MKDIR_P@
+ NMEDIT = @NMEDIT@
+@@ -174,7 +175,7 @@ MAINTAINERCLEANFILES = Makefile.in
+ all: all-recursive
+ 
+ .SUFFIXES:
+-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
++$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+ 	@for dep in $?; do \
+ 	  case '$(am__configure_deps)' in \
+ 	    *$$dep*) \
+@@ -199,9 +200,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+ $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+-$(top_srcdir)/configure:  $(am__configure_deps)
++$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
++$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+ mostlyclean-libtool:
+diff --git a/src/bin/Makefile.in b/src/bin/Makefile.in
+index 578e228..1054885 100644
+--- a/src/bin/Makefile.in
++++ b/src/bin/Makefile.in
+@@ -133,6 +133,7 @@ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+ LN_S = @LN_S@
+ LTLIBOBJS = @LTLIBOBJS@
++MAINT = @MAINT@
+ MAKEINFO = @MAKEINFO@
+ MKDIR_P = @MKDIR_P@
+ NMEDIT = @NMEDIT@
+@@ -240,7 +241,7 @@ all: all-recursive
+ 
+ .SUFFIXES:
+ .SUFFIXES: .c .lo .o .obj
+-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
++$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+ 	@for dep in $?; do \
+ 	  case '$(am__configure_deps)' in \
+ 	    *$$dep*) \
+@@ -265,9 +266,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+ $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+-$(top_srcdir)/configure:  $(am__configure_deps)
++$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
++$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ install-binPROGRAMS: $(bin_PROGRAMS)
+ 	@$(NORMAL_INSTALL)
+diff --git a/src/bin/compare/Makefile.in b/src/bin/compare/Makefile.in
+index be2116a..737996c 100644
+--- a/src/bin/compare/Makefile.in
++++ b/src/bin/compare/Makefile.in
+@@ -108,6 +108,7 @@ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+ LN_S = @LN_S@
+ LTLIBOBJS = @LTLIBOBJS@
++MAINT = @MAINT@
+ MAKEINFO = @MAKEINFO@
+ MKDIR_P = @MKDIR_P@
+ NMEDIT = @NMEDIT@
+@@ -197,7 +198,7 @@ all: all-am
+ 
+ .SUFFIXES:
+ .SUFFIXES: .c .lo .o .obj
+-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
++$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+ 	@for dep in $?; do \
+ 	  case '$(am__configure_deps)' in \
+ 	    *$$dep*) \
+@@ -222,9 +223,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+ $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+-$(top_srcdir)/configure:  $(am__configure_deps)
++$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
++$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ install-binPROGRAMS: $(bin_PROGRAMS)
+ 	@$(NORMAL_INSTALL)
+diff --git a/src/bin/data/Makefile.in b/src/bin/data/Makefile.in
+index 076c75b..f7c99d2 100644
+--- a/src/bin/data/Makefile.in
++++ b/src/bin/data/Makefile.in
+@@ -107,6 +107,7 @@ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+ LN_S = @LN_S@
+ LTLIBOBJS = @LTLIBOBJS@
++MAINT = @MAINT@
+ MAKEINFO = @MAKEINFO@
+ MKDIR_P = @MKDIR_P@
+ NMEDIT = @NMEDIT@
+@@ -198,7 +199,7 @@ EXTRA_DIST = $(test_DATA)
+ all: all-recursive
+ 
+ .SUFFIXES:
+-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
++$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+ 	@for dep in $?; do \
+ 	  case '$(am__configure_deps)' in \
+ 	    *$$dep*) \
+@@ -223,9 +224,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+ $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+-$(top_srcdir)/configure:  $(am__configure_deps)
++$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
++$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+ mostlyclean-libtool:
+diff --git a/src/bin/data/sub/Makefile.in b/src/bin/data/sub/Makefile.in
+index 9cc8cfe..2308d76 100644
+--- a/src/bin/data/sub/Makefile.in
++++ b/src/bin/data/sub/Makefile.in
+@@ -95,6 +95,7 @@ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+ LN_S = @LN_S@
+ LTLIBOBJS = @LTLIBOBJS@
++MAINT = @MAINT@
+ MAKEINFO = @MAKEINFO@
+ MKDIR_P = @MKDIR_P@
+ NMEDIT = @NMEDIT@
+@@ -176,7 +177,7 @@ EXTRA_DIST = $(test_DATA)
+ all: all-am
+ 
+ .SUFFIXES:
+-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
++$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+ 	@for dep in $?; do \
+ 	  case '$(am__configure_deps)' in \
+ 	    *$$dep*) \
+@@ -201,9 +202,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+ $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+-$(top_srcdir)/configure:  $(am__configure_deps)
++$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
++$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+ mostlyclean-libtool:
+diff --git a/src/lib/Makefile.in b/src/lib/Makefile.in
+index bcbaa0a..4c34a6b 100644
+--- a/src/lib/Makefile.in
++++ b/src/lib/Makefile.in
+@@ -133,6 +133,7 @@ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+ LN_S = @LN_S@
+ LTLIBOBJS = @LTLIBOBJS@
++MAINT = @MAINT@
+ MAKEINFO = @MAKEINFO@
+ MKDIR_P = @MKDIR_P@
+ NMEDIT = @NMEDIT@
+@@ -264,14 +265,14 @@ $(EFREETTRASHSOURCES)
+ installed_headersdir = $(prefix)/include/efreet
+ installed_headers_DATA = $(EFREETHEADERS) $(EFREETMIMEHEADERS) $(EFREETTRASHHEADERS)
+ libefreet_la_LIBADD = @ECORE_LIBS@ @EINA_LIBS@
+-libefreet_la_LDFLAGS = -version-info @version_info@
++libefreet_la_LDFLAGS = -release @PACKAGE_VERSION@$(DEBIAN_MINOR)
+ libefreet_mime_la_LIBADD = @ECORE_LIBS@ @EINA_LIBS@ libefreet.la
+ libefreet_trash_la_LIBADD = @ECORE_LIBS@ @EINA_LIBS@ libefreet.la
+ all: all-am
+ 
+ .SUFFIXES:
+ .SUFFIXES: .c .lo .o .obj
+-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
++$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
+ 	@for dep in $?; do \
+ 	  case '$(am__configure_deps)' in \
+ 	    *$$dep*) \
+@@ -296,9 +297,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
+ $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+-$(top_srcdir)/configure:  $(am__configure_deps)
++$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
++$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+ 	@$(NORMAL_INSTALL)

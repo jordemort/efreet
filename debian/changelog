@@ -1,3 +1,16 @@
+efreet (0.5.0.050+svn20090203-1) experimental; urgency=low
+
+  * New SVN snapshot
+    - libefreet0 is now libefrett-0.5.0.050a due to API change
+      + Bump shlibs
+    - Add patches to change the SONAME
+    - Use new 'make doc' target to generate the documentation:
+      + Add --enable-doc to configure options
+      + use 'make doc'
+      + build-depend on doxygen
+
+ -- Albin Tonnerre <albin.tonnerre@gmail.com>  Tue, 03 Feb 2009 15:13:57 +0100
+
 efreet (0.5.0.050+svn20081114-2) experimental; urgency=low
 
   * Update dependencies for new packages name
