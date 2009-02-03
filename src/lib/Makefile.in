@@ -37,7 +37,7 @@ subdir = src/lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_attribute.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/efl_doxygen.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -57,7 +57,7 @@ libefreet_la_DEPENDENCIES =
 am__objects_1 =
 am__objects_2 = efreet.lo efreet_base.lo efreet_icon.lo efreet_xml.lo \
 	efreet_ini.lo efreet_desktop.lo efreet_menu.lo efreet_utils.lo \
-	efreet_uri.lo $(am__objects_1)
+	efreet_uri.lo efreet_cache.lo $(am__objects_1)
 am_libefreet_la_OBJECTS = $(am__objects_2)
 libefreet_la_OBJECTS = $(am_libefreet_la_OBJECTS)
 libefreet_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
@@ -173,6 +173,8 @@ datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
+efl_doxygen = @efl_doxygen@
+efl_have_doxygen = @efl_have_doxygen@
 exec_prefix = @exec_prefix@
 host = @host@
 host_alias = @host_alias@
@@ -233,6 +235,7 @@ efreet_utils.c \
 efreet_uri.c \
 efreet_private.h \
 efreet_xml.h \
+efreet_cache.c \
 $(EFREETHEADERS)
 
 libefreet_la_SOURCES = \
@@ -339,6 +342,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efreet.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efreet_base.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efreet_cache.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efreet_desktop.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efreet_icon.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efreet_ini.Plo@am__quote@

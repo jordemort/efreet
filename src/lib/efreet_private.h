@@ -94,7 +94,7 @@
  */
 #define IF_FREE_HASH(x) do { \
     if (x) { \
-        Ecore_Hash *__tmp; __tmp = (x); (x) = NULL; ecore_hash_destroy(__tmp); \
+        Eina_Hash *__tmp; __tmp = (x); (x) = NULL; eina_hash_free(__tmp); \
     } \
     (x) = NULL; \
 } while (0)
@@ -197,6 +197,12 @@ EAPI const char *efreet_lang_modifier_get(void);
 size_t efreet_array_cat(char *buffer, size_t size, const char *strs[]);
 
 const char *efreet_desktop_environment_get(void);
+
+#define NON_EXISTING (void *)-1
+
+void efreet_cache_clear(void);
+const char *efreet_icon_hash_get(const char *theme_name, const char *icon, int size);
+void efreet_icon_hash_put(const char *theme_name, const char *icon, int size, const char *file);
 
 /**
  * @}
