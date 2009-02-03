@@ -871,6 +871,10 @@ EINA_CFLAGS
 EINA_LIBS
 DEFAULT_VISIBILITY_TRUE
 DEFAULT_VISIBILITY_FALSE
+efl_have_doxygen
+efl_doxygen
+EFL_BUILD_DOC_TRUE
+EFL_BUILD_DOC_FALSE
 requirements
 LIBOBJS
 LTLIBOBJS'
@@ -1479,6 +1483,7 @@ Optional Features:
   --disable-sloppy-spec   Enable sloppy spec compliance
   --enable-hidden-visibility
                           Enable hidden visibility
+  --disable-doc           Disable documentation build [default=enabled]
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -1487,6 +1492,7 @@ Optional Packages:
   --with-pic              try to use only PIC/non-PIC objects [default=use
                           both]
   --with-tags[=TAGS]      include additional configurations [automatic]
+  --with-doxygen=FILE     doxygen program to use [default=doxygen]
 
 Some influential environment variables:
   CC          C compiler command
@@ -1933,6 +1939,7 @@ ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
 
 
 
@@ -5925,20 +5932,28 @@ _ACEOF
 fi
 
 
-  { echo "$as_me:$LINENO: checking for __attribute__" >&5
+
+{ echo "$as_me:$LINENO: checking for __attribute__" >&5
 echo $ECHO_N "checking for __attribute__... $ECHO_C" >&6; }
-  if test "${ac_cv___attribute__+set}" = set; then
+
+if test "${ac_cv___attribute__+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-
   cat >conftest.$ac_ext <<_ACEOF
 /* confdefs.h.  */
 _ACEOF
 cat confdefs.h >>conftest.$ac_ext
 cat >>conftest.$ac_ext <<_ACEOF
 /* end confdefs.h.  */
+
 #include <stdlib.h>
-  int func(int x); int foo(int x __attribute__ ((unused))) { exit(1); }
+
+int func(int x);
+int foo(int x __attribute__ ((unused)))
+{
+   exit(1);
+}
+
 int
 main ()
 {
@@ -5964,26 +5979,42 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
 	 test -z "$ac_c_werror_flag" ||
 	 test ! -s conftest.err
        } && test -s conftest.$ac_objext; then
-  ac_cv___attribute__=yes
+  ac_cv___attribute__="yes"
 else
   echo "$as_me: failed program was:" >&5
 sed 's/^/| /' conftest.$ac_ext >&5
 
-	ac_cv___attribute__=no
+	ac_cv___attribute__="no"
+
 fi
 
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
 fi
 
-  if test "$ac_cv___attribute__" = "yes"; then
+
+{ echo "$as_me:$LINENO: result: $ac_cv___attribute__" >&5
+echo "${ECHO_T}$ac_cv___attribute__" >&6; }
+
+if test "x${ac_cv___attribute__}" = "xyes" ; then
 
 cat >>confdefs.h <<\_ACEOF
 #define HAVE___ATTRIBUTE__ 1
 _ACEOF
 
-  fi
-  { echo "$as_me:$LINENO: result: $ac_cv___attribute__" >&5
-echo "${ECHO_T}$ac_cv___attribute__" >&6; }
+
+cat >>confdefs.h <<\_ACEOF
+#define __UNUSED__ __attribute__((unused))
+_ACEOF
+
+  else
+
+cat >>confdefs.h <<\_ACEOF
+#define __UNUSED__
+_ACEOF
+
+fi
+
 
 
 
@@ -6550,7 +6581,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6553 "configure"' > conftest.$ac_ext
+  echo '#line 6584 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -8525,11 +8556,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8528: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8559: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8532: \$? = $ac_status" >&5
+   echo "$as_me:8563: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8815,11 +8846,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8818: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8849: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:8822: \$? = $ac_status" >&5
+   echo "$as_me:8853: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8919,11 +8950,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8922: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8953: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8926: \$? = $ac_status" >&5
+   echo "$as_me:8957: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -11296,7 +11327,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11299 "configure"
+#line 11330 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -11396,7 +11427,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 11399 "configure"
+#line 11430 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12196,11 +12227,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12199: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12230: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12203: \$? = $ac_status" >&5
+   echo "$as_me:12234: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -12486,11 +12517,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12489: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12520: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12493: \$? = $ac_status" >&5
+   echo "$as_me:12524: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -12590,11 +12621,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12593: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12624: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12597: \$? = $ac_status" >&5
+   echo "$as_me:12628: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16044,7 +16075,160 @@ fi
 
 
 
-ac_config_files="$ac_config_files efreet.spec efreet.pc efreet-mime.pc efreet-trash.pc Makefile src/Makefile src/lib/Makefile src/bin/Makefile src/bin/data/Makefile src/bin/data/sub/Makefile src/bin/compare/Makefile"
+# Check whether --enable-doc was given.
+if test "${enable_doc+set}" = set; then
+  enableval=$enable_doc;
+    if test "x${enableval}" = "xyes" ; then
+       efl_enable_doc="yes"
+    else
+       efl_enable_doc="no"
+    fi
+
+else
+  efl_enable_doc="yes"
+
+fi
+
+
+if test "x${efl_enable_doc}" = "xyes" ; then
+
+
+   efl_doxygen="doxygen"
+
+
+# Check whether --with-doxygen was given.
+if test "${with_doxygen+set}" = set; then
+  withval=$with_doxygen;       efl_doxygen=${withval}
+       # Extract the first word of "${efl_doxygen}", so it can be a program name with args.
+set dummy ${efl_doxygen}; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_efl_have_doxygen+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$efl_have_doxygen"; then
+  ac_cv_prog_efl_have_doxygen="$efl_have_doxygen" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_efl_have_doxygen="yes"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_prog_efl_have_doxygen" && ac_cv_prog_efl_have_doxygen="no"
+fi
+fi
+efl_have_doxygen=$ac_cv_prog_efl_have_doxygen
+if test -n "$efl_have_doxygen"; then
+  { echo "$as_me:$LINENO: result: $efl_have_doxygen" >&5
+echo "${ECHO_T}$efl_have_doxygen" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+       if test "x${efl_have_doxygen}" = "xno" ; then
+          echo "WARNING:"
+          echo "The doxygen program you specified:"
+          echo "$efl_doxygen"
+          echo "was not found.  Please check the path and make sure "
+          echo "the program exists and is executable."
+          { echo "$as_me:$LINENO: WARNING: Warning: no doxygen detected. Documentation will not be built" >&5
+echo "$as_me: WARNING: Warning: no doxygen detected. Documentation will not be built" >&2;}
+       fi
+
+else
+  # Extract the first word of "${efl_doxygen}", so it can be a program name with args.
+set dummy ${efl_doxygen}; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_efl_have_doxygen+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$efl_have_doxygen"; then
+  ac_cv_prog_efl_have_doxygen="$efl_have_doxygen" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_efl_have_doxygen="yes"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  test -z "$ac_cv_prog_efl_have_doxygen" && ac_cv_prog_efl_have_doxygen="no"
+fi
+fi
+efl_have_doxygen=$ac_cv_prog_efl_have_doxygen
+if test -n "$efl_have_doxygen"; then
+  { echo "$as_me:$LINENO: result: $efl_have_doxygen" >&5
+echo "${ECHO_T}$efl_have_doxygen" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+       if test "x${efl_have_doxygen}" = "xno" ; then
+          echo "WARNING:"
+          echo "The doxygen program was not found in your execute"
+          echo "You may have doxygen installed somewhere not covered by your path."
+          echo ""
+          echo "If this is the case make sure you have the packages installed, AND"
+          echo "that the doxygen program is in your execute path (see your"
+          echo "shell manual page on setting the \$PATH environment variable), OR"
+          echo "alternatively, specify the program to use with --with-doxygen."
+          { echo "$as_me:$LINENO: WARNING: Warning: no doxygen detected. Documentation will not be built" >&5
+echo "$as_me: WARNING: Warning: no doxygen detected. Documentation will not be built" >&2;}
+       fi
+
+
+fi
+
+fi
+
+
+
+if ! test "x${efl_have_doxygen}" = "xyes" ; then
+   efl_enable_doc="no"
+fi
+
+ if test "x${efl_enable_doc}" = "xyes"; then
+  EFL_BUILD_DOC_TRUE=
+  EFL_BUILD_DOC_FALSE='#'
+else
+  EFL_BUILD_DOC_TRUE='#'
+  EFL_BUILD_DOC_FALSE=
+fi
+
+
+if test "x${efl_enable_doc}" = "xyes" ; then
+  build_doc="yes"
+else
+  build_doc="no"
+fi
+
+
+
+
+ac_config_files="$ac_config_files efreet.spec efreet.pc efreet-mime.pc efreet-trash.pc Makefile doc/Makefile doc/Doxyfile src/Makefile src/lib/Makefile src/bin/Makefile src/bin/data/Makefile src/bin/data/sub/Makefile src/bin/compare/Makefile"
 
 ac_config_commands="$ac_config_commands default"
 
@@ -16176,6 +16360,13 @@ if test -z "${DEFAULT_VISIBILITY_TRUE}" && test -z "${DEFAULT_VISIBILITY_FALSE}"
   { { echo "$as_me:$LINENO: error: conditional \"DEFAULT_VISIBILITY\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"DEFAULT_VISIBILITY\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${EFL_BUILD_DOC_TRUE}" && test -z "${EFL_BUILD_DOC_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"EFL_BUILD_DOC\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"EFL_BUILD_DOC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -16653,6 +16844,8 @@ do
     "efreet-mime.pc") CONFIG_FILES="$CONFIG_FILES efreet-mime.pc" ;;
     "efreet-trash.pc") CONFIG_FILES="$CONFIG_FILES efreet-trash.pc" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
+    "doc/Doxyfile") CONFIG_FILES="$CONFIG_FILES doc/Doxyfile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/lib/Makefile") CONFIG_FILES="$CONFIG_FILES src/lib/Makefile" ;;
     "src/bin/Makefile") CONFIG_FILES="$CONFIG_FILES src/bin/Makefile" ;;
@@ -16869,12 +17062,16 @@ EINA_CFLAGS!$EINA_CFLAGS$ac_delim
 EINA_LIBS!$EINA_LIBS$ac_delim
 DEFAULT_VISIBILITY_TRUE!$DEFAULT_VISIBILITY_TRUE$ac_delim
 DEFAULT_VISIBILITY_FALSE!$DEFAULT_VISIBILITY_FALSE$ac_delim
+efl_have_doxygen!$efl_have_doxygen$ac_delim
+efl_doxygen!$efl_doxygen$ac_delim
+EFL_BUILD_DOC_TRUE!$EFL_BUILD_DOC_TRUE$ac_delim
+EFL_BUILD_DOC_FALSE!$EFL_BUILD_DOC_FALSE$ac_delim
 requirements!$requirements$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 12; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 16; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5
