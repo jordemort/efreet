@@ -1,4 +1,4 @@
-efreet (0.5.0.050+svn20090203-2) UNRELEASED; urgency=low
+efreet (0.5.0.050+svn20090203-2) experimental; urgency=low
 
   * Add debian/patches/04_fix_signedness_issues.diff:
     - Cherry-pick from SVN rev. 39610 (Closes: #514018)
