@@ -10,7 +10,7 @@ Vcs-Git: git://git.debian.org/pkg-e/libs/efreet.git
 Vcs-Browser: http://git.debian.org/?p=pkg-e/libs/efreet.git
 Homepage: http://www.enlightenment.org
 
-Package: libefreet-0.5.0.050a
+Package: libefreet-svn-00
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: libefreet0
@@ -31,7 +31,7 @@ Description: Library that implements freedesktop.org specs for use with E17/EFL
 Package: libefreet-dev
 Section: libdevel
 Architecture: any
-Depends: ${misc:Depends}, libefreet-0.5.0.050a (= ${binary:Version}), libecore-dev (>= 0.9.9.050+svn20081201), libeina-dev
+Depends: ${misc:Depends}, libefreet-svn-00 (= ${binary:Version}), libecore-dev (>= 0.9.9.050+svn20081201), libeina-dev
 Suggests: libefreet-doc
 Description: Development files for libefreet and libefreet-mime
  An implementation of several specifications from freedesktop.org intended for

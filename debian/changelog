@@ -1,3 +1,15 @@
+efreet (0.5.0.050+svn2009????) UNRELEASED; urgency=low
+
+  * New SVN snapshot
+    - Drop patches, no longer needed:
+      + 02-fix-library-soname.diff
+      + 03-reapply-autofoo.diff
+    - Drop 04_fix_signedness_issues.diff, applied upstream
+    - Package enaming due to upstream SONAME change.
+      + Update shlibs and .install files
+
+ -- Albin Tonnerre <albin.tonnerre@gmail.com>  Sat, 18 Apr 2009 13:09:52 +0200
+
 efreet (0.5.0.050+svn20090203-2) experimental; urgency=low
 
   * Add debian/patches/04_fix_signedness_issues.diff:
