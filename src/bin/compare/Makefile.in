@@ -37,7 +37,10 @@ subdir = src/bin/compare
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_attribute.m4 \
-	$(top_srcdir)/m4/efl_doxygen.m4 $(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/efl_doxygen.m4 $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -48,8 +51,10 @@ binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_efreet_alloc_OBJECTS = efreet_alloc.$(OBJEXT)
 efreet_alloc_OBJECTS = $(am_efreet_alloc_OBJECTS)
+efreet_alloc_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
 am_efreet_menu_alloc_OBJECTS = efreet_menu_alloc.$(OBJEXT)
 efreet_menu_alloc_OBJECTS = $(am_efreet_menu_alloc_OBJECTS)
+efreet_menu_alloc_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -86,33 +91,44 @@ DEFS = @DEFS@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
-ECHO = @ECHO@
+DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
-ECORE_CFLAGS = @ECORE_CFLAGS@
-ECORE_LIBS = @ECORE_LIBS@
+EFL_EFREET_BUILD = @EFL_EFREET_BUILD@
+EFL_EFREET_MIME_BUILD = @EFL_EFREET_MIME_BUILD@
+EFL_EFREET_TRASH_BUILD = @EFL_EFREET_TRASH_BUILD@
+EFREET_CFLAGS = @EFREET_CFLAGS@
+EFREET_LIBS = @EFREET_LIBS@
 EGREP = @EGREP@
 EINA_CFLAGS = @EINA_CFLAGS@
 EINA_LIBS = @EINA_LIBS@
+EVIL_CFLAGS = @EVIL_CFLAGS@
+EVIL_LIBS = @EVIL_LIBS@
 EXEEXT = @EXEEXT@
+FGREP = @FGREP@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
+LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MKDIR_P = @MKDIR_P@
+NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -132,6 +148,7 @@ abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
@@ -150,6 +167,9 @@ docdir = @docdir@
 dvidir = @dvidir@
 efl_doxygen = @efl_doxygen@
 efl_have_doxygen = @efl_have_doxygen@
+efreet_mime_release_info = @efreet_mime_release_info@
+efreet_release_info = @efreet_release_info@
+efreet_trash_release_info = @efreet_trash_release_info@
 exec_prefix = @exec_prefix@
 host = @host@
 host_alias = @host_alias@
@@ -164,6 +184,7 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
+lt_ECHO = @lt_ECHO@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
@@ -180,19 +201,17 @@ target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 version_info = @version_info@
+win32_libs = @win32_libs@
 MAINTAINERCLEANFILES = Makefile.in
 AM_CPPFLAGS = \
 -I. \
 -I$(top_srcdir)/src/lib \
-@EINA_CFLAGS@ \
-@ECORE_CFLAGS@
+@EFREET_CFLAGS@
 
-efreet_menu_alloc_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
 efreet_menu_alloc_SOURCES = efreet_menu_alloc.c comp.h
-efreet_menu_alloc_LDADD = $(top_builddir)/src/lib/libefreet.la @ECORE_LIBS@ @EINA_LIBS@
-efreet_alloc_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
+efreet_menu_alloc_LDADD = $(top_builddir)/src/lib/libefreet.la @EFREET_LIBS@
 efreet_alloc_SOURCES = efreet_alloc.c comp.h
-efreet_alloc_LDADD = $(top_builddir)/src/lib/libefreet.la @ECORE_LIBS@ @EINA_LIBS@
+efreet_alloc_LDADD = $(top_builddir)/src/lib/libefreet.la @EFREET_LIBS@
 all: all-am
 
 .SUFFIXES:
