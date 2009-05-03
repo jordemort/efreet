@@ -18,8 +18,14 @@
    */
 #undef HAVE_ALLOCA_H
 
+/* Define to 1 if you have the <arpa/inet.h> header file. */
+#undef HAVE_ARPA_INET_H
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
+
+/* Set to 1 if Evil library is installed */
+#undef HAVE_EVIL
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -50,6 +56,10 @@
 
 /* Define to 1 if your compiler has __attribute__ */
 #undef HAVE___ATTRIBUTE__
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
 
 /* Name of package */
 #undef PACKAGE
