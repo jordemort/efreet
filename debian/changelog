@@ -1,4 +1,4 @@
-efreet (0.5.0.050+svn2009????) UNRELEASED; urgency=low
+efreet (0.5.0.060-1) experimental; urgency=low
 
   * New SVN snapshot
     - Drop patches, no longer needed:
@@ -7,8 +7,11 @@ efreet (0.5.0.050+svn2009????) UNRELEASED; urgency=low
     - Drop 04_fix_signedness_issues.diff, applied upstream
     - Package enaming due to upstream SONAME change.
       + Update shlibs and .install files
+  * Package name purposedly doesn't match SONAME, in an attempt to make the
+    former a bit more meaningful than libefreet-ver-pre-01-0
+    - Override the lintian warning: package-name-doesnt-match-sonames
 
- -- Albin Tonnerre <albin.tonnerre@gmail.com>  Sat, 18 Apr 2009 13:09:52 +0200
+ -- Albin Tonnerre <albin.tonnerre@gmail.com>  Tue, 05 May 2009 18:51:47 +0200
 
 efreet (0.5.0.050+svn20090203-2) experimental; urgency=low
 
