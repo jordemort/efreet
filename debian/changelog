@@ -1,3 +1,10 @@
+efreet (0.5.0.061-1) UNRELEASED; urgency=low
+
+  * New upstream snapshot
+  * Package rename due to API changes
+
+ -- Albin Tonnerre <albin.tonnerre@gmail.com>  Fri, 19 Jun 2009 17:59:57 +0200
+
 efreet (0.5.0.060-1) experimental; urgency=low
 
   * New SVN snapshot
