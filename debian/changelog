@@ -1,10 +1,10 @@
-efreet (0.5.0.061-1) UNRELEASED; urgency=low
+efreet (0.5.0.061-1) unstable; urgency=low
 
   * New upstream snapshot
   * Package rename due to API changes
   * Update to Standards-Version 3.8.2, no change required
 
- -- Albin Tonnerre <albin.tonnerre@gmail.com>  Fri, 19 Jun 2009 17:59:57 +0200
+ -- Albin Tonnerre <albin.tonnerre@gmail.com>  Sat, 20 Jun 2009 17:36:29 +0200
 
 efreet (0.5.0.060-1) experimental; urgency=low
 
