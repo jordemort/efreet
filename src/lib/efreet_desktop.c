@@ -1222,9 +1222,11 @@ efreet_desktop_command_progress_get(Efreet_Desktop *desktop, Eina_List *files,
     if (command->num_pending == 0)
     {
         Eina_List *execs;
+        char *exec;
+
         execs = efreet_desktop_command_build(command);
         ret = efreet_desktop_command_execs_process(command, execs);
-	eina_list_free(execs);
+        eina_list_free(execs);
         efreet_desktop_command_free(command);
     }
 
@@ -1780,10 +1782,12 @@ efreet_desktop_cb_download_complete(void *data, const char *file __UNUSED__,
     if (f->command->num_pending <= 0)
     {
         Eina_List *execs;
+        char *exec;
+
         execs = efreet_desktop_command_build(f->command);
         /* TODO: Need to handle the return value from efreet_desktop_command_execs_process */
         efreet_desktop_command_execs_process(f->command, execs);
-	eina_list_free(execs);
+        eina_list_free(execs);
         efreet_desktop_command_free(f->command);
     }
 }
