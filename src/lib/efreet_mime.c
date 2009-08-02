@@ -366,7 +366,7 @@ efreet_mime_type_cache_clear(void)
         eina_hash_free(mime_icons);
         mime_icons_lru = NULL;
     }
-    mime_icons = eina_hash_pointer_new(EINA_FREE_CB(efreet_mime_icon_entry_head_free));
+    mime_icons = eina_hash_stringshared_new(EINA_FREE_CB(efreet_mime_icon_entry_head_free));
 }
 
 EAPI void
@@ -1049,6 +1049,7 @@ efreet_mime_shared_mimeinfo_magic_parse(char *data, int size)
             ptr = ++val;
 
             while (*ptr != '\n') ptr++;
+            ptr++;
         }
         else
         {
@@ -1070,7 +1071,6 @@ efreet_mime_shared_mimeinfo_magic_parse(char *data, int size)
                 entry->range_len = 1;
                 entry->mask = NULL;
                 entry->value = NULL;
-                ptr++;
 
                 mime->entries = eina_list_append(mime->entries, entry);
            }
@@ -1271,6 +1271,12 @@ efreet_mime_magic_check_priority(const char *file,
                     break;
                 }
             }
+        }
+
+        if (match)
+        {
+            fclose(f);
+            return last_mime;
         }
     }
     fclose(f);
