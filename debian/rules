@@ -4,10 +4,8 @@ include /usr/share/cdbs/1/class/autotools.mk
 include /usr/share/cdbs/1/rules/debhelper.mk
 include /usr/share/cdbs/1/rules/simple-patchsys.mk
 
-build/libefreet-doc::
-	$(MAKE) doc
-
 install/libefreet-doc::
+	$(MAKE) doc
 	cp -R $(DEB_SRCDIR)/doc/html debian/libefreet-doc/usr/share/doc/libefreet-doc/
 
 DEB_CONFIGURE_EXTRA_FLAGS := --disable-rpath --enable-doc

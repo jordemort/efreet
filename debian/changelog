@@ -1,3 +1,13 @@
+efreet (0.5.0.062-2) unstable; urgency=low
+
+  * Add 01_support_svg_by_default: (Closes: #538172)
+    - Efreet now considers .svg files when searching for icons
+  * debian/rules: build the doc in install: rather than build:, so that it
+    doesn't get built when the doc package is not built
+  * Update Standards-Version to 3.8.3, no change required
+
+ -- Albin Tonnerre <albin.tonnerre@gmail.com>  Fri, 21 Aug 2009 15:37:44 +0200
+
 efreet (0.5.0.062-1) unstable; urgency=low
 
   * New upstream snapshot
