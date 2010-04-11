@@ -6,7 +6,7 @@ Uploaders: Albin Tonnerre <lutin@debian.org>,
  Xavier Oswald <x.oswald@free.fr>, Jan Lübbe <jluebbe@debian.org>
 Build-Depends: debhelper (>= 7.0.50~), libecore-dev (>= 0.9.9.063), libeina-dev (>= 0.9.9.063)
 Build-Depends-Indep: doxygen, graphviz
-Standards-Version: 3.8.3
+Standards-Version: 3.8.4
 Vcs-Git: git://git.debian.org/pkg-e/libs/efreet.git
 Vcs-Browser: http://git.debian.org/?p=pkg-e/libs/efreet.git
 Homepage: http://www.enlightenment.org
