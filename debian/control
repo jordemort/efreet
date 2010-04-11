@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Debian Pkg-e Team <pkg-e-devel@lists.alioth.debian.org>
 Uploaders: Albin Tonnerre <lutin@debian.org>,
  Xavier Oswald <x.oswald@free.fr>, Jan Lübbe <jluebbe@debian.org>
-Build-Depends: debhelper (>= 6), cdbs, libecore-dev (>= 0.9.9.063), libeina-dev (>= 0.9.9.063)
+Build-Depends: debhelper (>= 7.0.50~), libecore-dev (>= 0.9.9.063), libeina-dev (>= 0.9.9.063)
 Build-Depends-Indep: doxygen, graphviz
 Standards-Version: 3.8.3
 Vcs-Git: git://git.debian.org/pkg-e/libs/efreet.git
