@@ -4,9 +4,14 @@ CFLAGS += -fvisibility=hidden
 
 binary: binary-indep binary-arch
 binary-indep: build-doc-stamp
+binary-arch: build-test-stamp
 
 build-doc-stamp: build
 	$(MAKE) doc
+	touch $@
+
+build-test-stamp: build
+	$(MAKE) check
 	touch $@
 
 %:
