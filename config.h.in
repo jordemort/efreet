@@ -8,9 +8,6 @@
 /* Define to 1 if using `alloca.c'. */
 #undef C_ALLOCA
 
-/* Default visibility */
-#undef DEFAULT_VISIBLITY
-
 /* Define to 1 if you have `alloca', as a function or macro. */
 #undef HAVE_ALLOCA
 
@@ -24,7 +21,7 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
-/* Set to 1 if Evil library is installed */
+/* Set to 1 if evil package is installed */
 #undef HAVE_EVIL
 
 /* Define to 1 if you have the <inttypes.h> header file. */
@@ -44,6 +41,9 @@
 
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strlcpy' function. */
+#undef HAVE_STRLCPY
 
 /* Define to 1 if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
@@ -76,8 +76,14 @@
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
+/* Define to the home page for this package. */
+#undef PACKAGE_URL
+
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
+
+/* default value since PATH_MAX is not defined */
+#undef PATH_MAX
 
 /* Sloppy Spec Compliance */
 #undef SLOPPY_SPEC
@@ -98,6 +104,18 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* Major version */
+#undef VMAJ
+
+/* Micro version */
+#undef VMIC
+
+/* Minor version */
+#undef VMIN
+
+/* Revison */
+#undef VREV
 
 /* Macro declaring a function argument to be unused */
 #undef __UNUSED__
