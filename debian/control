@@ -3,14 +3,14 @@ Section: libs
 Priority: optional
 Maintainer: Debian Pkg-e Team <pkg-e-devel@lists.alioth.debian.org>
 Uploaders: Albin Tonnerre <lutin@debian.org>, Jan Lübbe <jluebbe@debian.org>
-Build-Depends: debhelper (>= 7.0.50~), libecore-dev (>= 0.9.9.063), libeina-dev (>= 0.9.9.063)
+Build-Depends: debhelper (>= 7.0.50~), libecore-dev (>= 0.9.9.49898), libeina-dev (>= 0.9.9.49898)
 Build-Depends-Indep: doxygen, graphviz
 Standards-Version: 3.8.4
 Vcs-Git: git://git.debian.org/pkg-e/libs/efreet.git
 Vcs-Browser: http://git.debian.org/?p=pkg-e/libs/efreet.git
 Homepage: http://www.enlightenment.org
 
-Package: libefreet-svn-05
+Package: libefreet-svn-06
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Conflicts: libefreet0
@@ -31,7 +31,7 @@ Description: Library that implements freedesktop.org specs for use with E17/EFL
 Package: libefreet-dev
 Section: libdevel
 Architecture: any
-Depends: ${misc:Depends}, libefreet-svn-05 (= ${binary:Version}), libecore-dev (>= 0.9.9.063), libeina-dev (>= 0.9.9.063)
+Depends: ${misc:Depends}, libefreet-svn-06 (= ${binary:Version}), libecore-dev (>= 0.9.9.49898), libeina-dev (>= 0.9.9.49898)
 Suggests: libefreet-doc
 Description: Development files for libefreet and libefreet-mime
  An implementation of several specifications from freedesktop.org intended for

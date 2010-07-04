@@ -1,3 +1,9 @@
+efreet (0.5.0.49898-1) UNRELEASED; urgency=low
+
+  * New upstream snapshot
+
+ -- Albin Tonnerre <lutin@debian.org>  Sun, 04 Jul 2010 22:14:30 +0200
+
 efreet (0.5.0.063-1) unstable; urgency=low
 
   * New upstream snapshot
