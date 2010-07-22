@@ -1,8 +1,16 @@
-efreet (0.5.0.49898-1) UNRELEASED; urgency=low
+efreet (0.5.0.49898-1) unstable; urgency=low
 
   * New upstream snapshot
+  * Switch to '3.0 (quilt)' source format
+  * Switch from CDBS to dh7
+  * Bump Standards-Version, no change required
+  * Run the testsuite automatically when building
+  * Remove Xavier Oswald from uploaders, no longer active
+  * Drop patches/01_support_svg_by_default.diff, fixed upstream
+  * Drop --disable-rpath configure option, no longer recognized
+  * Install internal helper binary in libefreet-svn-06
 
- -- Albin Tonnerre <lutin@debian.org>  Sun, 04 Jul 2010 22:14:30 +0200
+ -- Albin Tonnerre <lutin@debian.org>  Thu, 22 Jul 2010 19:40:00 +0200
 
 efreet (0.5.0.063-1) unstable; urgency=low
 
