@@ -1,4 +1,3 @@
-/* vim: set sw=4 ts=4 sts=4 et: */
 #include "Efreet.h"
 #include "Efreet_Mime.h"
 #include <Ecore.h>
@@ -125,7 +124,7 @@ main(int argc, char ** argv)
             if ((!strcmp(argv[i], "-h")) ||
                 (!strcmp(argv[i], "--help")))
             {
-                for (i = 0; tests[i].name != NULL; i++)
+                for (i = 0; tests[i].name; i++)
                 {
                     printf("%s\n", tests[i].name);
                 }
@@ -136,7 +135,7 @@ main(int argc, char ** argv)
     }
 
     environment_store();
-    for (i = 0; tests[i].name != NULL; i++)
+    for (i = 0; tests[i].name; i++)
     {
         int ret;
         double start;
