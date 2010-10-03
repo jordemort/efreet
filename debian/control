@@ -41,7 +41,7 @@ Description: Development files for libefreet and libefreet-mime
   - Icon Theme
   - Menu
  .
- This packages contains headers and static libraries for Efreet.
+ This package contains headers and static libraries for Efreet.
 
 Package: libefreet-doc
 Section: doc
