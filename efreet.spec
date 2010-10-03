@@ -4,7 +4,7 @@
 
 Summary: FreeDesktop.Org Compatibility Library
 Name: efreet
-Version: 0.5.0.49898
+Version: 1.0.0.beta
 Release: %{_rel}
 License: BSD
 Group: System Environment/Libraries

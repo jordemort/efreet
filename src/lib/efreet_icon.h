@@ -1,4 +1,3 @@
-/* vim: set sw=4 ts=4 sts=4 et: */
 #ifndef EFREET_ICON_H
 #define EFREET_ICON_H
 
@@ -66,7 +65,7 @@ struct Efreet_Icon_Theme
 
     unsigned char hidden:1;     /**< Should this theme be hidden from users */
     unsigned char valid:1;      /**< Have we seen an index for this theme */
-    unsigned char fake:1;       /**< This isnt' a real theme but the user has
+    unsigned char fake:1;       /**< This isn't' a real theme but the user has
                                         tried to query from it. We create the
                                         fake one to give us the theme cache. */
 };
@@ -123,7 +122,7 @@ struct Efreet_Icon
                                         points for emblems/overlays */
 
     unsigned int ref_count;    /**< References to this icon */
-    unsigned char has_embedded_text_rectangle:1; /**< Was the embedded
+    unsigned char has_embedded_text_rectangle:1; /**< Has the embedded
                                                         rectangle set */
 };
 

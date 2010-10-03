@@ -36,7 +36,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 subdir = src/lib
-DIST_COMMON = $(dist_installed_headers_DATA) $(srcdir)/Makefile.am \
+DIST_COMMON = $(includes_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ac_attribute.m4 \
@@ -44,7 +44,9 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_attribute.m4 \
 	$(top_srcdir)/m4/efl_coverage.m4 \
 	$(top_srcdir)/m4/efl_doxygen.m4 \
 	$(top_srcdir)/m4/efl_path_max.m4 $(top_srcdir)/m4/efl_tests.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -72,8 +74,7 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(installed_headersdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includesdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libefreet_la_DEPENDENCIES =
 am__objects_1 = libefreet_la-efreet.lo libefreet_la-efreet_base.lo \
@@ -134,7 +135,7 @@ SOURCES = $(libefreet_la_SOURCES) $(libefreet_mime_la_SOURCES) \
 	$(libefreet_trash_la_SOURCES)
 DIST_SOURCES = $(libefreet_la_SOURCES) $(libefreet_mime_la_SOURCES) \
 	$(libefreet_trash_la_SOURCES)
-DATA = $(dist_installed_headers_DATA)
+HEADERS = $(includes_HEADERS)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -215,6 +216,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
+VMAJ = @VMAJ@
 WIN32_LIBS = @WIN32_LIBS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -300,8 +302,11 @@ efreet_menu.c \
 efreet_utils.c \
 efreet_uri.c
 
-installed_headersdir = $(includedir)/efreet
-dist_installed_headers_DATA = $(EFREETHEADERS) Efreet_Mime.h Efreet_Trash.h
+includes_HEADERS = $(EFREETHEADERS) Efreet_Mime.h Efreet_Trash.h
+includesdir = $(includedir)/efreet-@VMAJ@
+
+# Not sure if this was for 'make dist', so left it in but commented - dh
+# dist_installed_headers_DATA = $(EFREETHEADERS) Efreet_Mime.h Efreet_Trash.h
 libefreet_la_SOURCES = $(EFREETSOURCES)
 libefreet_la_CPPFLAGS = \
 -DPACKAGE_DATA_DIR=\"$(datadir)\" \
@@ -548,26 +553,26 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-dist_installed_headersDATA: $(dist_installed_headers_DATA)
+install-includesHEADERS: $(includes_HEADERS)
 	@$(NORMAL_INSTALL)
-	test -z "$(installed_headersdir)" || $(MKDIR_P) "$(DESTDIR)$(installed_headersdir)"
-	@list='$(dist_installed_headers_DATA)'; test -n "$(installed_headersdir)" || list=; \
+	test -z "$(includesdir)" || $(MKDIR_P) "$(DESTDIR)$(includesdir)"
+	@list='$(includes_HEADERS)'; test -n "$(includesdir)" || list=; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(installed_headersdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(installed_headersdir)" || exit $$?; \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(includesdir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(includesdir)" || exit $$?; \
 	done
 
-uninstall-dist_installed_headersDATA:
+uninstall-includesHEADERS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(dist_installed_headers_DATA)'; test -n "$(installed_headersdir)" || list=; \
+	@list='$(includes_HEADERS)'; test -n "$(includesdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	test -n "$$files" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(installed_headersdir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(installed_headersdir)" && rm -f $$files
+	echo " ( cd '$(DESTDIR)$(includesdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(includesdir)" && rm -f $$files
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
@@ -653,9 +658,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES) $(DATA)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(installed_headersdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includesdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -707,7 +712,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_installed_headersDATA
+install-data-am: install-includesHEADERS
 
 install-dvi: install-dvi-am
 
@@ -753,8 +758,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dist_installed_headersDATA \
-	uninstall-libLTLIBRARIES
+uninstall-am: uninstall-includesHEADERS uninstall-libLTLIBRARIES
 
 .MAKE: install-am install-strip
 
@@ -762,16 +766,15 @@ uninstall-am: uninstall-dist_installed_headersDATA \
 	clean-libLTLIBRARIES clean-libtool ctags distclean \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am \
-	install-dist_installed_headersDATA install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-libLTLIBRARIES \
-	install-man install-pdf install-pdf-am install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-dist_installed_headersDATA \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-includesHEADERS install-info \
+	install-info-am install-libLTLIBRARIES install-man install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags uninstall uninstall-am uninstall-includesHEADERS \
 	uninstall-libLTLIBRARIES
 
 

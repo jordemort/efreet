@@ -42,7 +42,9 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ac_attribute.m4 \
 	$(top_srcdir)/m4/efl_coverage.m4 \
 	$(top_srcdir)/m4/efl_doxygen.m4 \
 	$(top_srcdir)/m4/efl_path_max.m4 $(top_srcdir)/m4/efl_tests.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -135,6 +137,7 @@ SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
 VERSION = @VERSION@
+VMAJ = @VMAJ@
 WIN32_LIBS = @WIN32_LIBS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
@@ -198,7 +201,7 @@ top_srcdir = @top_srcdir@
 version_info = @version_info@
 MAINTAINERCLEANFILES = Makefile.in Doxyfile efreet_doxy_warnings.txt
 PACKAGE_DOCNAME = $(PACKAGE_TARNAME)-$(PACKAGE_VERSION)-doc
-EXTRA_DIST = Doxyfile.in $(wildcard img/*.*) e.css head.html foot.html
+EXTRA_DIST = Doxyfile.in $(wildcard images/*.*) e.css head.html foot.html
 all: all-am
 
 .SUFFIXES:
@@ -396,7 +399,7 @@ uninstall-am:
 
 @EFL_BUILD_DOC_TRUE@doc: all doc-clean
 @EFL_BUILD_DOC_TRUE@	$(efl_doxygen)
-@EFL_BUILD_DOC_TRUE@	cp img/* html/
+@EFL_BUILD_DOC_TRUE@	cp images/* html/
 @EFL_BUILD_DOC_TRUE@	rm -rf $(PACKAGE_DOCNAME).tar*
 @EFL_BUILD_DOC_TRUE@	mkdir -p $(PACKAGE_DOCNAME)/doc
 @EFL_BUILD_DOC_TRUE@	cp -R html/ latex/ $(PACKAGE_DOCNAME)/doc
