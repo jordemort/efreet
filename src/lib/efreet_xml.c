@@ -55,11 +55,12 @@ efreet_xml_init(void)
 {
     _efreet_xml_init_count++;
     if (_efreet_xml_init_count > 1) return _efreet_xml_init_count;
-    _efreet_xml_log_dom = eina_log_domain_register("Efreet_xml", EFREET_DEFAULT_LOG_COLOR);
+    _efreet_xml_log_dom = eina_log_domain_register
+      ("efreet_xml", EFREET_DEFAULT_LOG_COLOR);
     if (_efreet_xml_log_dom < 0)
     {
         _efreet_xml_init_count--;
-        ERROR("Efreet: Could not create a log domain for Efreet_xml.");
+        ERROR("Efreet: Could not create a log domain for efreet_xml.");
         return _efreet_xml_init_count;
     }
     return _efreet_xml_init_count;
@@ -80,7 +81,7 @@ efreet_xml_shutdown(void)
 
 /**
  * @internal
- * @param file: The file to parse
+ * @param file The file to parse
  * @return Returns an Efreet_Xml structure for the given file @a file or
  * NULL on failure
  * @brief Parses the given file into an Efreet_Xml structure.
@@ -122,7 +123,7 @@ efreet_error:
 
 /**
  * @internal
- * @param xml: The Efree_Xml to free
+ * @param xml The Efree_Xml to free
  * @return Returns no value
  * @brief Frees up the given Efreet_Xml structure
  */
@@ -152,8 +153,8 @@ efreet_xml_del(Efreet_Xml *xml)
 }
 
 /**
- * @param xml: The xml struct to work with
- * @param key: The attribute key to look for
+ * @param xml The xml struct to work with
+ * @param key The attribute key to look for
  * @return Returns the value for the given key, or NULL if none found
  * @brief Retrieves the value for the given attribute key
  */

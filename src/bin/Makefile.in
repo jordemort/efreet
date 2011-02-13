@@ -34,7 +34,11 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-internal_bin_PROGRAMS = efreet_desktop_cache_create$(EXEEXT)
+internal_bin_PROGRAMS = efreet_desktop_cache_create$(EXEEXT) \
+	$(am__EXEEXT_1)
+@ICON_CACHE_TRUE@am__append_1 = \
+@ICON_CACHE_TRUE@efreet_icon_cache_create
+
 subdir = src/bin
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -52,6 +56,7 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+@ICON_CACHE_TRUE@am__EXEEXT_1 = efreet_icon_cache_create$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(internal_bindir)"
 PROGRAMS = $(internal_bin_PROGRAMS)
 am_efreet_desktop_cache_create_OBJECTS =  \
@@ -63,6 +68,14 @@ efreet_desktop_cache_create_DEPENDENCIES =  \
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
+am__efreet_icon_cache_create_SOURCES_DIST =  \
+	efreet_icon_cache_create.c
+@ICON_CACHE_TRUE@am_efreet_icon_cache_create_OBJECTS =  \
+@ICON_CACHE_TRUE@	efreet_icon_cache_create.$(OBJEXT)
+efreet_icon_cache_create_OBJECTS =  \
+	$(am_efreet_icon_cache_create_OBJECTS)
+@ICON_CACHE_TRUE@efreet_icon_cache_create_DEPENDENCIES =  \
+@ICON_CACHE_TRUE@	$(top_builddir)/src/lib/libefreet.la
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -89,8 +102,10 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(efreet_desktop_cache_create_SOURCES)
-DIST_SOURCES = $(efreet_desktop_cache_create_SOURCES)
+SOURCES = $(efreet_desktop_cache_create_SOURCES) \
+	$(efreet_icon_cache_create_SOURCES)
+DIST_SOURCES = $(efreet_desktop_cache_create_SOURCES) \
+	$(am__efreet_icon_cache_create_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -250,6 +265,13 @@ $(top_builddir)/src/lib/libefreet.la \
 efreet_desktop_cache_create_SOURCES = \
 efreet_desktop_cache_create.c
 
+@ICON_CACHE_TRUE@efreet_icon_cache_create_LDADD = \
+@ICON_CACHE_TRUE@$(top_builddir)/src/lib/libefreet.la \
+@ICON_CACHE_TRUE@@EFREET_LIBS@
+
+@ICON_CACHE_TRUE@efreet_icon_cache_create_SOURCES = \
+@ICON_CACHE_TRUE@efreet_icon_cache_create.c
+
 all: all-am
 
 .SUFFIXES:
@@ -330,6 +352,9 @@ clean-internal_binPROGRAMS:
 efreet_desktop_cache_create$(EXEEXT): $(efreet_desktop_cache_create_OBJECTS) $(efreet_desktop_cache_create_DEPENDENCIES) 
 	@rm -f efreet_desktop_cache_create$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(efreet_desktop_cache_create_OBJECTS) $(efreet_desktop_cache_create_LDADD) $(LIBS)
+efreet_icon_cache_create$(EXEEXT): $(efreet_icon_cache_create_OBJECTS) $(efreet_icon_cache_create_DEPENDENCIES) 
+	@rm -f efreet_icon_cache_create$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(efreet_icon_cache_create_OBJECTS) $(efreet_icon_cache_create_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -338,6 +363,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efreet_desktop_cache_create.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/efreet_icon_cache_create.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
