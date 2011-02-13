@@ -12,11 +12,13 @@
 #include <errno.h>
 
 #include <Eina.h>
+#include <Eet.h>
 #include <Ecore.h>
 #include <Ecore_File.h>
 
 #include "Efreet.h"
 #include "efreet_private.h"
+#include "efreet_cache_private.h"
 
 static Eet_Data_Descriptor *edd = NULL;
 static Eet_File *ef = NULL;
@@ -25,7 +27,7 @@ static Eet_File *util_ef = NULL;
 static Eina_Hash *file_ids = NULL;
 static Eina_Hash *paths = NULL;
 
-int verbose = 0;
+static int verbose = 0;
 
 static int
 strcmplen(const void *data1, const void *data2)
@@ -41,8 +43,8 @@ cache_add(const char *path, const char *file_id, int priority __UNUSED__, int *c
 
     if (verbose)
     {
-         printf("FOUND: %s\n", path);
-         if (file_id) printf(" (id): %s\n", file_id);
+        printf("FOUND: %s\n", path);
+        if (file_id) printf(" (id): %s\n", file_id);
     }
     ext = strrchr(path, '.');
     if (!ext || (strcmp(ext, ".desktop") && strcmp(ext, ".directory"))) return 1;
@@ -81,7 +83,9 @@ cache_add(const char *path, const char *file_id, int priority __UNUSED__, int *c
         eina_hash_add(paths, desk->orig_path, (void *)1);
     }
     /* TODO: We should check priority, and not just hope we search in right order */
-    if (desk->type == EFREET_DESKTOP_TYPE_APPLICATION &&
+    /* TODO: We need to find out if prioritized file id has changed because of
+     * changed search order. */
+    if (!desk->hidden && desk->type == EFREET_DESKTOP_TYPE_APPLICATION &&
         file_id && !eina_hash_find(file_ids, file_id))
     {
         int id;
@@ -156,28 +160,28 @@ cache_scan(const char *path, const char *base_id, int priority, int recurse, int
     char id[PATH_MAX];
     char buf[PATH_MAX];
     DIR *files;
-    struct dirent *file;
+    struct dirent *ent;
 
     if (!ecore_file_is_dir(path)) return 1;
 
     files = opendir(path);
     if (!files) return 1;
     id[0] = '\0';
-    while ((file = readdir(files)))
+    while ((ent = readdir(files)))
     {
-        if (!file) break;
-        if (!strcmp(file->d_name, ".") || !strcmp(file->d_name, "..")) continue;
+        if (!ent) break;
+        if (!strcmp(ent->d_name, ".") || !strcmp(ent->d_name, "..")) continue;
 
         if (base_id)
         {
             if (*base_id)
-                snprintf(id, sizeof(id), "%s-%s", base_id, file->d_name);
+                snprintf(id, sizeof(id), "%s-%s", base_id, ent->d_name);
             else
-                strcpy(id, file->d_name);
+                strcpy(id, ent->d_name);
             file_id = id;
         }
 
-        snprintf(buf, sizeof(buf), "%s/%s", path, file->d_name);
+        snprintf(buf, sizeof(buf), "%s/%s", path, ent->d_name);
         if (ecore_file_is_dir(buf))
         {
             if (recurse)
@@ -204,17 +208,19 @@ main(int argc, char **argv)
      *   during whilst this program runs.
      * - Maybe linger for a while to reduce number of cache re-creates.
      */
-    char file[PATH_MAX];
-    char util_file[PATH_MAX];
+    Efreet_Cache_Version version;
     Eina_List *dirs = NULL, *user_dirs = NULL;
     int priority = 0;
     char *dir = NULL;
     char *path;
-    int fd = -1, tmpfd, dirsfd = -1;
+    int lockfd = -1, tmpfd, dirsfd = -1;
     struct stat st;
     int changed = 0;
     int i;
     struct flock fl;
+    char file[PATH_MAX] = { '\0' };
+    char util_file[PATH_MAX] = { '\0' };
+
 
     for (i = 1; i < argc; i++)
     {
@@ -232,22 +238,22 @@ main(int argc, char **argv)
     /* init external subsystems */
     if (!eina_init()) goto eina_error;
     if (!eet_init()) goto eet_error;
-    if (!ecore_init()) goto eet_error;
+    if (!ecore_init()) goto ecore_error;
 
     efreet_cache_update = 0;
 
     /* create homedir */
-    snprintf(file, sizeof(file), "%s/.efreet", efreet_home_dir_get());
+    snprintf(file, sizeof(file), "%s/efreet", efreet_cache_home_get());
     if (!ecore_file_mkpath(file)) goto efreet_error;
 
     /* lock process, so that we only run one copy of this program */
-    snprintf(file, sizeof(file), "%s/.efreet/desktop_data.lock", efreet_home_dir_get());
-    fd = open(file, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
-    if (fd < 0) goto efreet_error;
+    snprintf(file, sizeof(file), "%s/efreet/desktop_data.lock", efreet_cache_home_get());
+    lockfd = open(file, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+    if (lockfd < 0) goto efreet_error;
     memset(&fl, 0, sizeof(struct flock));
     fl.l_type = F_WRLCK;
     fl.l_whence = SEEK_SET;
-    if (fcntl(fd, F_SETLK, &fl) < 0)
+    if (fcntl(lockfd, F_SETLK, &fl) < 0)
     {
         if (verbose)
         {
@@ -268,7 +274,7 @@ main(int argc, char **argv)
 
     /* finish efreet init */
     if (!efreet_init()) goto efreet_error;
-    edd = efreet_desktop_edd_init();
+    edd = efreet_desktop_edd();
     if (!edd) goto edd_error;
 
     /* create cache */
@@ -276,14 +282,14 @@ main(int argc, char **argv)
     tmpfd = mkstemp(file);
     if (tmpfd < 0) goto error;
     close(tmpfd);
-    ef = eet_open(file, EET_FILE_MODE_WRITE);
+    ef = eet_open(file, EET_FILE_MODE_READ_WRITE);
     if (!ef) goto error;
 
     snprintf(util_file, sizeof(util_file), "%s.XXXXXX", efreet_desktop_util_cache_file());
     tmpfd = mkstemp(util_file);
     if (tmpfd < 0) goto error;
     close(tmpfd);
-    util_ef = eet_open(util_file, EET_FILE_MODE_WRITE);
+    util_ef = eet_open(util_file, EET_FILE_MODE_READ_WRITE);
     if (!util_ef) goto error;
 
     file_ids = eina_hash_string_superfast_new(NULL);
@@ -358,6 +364,14 @@ main(int argc, char **argv)
     eina_hash_free(file_ids);
     eina_hash_free(paths);
 
+    /* write cache version */
+    version.major = EFREET_DESKTOP_UTILS_CACHE_MAJOR;
+    version.minor = EFREET_DESKTOP_UTILS_CACHE_MINOR;
+    eet_data_write(util_ef, efreet_version_edd(), EFREET_CACHE_VERSION, &version, 1);
+    version.major = EFREET_DESKTOP_CACHE_MAJOR;
+    version.minor = EFREET_DESKTOP_CACHE_MINOR;
+    eet_data_write(ef, efreet_version_edd(), EFREET_CACHE_VERSION, &version, 1);
+
     /* check if old and new caches contain the same number of entries */
     if (!changed)
     {
@@ -397,24 +411,33 @@ main(int argc, char **argv)
         unlink(file);
     }
 
-    efreet_desktop_edd_shutdown(edd);
+    /* touch update file */
+    /* TODO: We need to signal whether the cache was updated or not */
+    snprintf(file, sizeof(file), "%s/efreet/desktop_data.update", efreet_cache_home_get());
+    tmpfd = open(file, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+    if (tmpfd >= 0)
+    {
+        if (write(tmpfd, "a", 1) != 1) perror("write");
+        close(tmpfd);
+    }
     efreet_shutdown();
     ecore_shutdown();
     eet_shutdown();
     eina_shutdown();
-    close(fd);
+    close(lockfd);
     return 0;
 error:
     if (dirsfd >= 0) close(dirsfd);
     IF_FREE(dir);
-    efreet_desktop_edd_shutdown(edd);
 edd_error:
     efreet_shutdown();
 efreet_error:
+    ecore_shutdown();
+ecore_error:
     eet_shutdown();
 eet_error:
     eina_shutdown();
 eina_error:
-    if (fd > 0) close(fd);
+    if (lockfd >= 0) close(lockfd);
     return 1;
 }

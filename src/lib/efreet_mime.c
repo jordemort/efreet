@@ -43,8 +43,8 @@ void *alloca (size_t);
 #include <Ecore.h>
 #include <Ecore_File.h>
 
-#include <Efreet.h>
-#include <Efreet_Mime.h>
+#include "Efreet.h"
+#include "Efreet_Mime.h"
 #include "efreet_private.h"
 
 static Eina_List *globs = NULL;     /* contains Efreet_Mime_Glob structs */
@@ -224,11 +224,12 @@ efreet_mime_init(void)
     if (!efreet_init())
         goto shutdown_ecore_file;
 
-    _efreet_mime_log_dom = eina_log_domain_register("Efreet_mime", EFREET_DEFAULT_LOG_COLOR);
+    _efreet_mime_log_dom = eina_log_domain_register
+      ("efreet_mime", EFREET_DEFAULT_LOG_COLOR);
 
     if (_efreet_mime_log_dom < 0)
     {
-        ERROR("Efreet: Could not create a log domain for Efreet_mime.");
+        ERROR("Efreet: Could not create a log domain for efreet_mime.");
         goto shutdown_efreet;
     }
 
@@ -292,7 +293,7 @@ efreet_mime_shutdown(void)
 }
 
 /**
- * @param file: The file to find the mime type
+ * @param file The file to find the mime type
  * @return Returns mime type as a string
  * @brief Retreive the mime type of a file
  */
@@ -323,16 +324,16 @@ efreet_mime_type_get(const char *file)
 }
 
 /**
- * @param mime: The name of the mime type
- * @param theme: The name of the theme to search icons in
- * @param size: The wanted size of the icon
+ * @param mime The name of the mime type
+ * @param theme The name of the theme to search icons in
+ * @param size The wanted size of the icon
  * @return Returns mime type icon path as a string
  * @brief Retreive the mime type icon for a file
  */
-EAPI char *
+EAPI const char *
 efreet_mime_type_icon_get(const char *mime, const char *theme, unsigned int size)
 {
-    char *icon = NULL;
+    const char *icon = NULL;
     char *data;
     Eina_List *icons  = NULL;
     const char *env = NULL;
@@ -427,7 +428,7 @@ efreet_mime_type_cache_flush(void)
 
 
 /**
- * @param file: The file to check the mime type
+ * @param file The file to check the mime type
  * @return Returns mime type as a string
  * @brief Retreive the mime type of a file using magic
  */
@@ -438,7 +439,7 @@ efreet_mime_magic_type_get(const char *file)
 }
 
 /**
- * @param file: The file to check the mime type
+ * @param file The file to check the mime type
  * @return Returns mime type as a string
  * @brief Retreive the mime type of a file using globs
  */
@@ -488,7 +489,7 @@ efreet_mime_globs_type_get(const char *file)
 }
 
 /**
- * @param file: The file to check the mime type
+ * @param file The file to check the mime type
  * @return Returns mime type as a string
  * @brief Retreive the special mime type of a file
  */
@@ -499,7 +500,7 @@ efreet_mime_special_type_get(const char *file)
 }
 
 /**
- * @param file: The file to check the mime type
+ * @param file The file to check the mime type
  * @return Returns mime type as a string
  * @brief Retreive the fallback mime type of a file
  */
@@ -523,7 +524,7 @@ efreet_mime_endian_check(void)
 
 /**
  * @internal
- * @param file: File to monitor
+ * @param file File to monitor
  * @return Returns no value.
  * @brief Creates a new file monitor if we aren't already monitoring the
  * given file
@@ -547,8 +548,8 @@ efreet_mime_monitor_add(const char *file)
 
 /**
  * @internal
- * @param datadirs: List of XDG data dirs
- * @param datahome: Path to XDG data home directory
+ * @param datadirs List of XDG data dirs
+ * @param datahome Path to XDG data home directory
  * @return Returns no value
  * @brief Read all glob files in XDG data/home dirs.
  * Also reads the /etc/mime.types file.
@@ -589,8 +590,8 @@ efreet_mime_load_globs(Eina_List *datadirs, const char *datahome)
 
 /**
  * @internal
- * @param datadirs: List of XDG data dirs
- * @param datahome: Path to XDG data home directory
+ * @param datadirs List of XDG data dirs
+ * @param datahome Path to XDG data home directory
  * @return Returns no value
  * @brief Read all magic files in XDG data/home dirs.
  */
@@ -620,10 +621,10 @@ efreet_mime_load_magics(Eina_List *datadirs, const char *datahome)
 
 /**
  * @internal
- * @param data: Data pointer passed to monitor_add
- * @param monitor: Ecore_File_Monitor associated with this event
- * @param event: The type of event
- * @param path: Path to the file that was updated
+ * @param data Data pointer passed to monitor_add
+ * @param monitor Ecore_File_Monitor associated with this event
+ * @param event The type of event
+ * @param path Path to the file that was updated
  * @return Returns no value
  * @brief Callback for all file monitors.  Just reloads the appropriate
  * list depending on which file changed.  If it was a magic file
@@ -653,8 +654,8 @@ efreet_mime_cb_update_file(void *data __UNUSED__,
 
 /**
  * @internal
- * @param datadirs: List of XDG data dirs
- * @param datahome: Path to XDG data home directory
+ * @param datadirs List of XDG data dirs
+ * @param datahome Path to XDG data home directory
  * @return Returns 1 on success, 0 on failure
  * @brief Initializes globs, magics, and monitors lists.
  */
@@ -707,7 +708,7 @@ efreet_mime_init_files(void)
 
 /**
  * @internal
- * @param file: File to examine
+ * @param file File to examine
  * @return Returns mime type if special file, else NULL
  * @brief Returns a mime type based on the stat of a file.
  * This is used first to catch directories and other special
@@ -734,7 +735,12 @@ efreet_mime_special_check(const char *file)
     struct stat s;
     int path_len = 0;
 
+    /* no link on Windows < Vista */
+#ifdef _WIN32
+    if (!stat(file, &s))
+#else
     if (!lstat(file, &s))
+#endif
     {
         if (S_ISREG(s.st_mode))
             return NULL;
@@ -775,7 +781,11 @@ efreet_mime_special_check(const char *file)
             /* Truncate to last slash */
             while (parent[--path_len] != '/') parent[path_len] = '\0';
 
+#ifdef _WIN32
+            if (!stat(file, &s2))
+#else
             if (!lstat(parent, &s2))
+#endif
             {
                 if (s.st_dev != s2.st_dev)
                     return _mime_inode_mountpoint;
@@ -792,7 +802,7 @@ efreet_mime_special_check(const char *file)
 
 /**
  * @internal
- * @param file: File to examine
+ * @param file File to examine
  * @return Returns mime type or NULL if the file doesn't exist
  * @brief Returns text/plain if the file appears to contain text and
  * returns application/octet-stream if it appears to be binary.
@@ -833,7 +843,7 @@ efreet_mime_fallback_check(const char *file)
 
 /**
  * @internal
- * @param glob: Glob to search for
+ * @param glob Glob to search for
  * @return Returns 1 on success, 0 on failure
  * @brief Removes a glob from the list
  */
@@ -856,7 +866,7 @@ efreet_mime_glob_remove(const char *glob)
 
 /**
  * @internal
- * @param file: mime.types file to load
+ * @param file mime.types file to load
  * @return Returns no value
  * @brief Loads values from a mime.types style file
  * into the globs list.
@@ -910,7 +920,7 @@ efreet_mime_mime_types_load(const char *file)
 
 /**
  * @internal
- * @param file: globs file to load
+ * @param file globs file to load
  * @return Returns no value
  * @brief Loads values from a mime.types style file
  * into the globs list.
@@ -989,7 +999,7 @@ efreet_mime_shared_mimeinfo_globs_load(const char *file)
 
 /**
  * @internal
- * @param in: Number to count the digits
+ * @param in Number to count the digits
  * @return Returns number of digits
  * @brief Calculates and returns the number of digits
  * in a number.
@@ -1007,7 +1017,7 @@ efreet_mime_count_digits(int in)
 
 /**
  * @internal
- * @param file: File to parse
+ * @param file File to parse
  * @return Returns no value
  * @brief Loads a magic file and adds information to magics list
  */
@@ -1039,7 +1049,7 @@ efreet_mime_shared_mimeinfo_magic_load(const char *file)
 }
 
 /**
- * @param data: The data from the file
+ * @param data The data from the file
  * @return Returns no value
  * @brief Parses a magic file
  * @note Format:
@@ -1249,9 +1259,9 @@ efreet_mime_shared_mimeinfo_magic_parse(char *data, int size)
 
 /**
  * @internal
- * @param file: File to check
- * @param start: Start priority, if 0 start at beginning
- * @param end: End priority, should be less then start
+ * @param file File to check
+ * @param start Start priority, if 0 start at beginning
+ * @param end End priority, should be less then start
  * unless start
  * @return Returns mime type for file if found, NULL if not
  * @brief Applies magic rules to a file given a start and end priority
@@ -1352,7 +1362,7 @@ efreet_mime_magic_check_priority(const char *file,
 
 /**
  * @internal
- * @param data: Data pointer that is being destroyed
+ * @param data Data pointer that is being destroyed
  * @return Returns no value
  * @brief Callback for globs destroy
  */
@@ -1368,7 +1378,7 @@ efreet_mime_glob_free(void *data)
 
 /**
  * @internal
- * @param data: Data pointer that is being destroyed
+ * @param data Data pointer that is being destroyed
  * @return Returns no value
  * @brief Callback for magics destroy
  */
@@ -1384,7 +1394,7 @@ efreet_mime_magic_free(void *data)
 
 /**
  * @internal
- * @param data: Data pointer that is being destroyed
+ * @param data Data pointer that is being destroyed
  * @return Returns no value
  * @brief Callback for magic entry destroy
  */
@@ -1401,8 +1411,8 @@ efreet_mime_magic_entry_free(void *data)
 
 /**
  * @internal
- * @param str: String (filename) to match
- * @param glob: Glob to match str to
+ * @param str String (filename) to match
+ * @param glob Glob to match str to
  * @return Returns 1 on success, 0 on failure
  * @brief Compares str to glob, case sensitive
  */
@@ -1421,8 +1431,8 @@ efreet_mime_glob_match(const char *str, const char *glob)
 
 /**
  * @internal
- * @param str: String (filename) to match
- * @param glob: Glob to match str to
+ * @param str String (filename) to match
+ * @param glob Glob to match str to
  * @return Returns 1 on success, 0 on failure
  * @brief Compares str to glob, case insensitive (expects str already in lower case)
  */

@@ -82,7 +82,7 @@ am__objects_1 = libefreet_la-efreet.lo libefreet_la-efreet_base.lo \
 	libefreet_la-efreet_ini.lo libefreet_la-efreet_desktop.lo \
 	libefreet_la-efreet_desktop_command.lo \
 	libefreet_la-efreet_menu.lo libefreet_la-efreet_utils.lo \
-	libefreet_la-efreet_uri.lo
+	libefreet_la-efreet_uri.lo libefreet_la-efreet_cache.lo
 am_libefreet_la_OBJECTS = $(am__objects_1)
 libefreet_la_OBJECTS = $(am_libefreet_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
@@ -300,7 +300,8 @@ efreet_desktop.c \
 efreet_desktop_command.c \
 efreet_menu.c \
 efreet_utils.c \
-efreet_uri.c
+efreet_uri.c \
+efreet_cache.c
 
 includes_HEADERS = $(EFREETHEADERS) Efreet_Mime.h Efreet_Trash.h
 includesdir = $(includedir)/efreet-@VMAJ@
@@ -336,7 +337,7 @@ libefreet_trash_la_CPPFLAGS = \
 
 libefreet_trash_la_LIBADD = @EFREET_LIBS@ libefreet.la
 libefreet_trash_la_LDFLAGS = -no-undefined @lt_enable_auto_import@ -version-info @version_info@ @release_info@
-EXTRA_DIST = efreet_private.h efreet_xml.h
+EXTRA_DIST = efreet_private.h efreet_xml.h efreet_cache_private.h
 all: all-am
 
 .SUFFIXES:
@@ -417,6 +418,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libefreet_la-efreet.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libefreet_la-efreet_base.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libefreet_la-efreet_cache.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libefreet_la-efreet_desktop.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libefreet_la-efreet_desktop_command.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libefreet_la-efreet_icon.Plo@am__quote@
@@ -531,6 +533,14 @@ libefreet_la-efreet_uri.lo: efreet_uri.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='efreet_uri.c' object='libefreet_la-efreet_uri.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libefreet_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libefreet_la-efreet_uri.lo `test -f 'efreet_uri.c' || echo '$(srcdir)/'`efreet_uri.c
+
+libefreet_la-efreet_cache.lo: efreet_cache.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libefreet_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libefreet_la-efreet_cache.lo -MD -MP -MF $(DEPDIR)/libefreet_la-efreet_cache.Tpo -c -o libefreet_la-efreet_cache.lo `test -f 'efreet_cache.c' || echo '$(srcdir)/'`efreet_cache.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libefreet_la-efreet_cache.Tpo $(DEPDIR)/libefreet_la-efreet_cache.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='efreet_cache.c' object='libefreet_la-efreet_cache.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libefreet_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libefreet_la-efreet_cache.lo `test -f 'efreet_cache.c' || echo '$(srcdir)/'`efreet_cache.c
 
 libefreet_mime_la-efreet_mime.lo: efreet_mime.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libefreet_mime_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libefreet_mime_la-efreet_mime.lo -MD -MP -MF $(DEPDIR)/libefreet_mime_la-efreet_mime.Tpo -c -o libefreet_mime_la-efreet_mime.lo `test -f 'efreet_mime.c' || echo '$(srcdir)/'`efreet_mime.c

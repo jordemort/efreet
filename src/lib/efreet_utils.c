@@ -2,6 +2,27 @@
 # include <config.h>
 #endif
 
+/* TODO: move eet file handling to eet_cache.c */
+/* TODO: add no_display check, as we might want only displayable items */
+
+#undef alloca
+#ifdef HAVE_ALLOCA_H
+# include <alloca.h>
+#elif defined __GNUC__
+# define alloca __builtin_alloca
+#elif defined _AIX
+# define alloca __alloca
+#elif defined _MSC_VER
+# include <malloc.h>
+# define alloca _alloca
+#else
+# include <stddef.h>
+# ifdef  __cplusplus
+extern "C"
+# endif
+void *alloca (size_t);
+#endif
+
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
@@ -9,11 +30,12 @@
 #include <fnmatch.h>
 #include <limits.h>
 
-#include <Ecore.h>
+#include <Eet.h>
 #include <Ecore_File.h>
 
 #include "Efreet.h"
 #include "efreet_private.h"
+#include "efreet_cache_private.h"
 
 /* define macros and variable for using the eina logging system  */
 
@@ -43,15 +65,14 @@ int
 efreet_util_init(void)
 {
     if (init++) return init;
-    _efreet_utils_log_dom = eina_log_domain_register("Efreet_util", EFREET_DEFAULT_LOG_COLOR);
+    _efreet_utils_log_dom = eina_log_domain_register
+      ("efreet_util", EFREET_DEFAULT_LOG_COLOR);
     if (_efreet_utils_log_dom < 0)
     {
         ERROR("Efreet: Could not create a log domain for efreet_util");
         return 0;
     }
 
-    /* TODO: Defer eet open until we actually need it open. */
-    cache = eet_open(efreet_desktop_util_cache_file(), EET_FILE_MODE_READ);
     file_id_by_desktop_path = eina_hash_string_superfast_new(EINA_FREE_CB(eina_stringshare_del));
 
     return init;
@@ -64,7 +85,7 @@ efreet_util_shutdown(void)
 
     eina_log_domain_unregister(_efreet_utils_log_dom);
     IF_FREE_HASH(file_id_by_desktop_path);
-    if (cache) eet_close(cache);
+    cache = efreet_cache_close(cache);
     IF_RELEASE(cache_file);
     return init;
 }
@@ -76,23 +97,23 @@ EAPI const char *
 efreet_desktop_util_cache_file(void)
 {
     char tmp[PATH_MAX] = { '\0' };
-    const char *home, *lang, *country, *modifier;
+    const char *cache_dir, *lang, *country, *modifier;
 
     if (cache_file) return cache_file;
 
-    home = efreet_home_dir_get();
+    cache_dir = efreet_cache_home_get();
     lang = efreet_lang_get();
     country = efreet_lang_country_get();
     modifier = efreet_lang_modifier_get();
 
     if (lang && country && modifier)
-        snprintf(tmp, sizeof(tmp), "%s/.efreet/desktop_util_%s_%s@%s.cache", home, lang, country, modifier);
+        snprintf(tmp, sizeof(tmp), "%s/efreet/desktop_util_%s_%s_%s@%s.eet", cache_dir, efreet_hostname_get(), lang, country, modifier);
     else if (lang && country)
-        snprintf(tmp, sizeof(tmp), "%s/.efreet/desktop_util_%s_%s.cache", home, lang, country);
+        snprintf(tmp, sizeof(tmp), "%s/efreet/desktop_util_%s_%s_%s.eet", cache_dir, efreet_hostname_get(), lang, country);
     else if (lang)
-        snprintf(tmp, sizeof(tmp), "%s/.efreet/desktop_util_%s.cache", home, lang);
+        snprintf(tmp, sizeof(tmp), "%s/efreet/desktop_util_%s_%s.eet", cache_dir, efreet_hostname_get(), lang);
     else
-        snprintf(tmp, sizeof(tmp), "%s/.efreet/desktop_util.cache", home);
+        snprintf(tmp, sizeof(tmp), "%s/efreet/desktop_util_%s.eet", cache_dir, efreet_hostname_get());
 
     cache_file = eina_stringshare_add(tmp);
     return cache_file;
@@ -181,6 +202,7 @@ efreet_util_desktop_mime_list(const char *mime)
  *
  * This list must be freed using EINA_LIST_FREE / efreet_desktop_free
  *
+ * @param wmname the wm name
  * @param wmclass the wm class
  * @return a list of desktops
  */
@@ -219,7 +241,7 @@ efreet_util_desktop_exec_find(const char *exec)
     int num, i;
     Efreet_Desktop *ret = NULL;
 
-    if (!cache) return NULL;
+    if (!efreet_cache_check(&cache, efreet_desktop_util_cache_file(), EFREET_DESKTOP_UTILS_CACHE_MAJOR)) return NULL;
     if (!exec) return NULL;
 
     keys = eet_list(cache, "*::e", &num);
@@ -312,7 +334,7 @@ efreet_util_desktop_exec_glob_list(const char *glob)
     int num, i;
     Eina_List *ret = NULL;
 
-    if (!cache) return NULL;
+    if (!efreet_cache_check(&cache, efreet_desktop_util_cache_file(), EFREET_DESKTOP_UTILS_CACHE_MAJOR)) return NULL;
     if (!glob) return NULL;
 
     keys = eet_list(cache, "*::e", &num);
@@ -389,7 +411,7 @@ efreet_util_desktop_categories_list(void)
     int num, i;
     Eina_List *ret = NULL;
 
-    if (!cache) return NULL;
+    if (!efreet_cache_check(&cache, efreet_desktop_util_cache_file(), EFREET_DESKTOP_UTILS_CACHE_MAJOR)) return NULL;
     keys = eet_list(cache, "*::ca", &num);
     if (!keys) return NULL;
     for (i = 0; i < num; i++)
@@ -487,7 +509,7 @@ efreet_util_cache_find(const char *search, const char *what1, const char *what2)
     int num, i;
     Efreet_Desktop *ret = NULL;
 
-    if (!cache) return NULL;
+    if (!efreet_cache_check(&cache, efreet_desktop_util_cache_file(), EFREET_DESKTOP_UTILS_CACHE_MAJOR)) return NULL;
     if ((!what1) && (!what2)) return NULL;
 
     keys = eet_list(cache, search, &num);
@@ -521,7 +543,7 @@ efreet_util_cache_list(const char *search, const char *what)
     int num, i;
     Eina_List *ret = NULL;
 
-    if (!cache) return NULL;
+    if (!efreet_cache_check(&cache, efreet_desktop_util_cache_file(), EFREET_DESKTOP_UTILS_CACHE_MAJOR)) return NULL;
     if (!what) return NULL;
 
     keys = eet_list(cache, search, &num);
@@ -556,7 +578,7 @@ efreet_util_cache_glob_list(const char *search, const char *what)
     int num, i;
     Eina_List *ret = NULL;
 
-    if (!cache) return NULL;
+    if (!efreet_cache_check(&cache, efreet_desktop_util_cache_file(), EFREET_DESKTOP_UTILS_CACHE_MAJOR)) return NULL;
     if (!what) return NULL;
 
     keys = eet_list(cache, search, &num);
@@ -587,6 +609,19 @@ efreet_util_cache_glob_list(const char *search, const char *what)
 void
 efreet_util_desktop_cache_reload(void)
 {
-    if (cache) eet_close(cache);
-    cache = eet_open(efreet_desktop_util_cache_file(), EET_FILE_MODE_READ);
+    cache = efreet_cache_close(cache);
 }
+
+EAPI void
+efreet_hash_free(Eina_Hash *hash, Eina_Free_Cb free_cb)
+{
+    Eina_Iterator *it;
+    void *data;
+
+    it = eina_hash_iterator_data_new(hash);
+    EINA_ITERATOR_FOREACH(it, data)
+        (*free_cb)(data);
+    eina_iterator_free(it);
+    eina_hash_free(hash);
+}
+

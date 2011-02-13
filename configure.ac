@@ -18,15 +18,21 @@ m4_define([lt_age], v_min)
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 
-AC_INIT([efreet], [v_ver.beta], [enlightenment-devel@lists.sourceforge.net])
+AC_INIT([efreet], [v_ver], [enlightenment-devel@lists.sourceforge.net])
 AC_PREREQ([2.52])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CANONICAL_BUILD
-AC_CANONICAL_HOST
+
+AC_CONFIG_HEADERS([config.h])
+AH_TOP([
+#ifndef EFL_CONFIG_H__
+#define EFL_CONFIG_H__
+])
+AH_BOTTOM([
+#endif /* EFL_CONFIG_H__ */
+])
 
 AM_INIT_AUTOMAKE([1.6 dist-bzip2])
-AM_CONFIG_HEADER([config.h])
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AC_LIBTOOL_WIN32_DLL
@@ -52,6 +58,9 @@ VMAJ=v_maj
 AC_SUBST(VMAJ)
 
 ### Needed information
+
+AC_CANONICAL_BUILD
+AC_CANONICAL_HOST
 
 
 ### Additional options to configure
@@ -86,6 +95,23 @@ if test "x${enable_sloppy_spec}" = "xyes" ; then
    AC_DEFINE([SLOPPY_SPEC], [1], [Sloppy Spec Compliance])
 fi
 
+AC_ARG_ENABLE([icon-cache],
+   [AC_HELP_STRING([--enable-icon-cache], [Enable icon cache compliance @<:@default=disabled@:>@])],
+   [
+    if test "x${enableval}" = "xyes" ; then
+       enable_icon_cache="yes"
+    else
+       enable_icon_cache="no"
+    fi
+   ],
+   [enable_icon_cache="no"])
+
+if test "x${enable_icon_cache}" = "xyes" ; then
+   AC_DEFINE([ICON_CACHE], [1], [Icon Cache])
+fi
+AM_CONDITIONAL(ICON_CACHE, test "x$enable_icon_cache" = "xyes")
+
+
 #AC_ARG_ENABLE(hidden-visibility,
 #	[AC_HELP_STRING([--enable-hidden-visibility],[Enable hidden visibility])],
 #	[enable_hidden_visibility=$enableval], [enable_hidden_visibility="auto"])
@@ -95,7 +121,7 @@ fi
 #    AC_DEFINE(DEFAULT_VISIBLITY, 1, [Default visibility])
 #fi
 #AM_CONDITIONAL(DEFAULT_VISIBILITY, test "x$enable_hidden_visibility" != "xyes")
-AM_CONDITIONAL(DEFAULT_VISIBILITY, 0)
+AM_CONDITIONAL(DEFAULT_VISIBILITY, false)
 
 
 ### Checks for programs
@@ -155,7 +181,6 @@ AC_CHECK_HEADERS([arpa/inet.h])
 ### Checks for compiler characteristics
 
 AC_C_CONST
-AC_ISC_POSIX
 AC_C___ATTRIBUTE__
 AM_PROG_CC_STDC
 AC_HEADER_STDC
@@ -190,6 +215,7 @@ AC_SUBST(lt_enable_auto_import)
 
 
 ### Checks for library functions
+AC_ISC_POSIX
 AC_FUNC_ALLOCA
 AC_CHECK_FUNCS(strlcpy)
 
@@ -216,11 +242,11 @@ doc/Makefile
 doc/Doxyfile
 src/Makefile
 src/lib/Makefile
+src/bin/Makefile
 src/tests/Makefile
 src/tests/data/Makefile
 src/tests/data/sub/Makefile
 src/tests/compare/Makefile
-src/bin/Makefile
 ])
 
 
@@ -239,6 +265,8 @@ echo
 echo "  Specification compliance:"
 echo "    Strict.............: ${enable_strict_spec}"
 echo "    Sloppy.............: ${enable_sloppy_spec}"
+echo
+echo "  Icon cache...........: ${enable_icon_cache}"
 echo
 echo "  Tests................: ${enable_tests}"
 echo "  Coverage.............: ${enable_coverage}"
