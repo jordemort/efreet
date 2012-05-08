@@ -1,10 +1,10 @@
 %define _missing_doc_files_terminate_build 0
 
-%{!?_rel:%{expand:%%global _rel 0.r%(svnversion | sed 's/[^0-9].*$//' || echo 0000)}}
+%{!?_rel:%{expand:%%global _rel 0.enl%{?dist}}}
 
 Summary: FreeDesktop.Org Compatibility Library
 Name: efreet
-Version: 1.0.0
+Version: 1.2.0
 Release: %{_rel}
 License: BSD
 Group: System Environment/Libraries
@@ -55,7 +55,7 @@ test "x$RPM_BUILD_ROOT" != "x/" && rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS COPYING* README
 %{_bindir}/%{name}*
 %{_libdir}/*.so.*
-%{_libdir}/efreet/efreet_desktop_cache_create
+%{_libdir}/efreet/
 
 %files devel
 %defattr(-, root, root)

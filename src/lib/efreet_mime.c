@@ -19,21 +19,19 @@ extern "C"
 void *alloca (size_t);
 #endif
 
-#include <stdio.h>
-#include <string.h>
 #include <ctype.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/time.h>
-#include <sys/mman.h>
-#include <unistd.h>
-#include <time.h>
 #include <fcntl.h>
+#include <unistd.h>
+#include <sys/mman.h>
 #include <fnmatch.h>
-#include <limits.h>
 
 #ifdef _WIN32
 # include <winsock2.h>
+#endif
+
+#ifdef HAVE_NETINET_IN_H
+# include <netinet/in.h>
 #endif
 
 #ifdef HAVE_ARPA_INET_H
@@ -42,6 +40,10 @@ void *alloca (size_t);
 
 #include <Ecore.h>
 #include <Ecore_File.h>
+
+/* define macros and variable for using the eina logging system  */
+#define EFREET_MODULE_LOG_DOM _efreet_mime_log_dom
+static int _efreet_mime_log_dom = -1;
 
 #include "Efreet.h"
 #include "Efreet_Mime.h"
@@ -104,10 +106,6 @@ static enum
  */
 //#define EFREET_MIME_ICONS_DEBUG
 
-/**
- * Efreet_Mime_Glob
- * @brief A parsed representation of a globs file
- */
 typedef struct Efreet_Mime_Glob Efreet_Mime_Glob;
 struct Efreet_Mime_Glob
 {
@@ -115,10 +113,6 @@ struct Efreet_Mime_Glob
     const char *mime;
 };
 
-/**
- * Efreet_Mime_Magic
- * @brief A parsed representation of a magic file section
- */
 typedef struct Efreet_Mime_Magic Efreet_Mime_Magic;
 struct Efreet_Mime_Magic
 {
@@ -127,10 +121,6 @@ struct Efreet_Mime_Magic
     Eina_List *entries;
 };
 
-/**
- * Efreet_Mime_Magic_Entry
- * @brief A parsed representation of a magic file entry
- */
 typedef struct Efreet_Mime_Magic_Entry Efreet_Mime_Magic_Entry;
 struct Efreet_Mime_Magic_Entry
 {
@@ -160,15 +150,6 @@ struct Efreet_Mime_Icon_Entry
     const char *theme;
     unsigned int size;
 };
-
-/* define macros and variable for using the eina logging system  */
-
-#ifdef EFREET_MODULE_LOG_DOM
-#undef EFREET_MODULE_LOG_DOM
-#endif
-#define EFREET_MODULE_LOG_DOM _efreet_mime_log_dom
-static int _efreet_mime_log_dom = -1;
-
 
 static int efreet_mime_glob_remove(const char *glob);
 static void efreet_mime_mime_types_load(const char *file);
@@ -205,10 +186,6 @@ static const char *efreet_mime_icon_entry_find(const char *mime,
                                                unsigned int size);
 static void efreet_mime_icons_debug(void);
 
-/**
- * @return Returns 1 on success or 0 on failure
- * @brief Initializes the efreet mime settings
- */
 EAPI int
 efreet_mime_init(void)
 {
@@ -229,7 +206,7 @@ efreet_mime_init(void)
 
     if (_efreet_mime_log_dom < 0)
     {
-        ERROR("Efreet: Could not create a log domain for efreet_mime.");
+        EINA_LOG_ERR("Efreet: Could not create a log domain for efreet_mime.");
         goto shutdown_efreet;
     }
 
@@ -246,6 +223,7 @@ efreet_mime_init(void)
 
 unregister_log_domain:
     eina_log_domain_unregister(_efreet_mime_log_dom);
+    _efreet_mime_log_dom = -1;
 shutdown_efreet:
     efreet_shutdown();
 shutdown_ecore_file:
@@ -256,10 +234,6 @@ shutdown_ecore:
     return --_efreet_mime_init_count;
 }
 
-/**
- * @return Returns no value
- * @brief Cleans up the efreet mime settings system
- */
 EAPI int
 efreet_mime_shutdown(void)
 {
@@ -285,6 +259,7 @@ efreet_mime_shutdown(void)
     IF_FREE_HASH(wild);
     IF_FREE_HASH(mime_icons);
     eina_log_domain_unregister(_efreet_mime_log_dom);
+    _efreet_mime_log_dom = -1;
     efreet_shutdown();
     ecore_file_shutdown();
     ecore_shutdown();
@@ -292,11 +267,6 @@ efreet_mime_shutdown(void)
     return _efreet_mime_init_count;
 }
 
-/**
- * @param file The file to find the mime type
- * @return Returns mime type as a string
- * @brief Retreive the mime type of a file
- */
 EAPI const char *
 efreet_mime_type_get(const char *file)
 {
@@ -323,13 +293,6 @@ efreet_mime_type_get(const char *file)
     return efreet_mime_fallback_check(file);
 }
 
-/**
- * @param mime The name of the mime type
- * @param theme The name of the theme to search icons in
- * @param size The wanted size of the icon
- * @return Returns mime type icon path as a string
- * @brief Retreive the mime type icon for a file
- */
 EAPI const char *
 efreet_mime_type_icon_get(const char *mime, const char *theme, unsigned int size)
 {
@@ -351,7 +314,7 @@ efreet_mime_type_icon_get(const char *mime, const char *theme, unsigned int size
     {
         eina_stringshare_del(mime);
         eina_stringshare_del(theme);
-        return strdup(cache);
+        return cache;
     }
 
     /* Standard icon name */
@@ -427,22 +390,12 @@ efreet_mime_type_cache_flush(void)
 }
 
 
-/**
- * @param file The file to check the mime type
- * @return Returns mime type as a string
- * @brief Retreive the mime type of a file using magic
- */
 EAPI const char *
 efreet_mime_magic_type_get(const char *file)
 {
     return efreet_mime_magic_check_priority(file, 0, 0);
 }
 
-/**
- * @param file The file to check the mime type
- * @return Returns mime type as a string
- * @brief Retreive the mime type of a file using globs
- */
 EAPI const char *
 efreet_mime_globs_type_get(const char *file)
 {
@@ -488,22 +441,12 @@ efreet_mime_globs_type_get(const char *file)
     return NULL;
 }
 
-/**
- * @param file The file to check the mime type
- * @return Returns mime type as a string
- * @brief Retreive the special mime type of a file
- */
 EAPI const char *
 efreet_mime_special_type_get(const char *file)
 {
     return efreet_mime_special_check(file);
 }
 
-/**
- * @param file The file to check the mime type
- * @return Returns mime type as a string
- * @brief Retreive the fallback mime type of a file
- */
 EAPI const char *
 efreet_mime_fallback_type_get(const char *file)
 {
@@ -1035,6 +978,9 @@ efreet_mime_shared_mimeinfo_magic_load(const char *file)
     fd = open(file, O_RDONLY);
     if (fd == -1) return;
 
+    /* let's make mmap safe and just get 0 pages for IO erro */
+    eina_mmap_safety_enabled_set(EINA_TRUE);
+   
     data = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
     if (data == MAP_FAILED)
     {

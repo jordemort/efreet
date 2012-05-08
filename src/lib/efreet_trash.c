@@ -2,16 +2,16 @@
 # include <config.h>
 #endif
 
-#include <stdio.h>
-#include <errno.h>
-#include <time.h>
-#include <limits.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <libgen.h>
+#include <errno.h>
 
 #include <Ecore_File.h>
+
+/* define macros and variable for using the eina logging system  */
+#define EFREET_MODULE_LOG_DOM _efreet_trash_log_dom
+static int _efreet_trash_log_dom = -1;
 
 #include "Efreet.h"
 #include "Efreet_Trash.h"
@@ -24,18 +24,6 @@ static const char *efreet_trash_dir = NULL;
 # define getuid() GetCurrentProcessId()
 #endif
 
-/* define macros and variable for using the eina logging system  */
-
-#ifdef EFREET_MODULE_LOG_DOM 
-#undef EFREET_MODULE_LOG_DOM
-#endif
-#define EFREET_MODULE_LOG_DOM _efreet_trash_log_dom
-static int _efreet_trash_log_dom = -1;
-
-/**
- * @return Returns 1 on success or 0 on failure
- * @brief Initializes the efreet trash system
- */
 EAPI int
 efreet_trash_init(void)
 {
@@ -49,17 +37,13 @@ efreet_trash_init(void)
       ("efreet_trash", EFREET_DEFAULT_LOG_COLOR);
     if (_efreet_trash_log_dom < 0)
     {
-        ERROR("Efreet: Could not create a log domain for efreet_trash");
+        EINA_LOG_ERR("Efreet: Could not create a log domain for efreet_trash");
         eina_shutdown();
         return --_efreet_trash_init_count;
     }
     return _efreet_trash_init_count;
 }
 
-/**
- * @return Returns no value
- * @brief Cleans up the efreet trash system
- */
 EAPI int
 efreet_trash_shutdown(void)
 {
@@ -68,16 +52,12 @@ efreet_trash_shutdown(void)
 
     IF_RELEASE(efreet_trash_dir);
     eina_log_domain_unregister(_efreet_trash_log_dom);
+    _efreet_trash_log_dom = -1;
     eina_shutdown();
 
     return _efreet_trash_init_count;
 }
 
-/**
- * @return Returns the XDG Trash local directory or NULL on errors
- * return value must be freed with eina_stringshare_del.
- * @brief Retrieves the XDG Trash local directory
- */
 EAPI const char*
 efreet_trash_dir_get(const char *file)
 {
@@ -171,17 +151,6 @@ efreet_trash_dir_get(const char *file)
     return trash_dir;
 }
 
-/**
- * @param uri The local uri to move in the trash
- * @param force_delete If you set this to 1 than files on different filesystems
- * will be deleted permanently
- * @return Return 1 on success, 0 on failure or -1 in case the uri is not on the
- * same filesystem and force_delete is not set.
- * @brief This function try to move the given uri to the trash. Files on 
- * different filesystem can't be moved to trash. If force_delete
- * is 0 than non-local files will be ignored and -1 is returned, if you set
- * force_delete to 1 non-local files will be deleted without asking.
- */
 EAPI int
 efreet_trash_delete_uri(Efreet_Uri *uri, int force_delete)
 {
@@ -244,7 +213,7 @@ efreet_trash_delete_uri(Efreet_Uri *uri, int force_delete)
 
     if ((f = fopen(dest, "w")))
     {
-        fputs("[Trash Info]\n", f); //TODO is '\n' right?? (or \r\c??)
+        fputs("[Trash Info]\n", f);
 
         fputs("Path=", f);
         escaped = efreet_uri_encode(uri);
@@ -267,10 +236,6 @@ efreet_trash_delete_uri(Efreet_Uri *uri, int force_delete)
     return 1;
 }
 
-/**
- * @return Return 1 if the trash is empty or 0 if some file are in.
- * @brief Check if the trash is currently empty
- */
 EAPI int
 efreet_trash_is_empty(void)
 {
@@ -282,10 +247,6 @@ efreet_trash_is_empty(void)
     return ecore_file_dir_is_empty(buf);
 }
 
-/**
- * @return Return 1 on success or 0 on failure
- * @brief Delete all the files inside the trash.
- */
 EAPI int
 efreet_trash_empty_trash(void)
 {
@@ -303,11 +264,6 @@ efreet_trash_empty_trash(void)
     return 1;
 }
 
-/**
- * @return Return a list of strings with filename (remember to free the list
- * when you don't need anymore)
- * @brief List all the files and directory currently inside the trash.
- */
 EAPI Eina_List*
 efreet_trash_ls(void)
 {
@@ -321,8 +277,9 @@ efreet_trash_ls(void)
     snprintf(buf, sizeof(buf), "%s/files", efreet_trash_dir_get(NULL));
     files = ecore_file_ls(buf);
 
-    EINA_LIST_FOREACH(files, l, infofile)
-        printf("FILE: %s\n", infofile);
+    if (eina_log_domain_level_check(_efreet_trash_log_dom, EINA_LOG_LEVEL_INFO))
+        EINA_LIST_FOREACH(files, l, infofile)
+            INF("FILE: %s\n", infofile);
 
     return files;
 }

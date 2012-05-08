@@ -1,9 +1,9 @@
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 m4_define([v_maj], [1])
-m4_define([v_min], [0])
+m4_define([v_min], [2])
 m4_define([v_mic], [0])
-m4_define([v_rev], m4_esyscmd([(svnversion "${SVN_REPO_PATH:-.}" | grep -v export || echo 0) | awk -F : '{printf("%s\n", $1);}' | tr -d ' :MSP\n']))
+m4_define([v_rev], m4_esyscmd([(svnversion "${SVN_REPO_PATH:-.}" | grep -v '\(export\|Unversioned directory\)' || echo 0) | awk -F : '{printf("%s\n", $1);}' | tr -d ' :MSP\n']))
 m4_if(v_rev, [0], [m4_define([v_rev], m4_esyscmd([git log 2> /dev/null | (grep -m1 git-svn-id || echo 0) | sed -e 's/.*@\([0-9]*\).*/\1/' | tr -d '\n']))])
 ##--   When released, remove the dnl on the below line
 m4_undefine([v_rev])
@@ -12,8 +12,8 @@ dnl m4_define([relname], [ver-pre-svn-07])
 dnl m4_define([v_rel], [-release relname])
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 m4_ifdef([v_rev], [m4_define([v_ver], [v_maj.v_min.v_mic.v_rev])], [m4_define([v_ver], [v_maj.v_min.v_mic])])
-m4_define([lt_rev], m4_eval(v_maj + v_min))
-m4_define([lt_cur], v_mic)
+m4_define([lt_cur], m4_eval(v_maj + v_min))
+m4_define([lt_rev], v_mic)
 m4_define([lt_age], v_min)
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
@@ -48,7 +48,7 @@ AC_DEFINE_UNQUOTED(VMAJ, [v_maj], [Major version])
 AC_DEFINE_UNQUOTED(VMIN, [v_min], [Minor version])
 AC_DEFINE_UNQUOTED(VMIC, [v_mic], [Micro version])
 AC_DEFINE_UNQUOTED(VREV, [v_rev], [Revison])
-version_info="lt_rev:lt_cur:lt_age"
+version_info="lt_cur:lt_rev:lt_age"
 release_info="v_rel"
 AC_SUBST(version_info)
 AC_SUBST(release_info)
@@ -95,22 +95,6 @@ if test "x${enable_sloppy_spec}" = "xyes" ; then
    AC_DEFINE([SLOPPY_SPEC], [1], [Sloppy Spec Compliance])
 fi
 
-AC_ARG_ENABLE([icon-cache],
-   [AC_HELP_STRING([--enable-icon-cache], [Enable icon cache compliance @<:@default=disabled@:>@])],
-   [
-    if test "x${enableval}" = "xyes" ; then
-       enable_icon_cache="yes"
-    else
-       enable_icon_cache="no"
-    fi
-   ],
-   [enable_icon_cache="no"])
-
-if test "x${enable_icon_cache}" = "xyes" ; then
-   AC_DEFINE([ICON_CACHE], [1], [Icon Cache])
-fi
-AM_CONDITIONAL(ICON_CACHE, test "x$enable_icon_cache" = "xyes")
-
 
 #AC_ARG_ENABLE(hidden-visibility,
 #	[AC_HELP_STRING([--enable-hidden-visibility],[Enable hidden visibility])],
@@ -151,7 +135,7 @@ EFL_EFREET_MIME_BUILD=""
 EFL_EFREET_TRASH_BUILD=""
 case "$host_os" in
    mingw*)
-      PKG_CHECK_MODULES([EVIL], [evil])
+      PKG_CHECK_MODULES([EVIL], [evil >= 1.0.0])
       AC_DEFINE(HAVE_EVIL, 1, [Set to 1 if evil package is installed])
       requirement_efreet="evil"
       EFL_EFREET_BUILD="-DEFL_EFREET_BUILD"
@@ -163,14 +147,14 @@ AC_SUBST(EFL_EFREET_BUILD)
 AC_SUBST(EFL_EFREET_MIME_BUILD)
 AC_SUBST(EFL_EFREET_TRASH_BUILD)
 
-PKG_CHECK_MODULES(EFREET, [eina >= 1.0.0 eet >= 1.4.0 ecore >= 1.0.0 ecore-file >= 1.0.0])
-PKG_CHECK_MODULES(EINA, [eina >= 1.0.0])
+requirement_efreet="ecore-file >= 1.2.0 ecore >= 1.2.0 eet >= 1.6.0 eina >= 1.2.0 ${requirement_efreet}"
+PKG_CHECK_MODULES(EFREET, [${requirement_efreet}])
+PKG_CHECK_MODULES(EINA, [eina >= 1.2.0])
 
-requirement_efreet="ecore-file >= 1.0.0 ecore >= 1.0.0 eet >= 1.4.0 eina >= 1.0.0 ${requirement_efreet}"
 
 ### Checks for header files
 
-AC_CHECK_HEADERS([arpa/inet.h])
+AC_CHECK_HEADERS([netinet/in.h arpa/inet.h])
 
 ### Checks for types
 
@@ -217,7 +201,7 @@ AC_SUBST(lt_enable_auto_import)
 ### Checks for library functions
 AC_ISC_POSIX
 AC_FUNC_ALLOCA
-AC_CHECK_FUNCS(strlcpy)
+AC_CHECK_FUNCS(strlcpy clearenv)
 
 ### Unit tests, coverage
 
@@ -265,8 +249,6 @@ echo
 echo "  Specification compliance:"
 echo "    Strict.............: ${enable_strict_spec}"
 echo "    Sloppy.............: ${enable_sloppy_spec}"
-echo
-echo "  Icon cache...........: ${enable_icon_cache}"
 echo
 echo "  Tests................: ${enable_tests}"
 echo "  Coverage.............: ${enable_coverage}"

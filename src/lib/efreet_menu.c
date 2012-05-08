@@ -1,5 +1,3 @@
-/* TODO: Check where strcmp can be changed with == because of stringshare */
-
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -22,42 +20,26 @@ extern "C"
 void *alloca (size_t);
 #endif
 
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <dirent.h>
-#include <limits.h>
-
 #include <Ecore_File.h>
+
+/* define macros and variable for using the eina logging system  */
+#define EFREET_MODULE_LOG_DOM _efreet_menu_log_dom
+static int _efreet_menu_log_dom = -1;
 
 #include "Efreet.h"
 #include "efreet_private.h"
 #include "efreet_xml.h"
 
-/**
- * Efreet_Menu_Move
- */
 typedef struct Efreet_Menu_Move Efreet_Menu_Move;
 
-/**
- * Efreet_Menu_Move
- * Info on a menu movement
- */
 struct Efreet_Menu_Move
 {
     const char *old_name;     /**< The menu path to move from */
     const char *new_name;     /**< The menu path to move too */
 };
 
-/**
- * Efreet_Menu_Internal
- */
 typedef struct Efreet_Menu_Internal Efreet_Menu_Internal;
 
-/**
- * Efreet_Menu_Internal
- * Contains the information about a menu
- */
 struct Efreet_Menu_Internal
 {
     struct
@@ -106,14 +88,8 @@ struct Efreet_Menu_Internal
     unsigned char deleted:1;            /**< The menu is deleted */
 };
 
-/**
- * Efreet_Menu_App_Dir
- */
 typedef struct Efreet_Menu_App_Dir Efreet_Menu_App_Dir;
 
-/**
- * Holds information on an app dir
- */
 struct Efreet_Menu_App_Dir
 {
     const char *path;           /**< directory path */
@@ -121,9 +97,6 @@ struct Efreet_Menu_App_Dir
     unsigned int legacy:1;      /**< is this a legacy dir */
 };
 
-/**
- * The type of operations we can perform with a filter
- */
 enum Efreet_Menu_Filter_Op_Type
 {
     EFREET_MENU_FILTER_OP_OR,
@@ -131,34 +104,18 @@ enum Efreet_Menu_Filter_Op_Type
     EFREET_MENU_FILTER_OP_NOT
 };
 
-/**
- * Efreet_Menu_Filter_Op_Type
- */
 typedef enum Efreet_Menu_Filter_Op_Type Efreet_Menu_Filter_Op_Type;
 
-/**
- * The type of filter
- */
 enum Efreet_Menu_Filter_Type
 {
     EFREET_MENU_FILTER_INCLUDE,
     EFREET_MENU_FILTER_EXCLUDE
 };
 
-/**
- * Efreet_Menu_Filter_Type
- */
 typedef enum Efreet_Menu_Filter_Type Efreet_Menu_Filter_Type;
 
-/**
- * Efreet_Menu_Filter_Op
- */
 typedef struct Efreet_Menu_Filter_Op Efreet_Menu_Filter_Op;
 
-/**
- * Efreet_Menu_Filter_Op
- * Contains information on a filter operation
- */
 struct Efreet_Menu_Filter_Op
 {
     Efreet_Menu_Filter_Op_Type type; /**< The type of operation */
@@ -170,24 +127,14 @@ struct Efreet_Menu_Filter_Op
     unsigned char all:1;             /**< Applies to all .desktop files */
 };
 
-/**
- * Efreet_Menu_Filter
- */
 typedef struct Efreet_Menu_Filter Efreet_Menu_Filter;
 
-/**
- * Efreet_Menu_Filter
- * Stores information on a filter
- */
 struct Efreet_Menu_Filter
 {
     Efreet_Menu_Filter_Type type;   /**< The type of filter */
     Efreet_Menu_Filter_Op *op;      /**< The filter operations */
 };
 
-/**
- * The type of layout
- */
 enum Efreet_Menu_Layout_Type
 {
     EFREET_MENU_LAYOUT_MENUNAME,
@@ -196,20 +143,10 @@ enum Efreet_Menu_Layout_Type
     EFREET_MENU_LAYOUT_MERGE
 };
 
-/**
- * Efreet_Menu_Layout_Type
- */
 typedef enum Efreet_Menu_Layout_Type Efreet_Menu_Layout_Type;
 
-/**
- * Efreet_Menu_Layout
- */
 typedef struct Efreet_Menu_Layout Efreet_Menu_Layout;
 
-/**
- * Efreet_Menu_Layout
- * Stores information on a layout
- */
 struct Efreet_Menu_Layout
 {
     Efreet_Menu_Layout_Type  type;   /**< The type of layout */
@@ -223,15 +160,8 @@ struct Efreet_Menu_Layout
     signed char inline_alias;  /**< Whether we should use the menu name when inlining */
 };
 
-/**
- * Efreet_Menu_Desktop
- */
 typedef struct Efreet_Menu_Desktop Efreet_Menu_Desktop;
 
-/**
- * Efreet_Menu_Desktop
- * Stores information on a desktop for the menu
- */
 struct Efreet_Menu_Desktop
 {
     Efreet_Desktop *desktop;   /**< The desktop we refer too */
@@ -251,16 +181,6 @@ static Eina_Hash *efreet_menu_handle_cbs = NULL;
 static Eina_Hash *efreet_menu_filter_cbs = NULL;
 static Eina_Hash *efreet_menu_move_cbs = NULL;
 static Eina_Hash *efreet_menu_layout_cbs = NULL;
-
-/* define macros and variable for using the eina logging system  */
-#ifdef EFREET_MODULE_LOG_DOM 
-#undef EFREET_MODULE_LOG_DOM
-#endif
-
-#define EFREET_MODULE_LOG_DOM _efreet_menu_log_dom 
-
-static int _efreet_menu_log_dom = -1;
-
 
 static const char *efreet_menu_prefix_get(void);
 
@@ -405,10 +325,6 @@ static int efreet_menu_save_indent(FILE *f, int indent);
 
 static void efreet_menu_path_set(Efreet_Menu_Internal *internal, const char *path);
 
-/**
- * @return Returns 1 on success, 0 on failure
- * @brief Initializes the Efreet Menu system.
- */
 int
 efreet_menu_init(void)
 {
@@ -483,13 +399,7 @@ efreet_menu_init(void)
       ("efreet_menu", EFREET_DEFAULT_LOG_COLOR);
     if (_efreet_menu_log_dom < 0)
     {
-        ERROR("Efreet: Could not create a log domain for efreet_menu");
-        return 0;
-    }
-    if (!efreet_xml_init())
-    {
-        ERROR("Efreet: Could not init xml module");
-        eina_log_domain_unregister(_efreet_menu_log_dom);
+        EINA_LOG_ERR("Efreet: Could not create a log domain for efreet_menu");
         return 0;
     }
 
@@ -500,8 +410,8 @@ efreet_menu_init(void)
     if (!efreet_menu_handle_cbs || !efreet_menu_filter_cbs
             || !efreet_menu_move_cbs || !efreet_menu_layout_cbs)
     {
-        efreet_xml_shutdown();
         eina_log_domain_unregister(_efreet_menu_log_dom);
+        _efreet_menu_log_dom = -1;
         return 0;
     }
 
@@ -548,11 +458,6 @@ efreet_menu_init(void)
     return 1;
 }
 
-/**
- * @return Returns no value
- * @brief Initialize legacy kde support. This function blocks while
- * the kde-config script is run.
- */
 EAPI int
 efreet_menu_kde_legacy_init(void)
 {
@@ -592,10 +497,6 @@ efreet_menu_kde_legacy_init(void)
     return 1;
 }
 
-/**
- * @return Returns no value
- * @brief Shuts down the Efreet menu system
- */
 void
 efreet_menu_shutdown(void)
 {
@@ -613,16 +514,10 @@ efreet_menu_shutdown(void)
 
     IF_RELEASE(efreet_tag_menu);
 
-    efreet_xml_shutdown();
     eina_log_domain_unregister(_efreet_menu_log_dom);
+    _efreet_menu_log_dom = -1;
 }
 
-/**
- * @param name The internal name of the menu
- * @return Returns the Efreet_Menu on success or
- * NULL on failure
- * @brief Creates a new menu
- */
 EAPI Efreet_Menu *
 efreet_menu_new(const char *name)
 {
@@ -639,13 +534,6 @@ efreet_menu_new(const char *name)
     return menu;
 }
 
-/**
- * @brief Override which file is used for menu creation
- * @param file The file to use for menu creation
- *
- * This file is only used if it exists, else the standard files will be used
- * for the menu.
- */
 EAPI void
 efreet_menu_file_set(const char *file)
 {
@@ -654,11 +542,6 @@ efreet_menu_file_set(const char *file)
     if (file) efreet_menu_file = eina_stringshare_add(file);
 }
 
-/**
- * @return Returns the Efreet_Menu_Internal representation of the default menu or
- * NULL if none found
- * @brief Creates the default menu representation
- */
 EAPI Efreet_Menu *
 efreet_menu_get(void)
 {
@@ -694,12 +577,6 @@ efreet_menu_get(void)
     return NULL;
 }
 
-/**
- * @param path The path of the menu to load
- * @return Returns the Efreet_Menu_Internal representation on success or NULL on
- * failure
- * @brief Parses the given .menu file and creates the menu representation
- */
 EAPI Efreet_Menu *
 efreet_menu_parse(const char *path)
 {
@@ -772,12 +649,6 @@ efreet_menu_parse(const char *path)
     return entry;
 }
 
-/**
- * @param menu The menu to work with
- * @param path The path where the menu should be saved
- * @return Returns 1 on success, 0 on failure
- * @brief Saves the menu to file
- */
 EAPI int
 efreet_menu_save(Efreet_Menu *menu, const char *path)
 {
@@ -892,14 +763,6 @@ efreet_menu_save_indent(FILE *f, int indent)
     return 1;
 }
 
-/**
- * @param menu The menu to work with
- * @param desktop The desktop to insert
- * @param pos The position to place the new desktop
- * @return Returns 1 on success, 0 on failure
- * @brief Insert a desktop element in a menu structure. Only accepts desktop files
- * in default directories.
- */
 EAPI int
 efreet_menu_desktop_insert(Efreet_Menu *menu, Efreet_Desktop *desktop, int pos)
 {
@@ -928,13 +791,6 @@ efreet_menu_desktop_insert(Efreet_Menu *menu, Efreet_Desktop *desktop, int pos)
     return 1;
 }
 
-/**
- * @param menu The menu to work with
- * @param desktop The desktop to remove
- * @return Returns 1 on success, 0 on failure
- * @brief Remove a desktop element in a menu structure. Only accepts desktop files
- * in default directories.
- */
 EAPI int
 efreet_menu_desktop_remove(Efreet_Menu *menu, Efreet_Desktop *desktop)
 {
@@ -954,13 +810,6 @@ efreet_menu_desktop_remove(Efreet_Menu *menu, Efreet_Desktop *desktop)
     return 0;
 }
 
-/**
- * @param menu The menu to work with
- * @param menu The menu to work with
- * @param indent The indent level to print the menu at
- * @return Returns no value
- * @brief Dumps the contents of the menu to the command line
- */
 EAPI void
 efreet_menu_dump(Efreet_Menu *menu, const char *indent)
 {
@@ -996,6 +845,7 @@ efreet_menu_dump(Efreet_Menu *menu, const char *indent)
 }
 
 /**
+ * @internal
  * @param user_dir The user directory to work with
  * @param system_dirs The system directories to work with
  * @param suffix The path suffix to add
@@ -1323,6 +1173,8 @@ efreet_menu_handle_name(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
         INF("efreet_menu_handle_name() setting second name into menu");
         return 0;
     }
+    /* ignore the name if it is empty */
+    if (!xml->text) return 1;
 
     /* ignore the name if it contains a / */
     if (strchr(xml->text, '/')) return 1;
@@ -1757,9 +1609,8 @@ efreet_menu_handle_merge_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml)
 static int
 efreet_menu_merge_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml, const char *path)
 {
-    char dir_path[PATH_MAX];
-    DIR *files;
-    struct dirent *file;
+    Eina_Iterator *it;
+    Eina_File_Direct_Info *info;
 
     if (!parent || !xml || !path) return 0;
 
@@ -1767,26 +1618,24 @@ efreet_menu_merge_dir(Efreet_Menu_Internal *parent, Efreet_Xml *xml, const char 
     if (eina_hash_find(efreet_merged_dirs, path)) return 1;
     eina_hash_add(efreet_merged_dirs, path, (void *)1);
 
-    files = opendir(path);
-    if (!files) return 1;
+    it = eina_file_direct_ls(path);
+    if (!it) return 1;
 
-    while ((file = readdir(files)))
+    EINA_ITERATOR_FOREACH(it, info)
     {
         char *p;
 
-        if (!strcmp(file->d_name, ".") || !strcmp(file->d_name, "..")) continue;
-        p = strrchr(file->d_name, '.');
+        p = strrchr(info->path + info->name_start, '.');
         if (!p) continue;
         if (strcmp(p, ".menu")) continue;
 
-        snprintf(dir_path, sizeof(dir_path), "%s/%s", path, file->d_name);
-        if (!efreet_menu_merge(parent, xml, dir_path))
+        if (!efreet_menu_merge(parent, xml, info->path))
         {
-            closedir(files);
+            eina_iterator_free(it);
             return 0;
         }
     }
-    closedir(files);
+    eina_iterator_free(it);
 
     return 1;
 }
@@ -1894,13 +1743,11 @@ efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
                                         const char *prefix)
 {
     const char *path;
-    char file_path[PATH_MAX];
     Efreet_Menu_Internal *legacy_internal;
     Efreet_Menu_Filter *filter;
     Efreet_Menu_App_Dir *app_dir;
-    int path_len, count = 0;
-    DIR *files;
-    struct dirent *file;
+    int count = 0;
+    Eina_Iterator *it;
 
     if (!parent || !legacy_dir) return 0;
 
@@ -1957,34 +1804,31 @@ efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
     efreet_menu_create_filter_list(legacy_internal);
     legacy_internal->filters = eina_list_append(legacy_internal->filters, filter);
 
-    path_len = strlen(path);
-    files = opendir(path);
-    if (files)
+    it = eina_file_direct_ls(path);
+    if (it)
     {
-        while ((file = readdir(files)))
+        Eina_File_Direct_Info *info;
+
+        EINA_ITERATOR_FOREACH(it, info)
         {
             Efreet_Desktop *desktop = NULL;
             char buf[PATH_MAX];
             char *exten;
+            const char *fname;
 
-            if (!strcmp(file->d_name, ".") || !strcmp(file->d_name, "..")) continue;
-            file_path[0] = '\0';
-            eina_strlcpy(file_path, path, PATH_MAX);
-            eina_strlcpy(file_path + path_len, "/", PATH_MAX - path_len);
-            eina_strlcpy(file_path + path_len + 1, file->d_name, PATH_MAX - path_len - 1);
-
+            fname = info->path + info->name_start;
             /* recurse into sub directories */
-            if (ecore_file_is_dir(file_path))
+            if (ecore_file_is_dir(info->path))
             {
                 Efreet_Menu_Internal *ret;
 
                 ret = efreet_menu_handle_legacy_dir_helper(root ? root : legacy_internal,
-                        legacy_internal, file_path, prefix);
+                        legacy_internal, info->path, prefix);
                 if (!ret)
                 {
                     efreet_menu_internal_free(legacy_internal);
                     eina_stringshare_del(path);
-                    closedir(files);
+                    eina_iterator_free(it);
                     return NULL;
                 }
 
@@ -1994,9 +1838,9 @@ efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
                 continue;
             }
 
-            if (!strcmp(file->d_name, ".directory"))
+            if (!strcmp(fname, ".directory"))
             {
-                legacy_internal->directory = efreet_desktop_get(file_path);
+                legacy_internal->directory = efreet_desktop_get(info->path);
                 if (legacy_internal->directory
                         && legacy_internal->directory->type != EFREET_DESKTOP_TYPE_DIRECTORY)
                 {
@@ -2006,10 +1850,10 @@ efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
                 continue;
             }
 
-            exten = strrchr(file->d_name, '.');
+            exten = strrchr(fname, '.');
 
             if (exten && !strcmp(exten, ".desktop"))
-                desktop = efreet_desktop_get(file_path);
+                desktop = efreet_desktop_get(info->path);
 
             if (!desktop) continue;
 
@@ -2025,16 +1869,16 @@ efreet_menu_handle_legacy_dir_helper(Efreet_Menu_Internal *root,
 
             if (prefix)
             {
-                snprintf(buf, sizeof(buf), "%s%s", prefix, file->d_name);
+                snprintf(buf, sizeof(buf), "%s%s", prefix, fname);
                 filter->op->filenames = eina_list_append(filter->op->filenames, eina_stringshare_add(buf));
             }
             else
-                filter->op->filenames = eina_list_append(filter->op->filenames, eina_stringshare_add(file->d_name));
+                filter->op->filenames = eina_list_append(filter->op->filenames, eina_stringshare_add(fname));
 
             count++;
             efreet_desktop_free(desktop);
         }
-        closedir(files);
+        eina_iterator_free(it);
     }
 
     eina_stringshare_del(path);
@@ -2610,11 +2454,6 @@ efreet_menu_entry_new(void)
     return entry;
 }
 
-/**
- * @param entry The Efreet_Menu to free
- * @return Returns no value
- * @brief Frees the given structure
- */
 EAPI void
 efreet_menu_free(Efreet_Menu *entry)
 {
@@ -3323,6 +3162,7 @@ static int
 efreet_menu_cb_app_dirs_compare(Efreet_Menu_App_Dir *a, const char *b)
 {
     if (!a->path || !b) return 1;
+    if (a->path == b) return 0;
     return strcmp(a->path, b);
 }
 
@@ -3420,6 +3260,7 @@ static int
 efreet_menu_cb_menu_compare(Efreet_Menu_Internal *a, Efreet_Menu_Internal *b)
 {
     if (!a->name.internal || !b->name.internal) return 1;
+    if (a->name.internal == b->name.internal) return 0;
     return strcmp(a->name.internal, b->name.internal);
 }
 
@@ -3444,34 +3285,36 @@ efreet_menu_app_dir_scan(Efreet_Menu_Internal *internal, const char *path, const
 {
     Efreet_Desktop *desktop;
     Efreet_Menu_Desktop *menu_desktop;
-    DIR *files;
-    char buf[PATH_MAX], buf2[PATH_MAX];
-    struct dirent *file;
-    char *ext;
+    char buf2[PATH_MAX];
+    Eina_Iterator *it;
+    Eina_File_Direct_Info *info;
 
-    files = opendir(path);
-    if (!files) return 1;
+    it = eina_file_direct_ls(path);
+    if (!it) return 1;
 
-    while ((file = readdir(files)))
+    EINA_ITERATOR_FOREACH(it, info)
     {
-        if (!strcmp(file->d_name, ".") || !strcmp(file->d_name, "..")) continue;
-        snprintf(buf, sizeof(buf), "%s/%s", path, file->d_name);
-        if (id)
-            snprintf(buf2, sizeof(buf2), "%s-%s", id, file->d_name);
-        else
-            strcpy(buf2, file->d_name);
+        const char *fname;
 
-        if (ecore_file_is_dir(buf))
+        fname = info->path + info->name_start;
+        if (id)
+            snprintf(buf2, sizeof(buf2), "%s-%s", id, fname);
+        else
+            strcpy(buf2, fname);
+
+        if (ecore_file_is_dir(info->path))
         {
             if (!legacy)
-                efreet_menu_app_dir_scan(internal, buf, buf2, legacy);
+                efreet_menu_app_dir_scan(internal, info->path, buf2, legacy);
         }
         else
         {
-            ext = strrchr(buf, '.');
+            const char *ext;
+
+            ext = strrchr(fname, '.');
 
             if (!ext || strcmp(ext, ".desktop")) continue;
-            desktop = efreet_desktop_get(buf);
+            desktop = efreet_desktop_get(info->path);
 
             if (!desktop || desktop->type != EFREET_DESKTOP_TYPE_APPLICATION)
             {
@@ -3493,7 +3336,7 @@ efreet_menu_app_dir_scan(Efreet_Menu_Internal *internal, const char *path, const
             internal->app_pool = eina_list_prepend(internal->app_pool, menu_desktop);
         }
     }
-    closedir(files);
+    eina_iterator_free(it);
 
     return 1;
 }
@@ -3549,32 +3392,33 @@ efreet_menu_directory_dir_scan(const char *path, const char *relative_path,
                                 Eina_Hash *cache)
 {
     Efreet_Desktop *desktop;
-    DIR *files;
-    char buf[PATH_MAX], buf2[PATH_MAX];
-    struct dirent *file;
+    char buf2[PATH_MAX];
+    Eina_Iterator *it;
+    Eina_File_Direct_Info *info;
     char *ext;
 
-    files = opendir(path);
-    if (!files) return 1;
+    it = eina_file_direct_ls(path);
+    if (!it) return 1;
 
-    while ((file = readdir(files)))
+    EINA_ITERATOR_FOREACH(it, info)
     {
-        if (!strcmp(file->d_name, ".") || !strcmp(file->d_name, "..")) continue;
-        snprintf(buf, sizeof(buf), "%s/%s", path, file->d_name);
-        if (relative_path)
-            snprintf(buf2, sizeof(buf2), "%s/%s", relative_path, file->d_name);
-        else
-            strcpy(buf2, file->d_name);
+        const char *fname;
 
-        if (ecore_file_is_dir(buf))
-            efreet_menu_directory_dir_scan(buf, buf2, cache);
+        fname = info->path + info->name_start;
+        if (relative_path)
+            snprintf(buf2, sizeof(buf2), "%s/%s", relative_path, fname);
+        else
+            strcpy(buf2, fname);
+
+        if (ecore_file_is_dir(info->path))
+            efreet_menu_directory_dir_scan(info->path, buf2, cache);
 
         else
         {
-            ext = strrchr(buf, '.');
+            ext = strrchr(fname, '.');
             if (!ext || strcmp(ext, ".directory")) continue;
 
-            desktop = efreet_desktop_get(buf);
+            desktop = efreet_desktop_get(info->path);
             if (!desktop || desktop->type != EFREET_DESKTOP_TYPE_DIRECTORY)
             {
                 efreet_desktop_free(desktop);
@@ -3585,7 +3429,7 @@ efreet_menu_directory_dir_scan(const char *path, const char *relative_path,
             eina_hash_add(cache, buf2, desktop);
         }
     }
-    closedir(files);
+    eina_iterator_free(it);
 
     return 1;
 }
@@ -3627,6 +3471,7 @@ efreet_menu_cb_md_compare(const Efreet_Menu_Desktop *a, const Efreet_Menu_Deskto
 #ifdef STRICT_SPEC
     return strcmp(ecore_file_file_get(a->desktop->orig_path), ecore_file_file_get(b->desktop->orig_path));
 #else
+    if (a->desktop->name == b->desktop->name) return 0;
     return strcasecmp(a->desktop->name, b->desktop->name);
 #endif
 }
@@ -3634,12 +3479,14 @@ efreet_menu_cb_md_compare(const Efreet_Menu_Desktop *a, const Efreet_Menu_Deskto
 static int
 efreet_menu_cb_compare_names(Efreet_Menu_Internal *internal, const char *name)
 {
+    if (internal->name.internal == name) return 0;
     return strcmp(internal->name.internal, name);
 }
 
 static int
 efreet_menu_cb_md_compare_ids(Efreet_Menu_Desktop *md, const char *name)
 {
+    if (md->id == name) return 0;
     return strcmp(md->id, name);
 }
 
@@ -3989,6 +3836,7 @@ efreet_menu_cb_entry_compare_menu(Efreet_Menu *entry, Efreet_Menu_Internal *inte
 {
     if (entry->type != EFREET_MENU_ENTRY_MENU) return 1;
     if (!entry->name || !internal->name.name) return 1;
+    if (entry->name == internal->name.name) return 0;
     return strcmp(entry->name, internal->name.name);
 }
 
@@ -3997,6 +3845,7 @@ efreet_menu_cb_entry_compare_desktop(Efreet_Menu *entry, Efreet_Desktop *desktop
 {
     if (entry->type != EFREET_MENU_ENTRY_DESKTOP) return -1;
     if (!entry->name || !desktop->name) return -1;
+    if (entry->name == desktop->name) return 0;
     return strcmp(entry->name, desktop->name);
 }
 
