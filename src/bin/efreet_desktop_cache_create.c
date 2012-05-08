@@ -1,20 +1,17 @@
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
-#include <limits.h>
-#include <stdio.h>
-#include <dirent.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
 
 #include <Eina.h>
 #include <Eet.h>
 #include <Ecore.h>
 #include <Ecore_File.h>
+
+#define EFREET_MODULE_LOG_DOM _efreet_desktop_cache_log_dom
+static int _efreet_desktop_cache_log_dom = -1;
 
 #include "Efreet.h"
 #include "efreet_private.h"
@@ -24,15 +21,23 @@ static Eet_Data_Descriptor *edd = NULL;
 static Eet_File *ef = NULL;
 static Eet_File *util_ef = NULL;
 
+static Eina_Hash *desktops = NULL;
+
 static Eina_Hash *file_ids = NULL;
 static Eina_Hash *paths = NULL;
 
-static int verbose = 0;
+static Eina_Hash *mime_types = NULL;
+static Eina_Hash *categories = NULL;
+static Eina_Hash *startup_wm_class = NULL;
+static Eina_Hash *name = NULL;
+static Eina_Hash *generic_name = NULL;
+static Eina_Hash *comment = NULL;
+static Eina_Hash *exec = NULL;
 
 static int
 strcmplen(const void *data1, const void *data2)
 {
-    return strncmp(data1, data2, eina_stringshare_strlen(data2));
+    return strncmp(data1, data2, eina_stringshare_strlen(data1));
 }
 
 static int
@@ -41,39 +46,27 @@ cache_add(const char *path, const char *file_id, int priority __UNUSED__, int *c
     Efreet_Desktop *desk;
     char *ext;
 
-    if (verbose)
-    {
-        printf("FOUND: %s\n", path);
-        if (file_id) printf(" (id): %s\n", file_id);
-    }
+    INF("FOUND: %s", path);
+    if (file_id) INF(" (id): %s", file_id);
     ext = strrchr(path, '.');
     if (!ext || (strcmp(ext, ".desktop") && strcmp(ext, ".directory"))) return 1;
     desk = efreet_desktop_new(path);
-    if (verbose)
-    {
-        if (desk) printf("  OK\n");
-        else      printf("  FAIL\n");
-    }
+    if (desk) INF("  OK");
+    else      INF("  FAIL");
     if (!desk) return 1;
     if (!desk->eet)
     {
         /* This file isn't in cache */
         *changed = 1;
-        if (verbose)
-        {
-            printf("  NEW\n");
-        }
+        INF("  NEW");
     }
     else if (ecore_file_mod_time(desk->orig_path) != desk->load_time)
     {
         efreet_desktop_free(desk);
         *changed = 1;
         desk = efreet_desktop_uncached_new(path);
-        if (verbose)
-        {
-            if (desk) printf("  CHANGED\n");
-            else      printf("  NO UNCACHED\n");
-        }
+        if (desk) INF("  CHANGED");
+        else      INF("  NO UNCACHED");
     }
     if (!desk) return 1;
     if (!eina_hash_find(paths, desk->orig_path))
@@ -88,67 +81,43 @@ cache_add(const char *path, const char *file_id, int priority __UNUSED__, int *c
     if (!desk->hidden && desk->type == EFREET_DESKTOP_TYPE_APPLICATION &&
         file_id && !eina_hash_find(file_ids, file_id))
     {
-        int id;
-        char key[PATH_MAX];
-        char *data;
-        int i = 0;
         Eina_List *l;
+        char *data;
+        Efreet_Cache_Array_String *array;
 
-        id = eina_hash_population(file_ids);
-        i = 0;
-        EINA_LIST_FOREACH(desk->mime_types, l, data)
-        {
-            snprintf(key, sizeof(key), "%d::%d::m", id, i++);
-            if (!eet_write(util_ef, key, data, strlen(data) + 1, 0)) return 0;
+#define ADD_LIST(list, hash) \
+        EINA_LIST_FOREACH((list), l, data) \
+        { \
+            array = eina_hash_find((hash), data); \
+            if (!array) \
+                array = NEW(Efreet_Cache_Array_String, 1); \
+            array->array = realloc(array->array, sizeof (char *) * (array->array_count + 1)); \
+            array->array[array->array_count++] = desk->orig_path; \
+            eina_hash_set((hash), data, array); \
         }
-        i = 0;
-        EINA_LIST_FOREACH(desk->categories, l, data)
-        {
-            snprintf(key, sizeof(key), "%d::%d::ca", id, i++);
-            if (!eet_write(util_ef, key, data, strlen(data) + 1, 0)) return 0;
+#define ADD_ELEM(elem, hash) \
+        if ((elem)) \
+        { \
+            data = (elem); \
+            array = eina_hash_find((hash), data); \
+            if (!array) \
+                array = NEW(Efreet_Cache_Array_String, 1); \
+            array->array = realloc(array->array, sizeof (char *) * (array->array_count + 1)); \
+            array->array[array->array_count++] = desk->orig_path; \
+            eina_hash_set((hash), data, array); \
         }
-        if (desk->startup_wm_class)
-        {
-            data = desk->startup_wm_class;
-            snprintf(key, sizeof(key), "%d::swc", id);
-            if (!eet_write(util_ef, key, data, strlen(data) + 1, 0)) return 0;
-        }
-        if (desk->name)
-        {
-            data = desk->name;
-            snprintf(key, sizeof(key), "%d::n", id);
-            if (!eet_write(util_ef, key, data, strlen(data) + 1, 0)) return 0;
-        }
-        if (desk->generic_name)
-        {
-            data = desk->generic_name;
-            snprintf(key, sizeof(key), "%d::gn", id);
-            if (!eet_write(util_ef, key, data, strlen(data) + 1, 0)) return 0;
-        }
-        if (desk->comment)
-        {
-            data = desk->comment;
-            snprintf(key, sizeof(key), "%d::co", id);
-            if (!eet_write(util_ef, key, data, strlen(data) + 1, 0)) return 0;
-        }
-        if (desk->exec)
-        {
-            data = desk->exec;
-            snprintf(key, sizeof(key), "%d::e", id);
-            if (!eet_write(util_ef, key, data, strlen(data) + 1, 0)) return 0;
-        }
-        if (desk->orig_path)
-        {
-            data = desk->orig_path;
-            snprintf(key, sizeof(key), "%d::op", id);
-            if (!eet_write(util_ef, key, data, strlen(data) + 1, 0)) return 0;
-        }
-        snprintf(key, sizeof(key), "%d::fi", id);
-        if (!eet_write(util_ef, key, file_id, strlen(file_id) + 1, 0)) return 0;
-
-        eina_hash_add(file_ids, file_id, (void *)1);
+        ADD_LIST(desk->mime_types, mime_types);
+        ADD_LIST(desk->categories, categories);
+        ADD_ELEM(desk->startup_wm_class, startup_wm_class);
+        ADD_ELEM(desk->name, name);
+        ADD_ELEM(desk->generic_name, generic_name);
+        ADD_ELEM(desk->comment, comment);
+        ADD_ELEM(desk->exec, exec);
+        eina_hash_add(file_ids, file_id, desk->orig_path);
+        eina_hash_add(desktops, desk->orig_path, desk);
     }
-    efreet_desktop_free(desk);
+    else
+        efreet_desktop_free(desk);
     return 1;
 }
 
@@ -159,29 +128,30 @@ cache_scan(const char *path, const char *base_id, int priority, int recurse, int
     char *file_id = NULL;
     char id[PATH_MAX];
     char buf[PATH_MAX];
-    DIR *files;
-    struct dirent *ent;
+    Eina_Iterator *it;
+    Eina_File_Direct_Info *info;
 
     if (!ecore_file_is_dir(path)) return 1;
 
-    files = opendir(path);
-    if (!files) return 1;
-    id[0] = '\0';
-    while ((ent = readdir(files)))
-    {
-        if (!ent) break;
-        if (!strcmp(ent->d_name, ".") || !strcmp(ent->d_name, "..")) continue;
+    it = eina_file_direct_ls(path);
+    if (!it) return 1;
 
+    id[0] = '\0';
+    EINA_ITERATOR_FOREACH(it, info)
+    {
+        const char *fname;
+       
+        fname = info->path + info->name_start;
         if (base_id)
         {
             if (*base_id)
-                snprintf(id, sizeof(id), "%s-%s", base_id, ent->d_name);
+                snprintf(id, sizeof(id), "%s-%s", base_id, fname);
             else
-                strcpy(id, ent->d_name);
+                strcpy(id, fname);
             file_id = id;
         }
 
-        snprintf(buf, sizeof(buf), "%s/%s", path, ent->d_name);
+        snprintf(buf, sizeof(buf), "%s/%s", path, fname);
         if (ecore_file_is_dir(buf))
         {
             if (recurse)
@@ -191,13 +161,38 @@ cache_scan(const char *path, const char *base_id, int priority, int recurse, int
         {
             if (!cache_add(buf, file_id, priority, changed))
             {
-                closedir(files);
+                eina_iterator_free(it);
                 return 0;
             }
         }
     }
-    closedir(files);
+    eina_iterator_free(it);
     return 1;
+}
+
+static int
+cache_lock_file(void)
+{
+    char file[PATH_MAX];
+    struct flock fl;
+    int lockfd;
+
+    snprintf(file, sizeof(file), "%s/efreet/desktop_data.lock", efreet_cache_home_get());
+    lockfd = open(file, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+    if (lockfd < 0) return -1;
+    efreet_fsetowner(lockfd);
+
+    memset(&fl, 0, sizeof(struct flock));
+    fl.l_type = F_WRLCK;
+    fl.l_whence = SEEK_SET;
+    if (fcntl(lockfd, F_SETLK, &fl) < 0)
+    {
+        INF("LOCKED! You may want to delete %s if this persists", file);
+        close(lockfd);
+        return -1;
+    }
+
+    return lockfd;
 }
 
 int
@@ -208,74 +203,83 @@ main(int argc, char **argv)
      *   during whilst this program runs.
      * - Maybe linger for a while to reduce number of cache re-creates.
      */
+    Efreet_Cache_Hash hash;
     Efreet_Cache_Version version;
-    Eina_List *dirs = NULL, *user_dirs = NULL;
+    Eina_List *dirs = NULL;
+    Eina_List *systemdirs = NULL;
+    Efreet_Cache_Array_String *user_dirs = NULL;
+    Eina_List *extra_dirs = NULL;
+    Eina_List *store_dirs = NULL;
     int priority = 0;
     char *dir = NULL;
     char *path;
-    int lockfd = -1, tmpfd, dirsfd = -1;
-    struct stat st;
+    int lockfd = -1, tmpfd;
     int changed = 0;
     int i;
-    struct flock fl;
     char file[PATH_MAX] = { '\0' };
     char util_file[PATH_MAX] = { '\0' };
 
+    if (!eina_init()) goto eina_error;
+    _efreet_desktop_cache_log_dom =
+        eina_log_domain_register("efreet_desktop_cache", EFREET_DEFAULT_LOG_COLOR);
+    if (_efreet_desktop_cache_log_dom < 0)
+    {
+        EINA_LOG_ERR("Efreet: Could not create a log domain for efreet_desktop_cache.");
+        return -1;
+    }
 
     for (i = 1; i < argc; i++)
     {
-        if      (!strcmp(argv[i], "-v")) verbose = 1;
+        if (!strcmp(argv[i], "-v"))
+            eina_log_domain_level_set("efreet_desktop_cache", EINA_LOG_LEVEL_DBG);
         else if ((!strcmp(argv[i], "-h")) ||
                  (!strcmp(argv[i], "-help")) ||
                  (!strcmp(argv[i], "--h")) ||
                  (!strcmp(argv[i], "--help")))
         {
             printf("Options:\n");
-            printf("  -v     Verbose mode\n");
+            printf("  -v              Verbose mode\n");
+            printf("  -d dir1 dir2    Extra dirs\n");
             exit(0);
         }
+        else if (!strcmp(argv[i], "-d"))
+        {
+            while ((i < (argc - 1)) && (argv[(i + 1)][0] != '-'))
+                extra_dirs = eina_list_append(extra_dirs, argv[++i]);
+        }
     }
+    extra_dirs = eina_list_sort(extra_dirs, -1, EINA_COMPARE_CB(strcmp));
+
     /* init external subsystems */
-    if (!eina_init()) goto eina_error;
     if (!eet_init()) goto eet_error;
     if (!ecore_init()) goto ecore_error;
 
     efreet_cache_update = 0;
+    /* finish efreet init */
+    if (!efreet_init()) goto efreet_error;
 
     /* create homedir */
     snprintf(file, sizeof(file), "%s/efreet", efreet_cache_home_get());
-    if (!ecore_file_mkpath(file)) goto efreet_error;
-
-    /* lock process, so that we only run one copy of this program */
-    snprintf(file, sizeof(file), "%s/efreet/desktop_data.lock", efreet_cache_home_get());
-    lockfd = open(file, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
-    if (lockfd < 0) goto efreet_error;
-    memset(&fl, 0, sizeof(struct flock));
-    fl.l_type = F_WRLCK;
-    fl.l_whence = SEEK_SET;
-    if (fcntl(lockfd, F_SETLK, &fl) < 0)
+    if (!ecore_file_exists(file))
     {
-        if (verbose)
-        {
-            printf("LOCKED! You may want to delete %s if this persists\n", file);
-        }
-        goto efreet_error;
+        if (!ecore_file_mkpath(file)) goto efreet_error;
+        efreet_setowner(file);
     }
 
-    /* create dir for desktop cache */
-    dir = ecore_file_dir_get(efreet_desktop_cache_file());
-    if (!ecore_file_mkpath(dir)) goto efreet_error;
-    free(dir);
+    /* lock process, so that we only run one copy of this program */
+    lockfd = cache_lock_file();
+    if (lockfd == -1) goto efreet_error;
 
-    /* create dir for util cache */
-    dir = ecore_file_dir_get(efreet_desktop_util_cache_file());
-    if (!ecore_file_mkpath(dir)) goto efreet_error;
-    free(dir);
-
-    /* finish efreet init */
-    if (!efreet_init()) goto efreet_error;
     edd = efreet_desktop_edd();
     if (!edd) goto edd_error;
+
+    /* read user dirs from old cache */
+    ef = eet_open(efreet_desktop_cache_file(), EET_FILE_MODE_READ);
+    if (ef)
+    {
+        user_dirs = eet_data_read(ef, efreet_array_string_edd(), EFREET_CACHE_DESKTOP_DIRS);
+        eet_close(ef);
+    }
 
     /* create cache */
     snprintf(file, sizeof(file), "%s.XXXXXX", efreet_desktop_cache_file());
@@ -292,78 +296,6 @@ main(int argc, char **argv)
     util_ef = eet_open(util_file, EET_FILE_MODE_READ_WRITE);
     if (!util_ef) goto error;
 
-    file_ids = eina_hash_string_superfast_new(NULL);
-    if (!file_ids) goto error;
-    paths = eina_hash_string_superfast_new(NULL);
-    if (!paths) goto error;
-
-    dirs = efreet_default_dirs_get(efreet_data_home_get(), efreet_data_dirs_get(),
-                                                                    "applications");
-    if (!dirs) goto error;
-
-    dirsfd = open(efreet_desktop_cache_dirs(), O_APPEND | O_RDWR, S_IRUSR | S_IWUSR);
-    if (dirsfd >= 0)
-    {
-        if ((fstat(dirsfd, &st) == 0) && (st.st_size > 0))
-        {
-            char *p;
-            char *map;
-
-            map = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, dirsfd, 0);
-            if (map == MAP_FAILED) goto error;
-            p = map;
-            while (p < map + st.st_size)
-            {
-                unsigned int size = *(unsigned int *)p;
-                p += sizeof(unsigned int);
-                user_dirs = eina_list_append(user_dirs, eina_stringshare_add(p));
-                p += size;
-            }
-            munmap(map, st.st_size);
-        }
-        close(dirsfd);
-        dirsfd = -1;
-        unlink(efreet_desktop_cache_dirs());
-    }
-
-    EINA_LIST_FREE(dirs, path)
-    {
-        char file_id[PATH_MAX] = { '\0' };
-        Eina_List *l;
-
-        if (!cache_scan(path, file_id, priority++, 1, &changed)) goto error;
-        l = eina_list_search_unsorted_list(user_dirs, strcmplen, path);
-        if (l)
-        {
-            eina_stringshare_del(eina_list_data_get(l));
-            user_dirs = eina_list_remove_list(user_dirs, l);
-        }
-        eina_stringshare_del(path);
-    }
-    if (user_dirs)
-    {
-        dirsfd = open(efreet_desktop_cache_dirs(), O_CREAT | O_APPEND | O_WRONLY, S_IRUSR | S_IWUSR);
-        if (dirsfd < 0) goto error;
-        EINA_LIST_FREE(user_dirs, dir)
-        {
-            unsigned int size = strlen(dir) + 1;
-            size_t count;
-
-            count = write(dirsfd, &size, sizeof(int));
-            count += write(dirsfd, dir, size);
-
-            if (count != sizeof (int) + size)
-                printf("Didn't write all data on dirsfd");
-
-            if (!cache_scan(dir, NULL, priority, 0, &changed)) goto error;
-            eina_stringshare_del(dir);
-        }
-        close(dirsfd);
-        dirsfd = -1;
-    }
-    eina_hash_free(file_ids);
-    eina_hash_free(paths);
-
     /* write cache version */
     version.major = EFREET_DESKTOP_UTILS_CACHE_MAJOR;
     version.minor = EFREET_DESKTOP_UTILS_CACHE_MINOR;
@@ -371,6 +303,135 @@ main(int argc, char **argv)
     version.major = EFREET_DESKTOP_CACHE_MAJOR;
     version.minor = EFREET_DESKTOP_CACHE_MINOR;
     eet_data_write(ef, efreet_version_edd(), EFREET_CACHE_VERSION, &version, 1);
+
+    desktops = eina_hash_string_superfast_new(EINA_FREE_CB(efreet_desktop_free));
+
+    file_ids = eina_hash_string_superfast_new(NULL);
+    paths = eina_hash_string_superfast_new(NULL);
+
+    mime_types = eina_hash_string_superfast_new(EINA_FREE_CB(efreet_cache_array_string_free));
+    categories = eina_hash_string_superfast_new(EINA_FREE_CB(efreet_cache_array_string_free));
+    startup_wm_class = eina_hash_string_superfast_new(EINA_FREE_CB(efreet_cache_array_string_free));
+    name = eina_hash_string_superfast_new(EINA_FREE_CB(efreet_cache_array_string_free));
+    generic_name = eina_hash_string_superfast_new(EINA_FREE_CB(efreet_cache_array_string_free));
+    comment = eina_hash_string_superfast_new(EINA_FREE_CB(efreet_cache_array_string_free));
+    exec = eina_hash_string_superfast_new(EINA_FREE_CB(efreet_cache_array_string_free));
+
+    dirs = efreet_default_dirs_get(efreet_data_home_get(), efreet_data_dirs_get(),
+                                                                    "applications");
+    if (!dirs) goto error;
+
+    EINA_LIST_FREE(dirs, path)
+    {
+        char file_id[PATH_MAX] = { '\0' };
+
+        if (!cache_scan(path, file_id, priority++, 1, &changed)) goto error;
+        systemdirs = eina_list_append(systemdirs, path);
+    }
+
+    if (user_dirs)
+    {
+        unsigned int j;
+
+        for (j = 0; j < user_dirs->array_count; j++)
+        {
+            if (eina_list_search_unsorted_list(systemdirs, strcmplen, user_dirs->array[j]))
+                continue;
+            if (!ecore_file_is_dir(user_dirs->array[j])) continue;
+            if (!cache_scan(user_dirs->array[j], NULL, priority, 0, &changed)) goto error;
+
+            store_dirs = eina_list_append(store_dirs, user_dirs->array[j]);
+        }
+        store_dirs = eina_list_sort(store_dirs, -1, EINA_COMPARE_CB(strcmp));
+    }
+
+    if (extra_dirs)
+    {
+        Eina_List *l;
+
+        EINA_LIST_FOREACH(extra_dirs, l, path)
+        {
+            if (eina_list_search_unsorted_list(systemdirs, strcmplen, path))
+                continue;
+            if (eina_list_search_unsorted_list(store_dirs, EINA_COMPARE_CB(strcmp), path))
+                continue;
+            if (!ecore_file_is_dir(path)) continue;
+
+            /* If we scan a passed dir, we must have changed */
+            changed = 1;
+            if (!cache_scan(path, NULL, priority, 0, &changed)) goto error;
+
+            store_dirs = eina_list_append(store_dirs, path);
+        }
+        store_dirs = eina_list_sort(store_dirs, -1, EINA_COMPARE_CB(strcmp));
+    }
+
+    if (user_dirs)
+    {
+        IF_FREE(user_dirs->array);
+        free(user_dirs);
+    }
+
+    /* store user dirs */
+    if (store_dirs)
+    {
+        Eina_List *l;
+
+        user_dirs = NEW(Efreet_Cache_Array_String, 1);
+        user_dirs->array = NEW(char *, eina_list_count(store_dirs));
+        user_dirs->array_count = 0;
+        EINA_LIST_FOREACH(store_dirs, l, path)
+            user_dirs->array[user_dirs->array_count++] = path;
+
+        eet_data_write(ef, efreet_array_string_edd(), EFREET_CACHE_DESKTOP_DIRS, user_dirs, 1);
+        IF_FREE(user_dirs->array);
+        free(user_dirs);
+    }
+
+    /* store util */
+#define STORE_HASH_ARRAY(_hash) \
+    if (eina_hash_population((_hash)) > 0) \
+    { \
+        Eina_Iterator *it;   \
+        Efreet_Cache_Array_String array; \
+        const char *str;     \
+                             \
+        hash.hash = (_hash); \
+        eet_data_write(util_ef, efreet_hash_array_string_edd(), #_hash "_hash", &hash, 1); \
+        array.array_count = 0; \
+        array.array = malloc(eina_hash_population(hash.hash) * sizeof(char *)); \
+        it = eina_hash_iterator_key_new(hash.hash); \
+        EINA_ITERATOR_FOREACH(it, str) \
+            array.array[array.array_count++] = str; \
+        eina_iterator_free(it); \
+        eet_data_write(util_ef, efreet_array_string_edd(), #_hash "_list", &array, 1); \
+        free(array.array); \
+    }
+    STORE_HASH_ARRAY(mime_types);
+    STORE_HASH_ARRAY(categories);
+    STORE_HASH_ARRAY(startup_wm_class);
+    STORE_HASH_ARRAY(name);
+    STORE_HASH_ARRAY(generic_name);
+    STORE_HASH_ARRAY(comment);
+    STORE_HASH_ARRAY(exec);
+    if (eina_hash_population(file_ids) > 0)
+    {
+        hash.hash = file_ids;
+        eet_data_write(util_ef, efreet_hash_string_edd(), "file_id", &hash, 1);
+    }
+
+    eina_hash_free(mime_types);
+    eina_hash_free(categories);
+    eina_hash_free(startup_wm_class);
+    eina_hash_free(name);
+    eina_hash_free(generic_name);
+    eina_hash_free(comment);
+    eina_hash_free(exec);
+
+    eina_hash_free(file_ids);
+    eina_hash_free(paths);
+
+    eina_hash_free(desktops);
 
     /* check if old and new caches contain the same number of entries */
     if (!changed)
@@ -383,7 +444,6 @@ main(int argc, char **argv)
         old = eet_open(efreet_desktop_util_cache_file(), EET_FILE_MODE_READ);
         if (!old || eet_num_entries(old) != eet_num_entries(util_ef)) changed = 1;
         if (old) eet_close(old);
-
     }
 
     /* cleanup */
@@ -403,7 +463,9 @@ main(int argc, char **argv)
         }
         /* rename tmp files to real files */
         if (rename(util_file, efreet_desktop_util_cache_file()) < 0) goto error;
+        efreet_setowner(efreet_desktop_util_cache_file());
         if (rename(file, efreet_desktop_cache_file()) < 0) goto error;
+        efreet_setowner(efreet_desktop_cache_file());
     }
     else
     {
@@ -412,30 +474,44 @@ main(int argc, char **argv)
     }
 
     /* touch update file */
-    /* TODO: We need to signal whether the cache was updated or not */
     snprintf(file, sizeof(file), "%s/efreet/desktop_data.update", efreet_cache_home_get());
     tmpfd = open(file, O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
     if (tmpfd >= 0)
     {
-        if (write(tmpfd, "a", 1) != 1) perror("write");
+        char c = 'n';
+
+        efreet_fsetowner(tmpfd);
+        if (changed) c = 'c';
+        if (write(tmpfd, &c, 1) != 1) perror("write");
         close(tmpfd);
     }
+
+    EINA_LIST_FREE(systemdirs, dir)
+        eina_stringshare_del(dir);
+    eina_list_free(extra_dirs);
+    eina_list_free(store_dirs);
     efreet_shutdown();
     ecore_shutdown();
     eet_shutdown();
+    eina_log_domain_unregister(_efreet_desktop_cache_log_dom);
     eina_shutdown();
     close(lockfd);
     return 0;
 error:
-    if (dirsfd >= 0) close(dirsfd);
     IF_FREE(dir);
 edd_error:
+    if (user_dirs) efreet_cache_array_string_free(user_dirs);
     efreet_shutdown();
 efreet_error:
     ecore_shutdown();
 ecore_error:
     eet_shutdown();
 eet_error:
+    EINA_LIST_FREE(systemdirs, dir)
+        eina_stringshare_del(dir);
+    eina_list_free(extra_dirs);
+    eina_list_free(store_dirs);
+    eina_log_domain_unregister(_efreet_desktop_cache_log_dom);
     eina_shutdown();
 eina_error:
     if (lockfd >= 0) close(lockfd);

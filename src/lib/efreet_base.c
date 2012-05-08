@@ -20,10 +20,11 @@ extern "C"
 void *alloca (size_t);
 #endif
 
-#include <stdio.h>
-#include <string.h>
-#include <limits.h>
 #include <unistd.h>
+
+/* define macros and variable for using the eina logging system  */
+#define EFREET_MODULE_LOG_DOM _efreet_base_log_dom
+static int _efreet_base_log_dom = -1;
 
 #include "Efreet.h"
 #include "efreet_private.h"
@@ -45,15 +46,6 @@ static Eina_List  *xdg_data_dirs = NULL;
 static Eina_List  *xdg_config_dirs = NULL;
 static const char *hostname = NULL;
 
-/* define macros and variable for using the eina logging system  */
-#ifdef EFREET_MODULE_LOG_DOM 
-#undef EFREET_MODULE_LOG_DOM
-#endif
-
-#define EFREET_MODULE_LOG_DOM _efreet_base_log_dom
-static int _efreet_base_log_dom = -1;
-
-
 static const char *efreet_dir_get(const char *key, const char *fallback);
 static Eina_List  *efreet_dirs_get(const char *key,
                                         const char *fallback);
@@ -70,7 +62,7 @@ efreet_base_init(void)
       ("efreet_base", EFREET_DEFAULT_LOG_COLOR);
     if (_efreet_base_log_dom < 0)
     {
-        ERROR("Efreet: Could not create a log domain for efreet_base.\n");
+        EINA_LOG_ERR("Efreet: Could not create a log domain for efreet_base.\n");
         return 0;
     }
     return 1;
@@ -95,16 +87,15 @@ efreet_base_shutdown(void)
     IF_RELEASE(hostname);
 
     eina_log_domain_unregister(_efreet_base_log_dom);
+    _efreet_base_log_dom = -1;
 }
 
 /**
  * @internal
  * @return Returns the users home directory
  * @brief Gets the users home directory and returns it.
- *
- * Needs EAPI because of helper binaries
  */
-EAPI const char *
+const char *
 efreet_home_dir_get(void)
 {
     if (efreet_home_dir) return efreet_home_dir;
@@ -122,10 +113,6 @@ efreet_home_dir_get(void)
     return efreet_home_dir;
 }
 
-/**
- * @return Returns the XDG Data Home directory
- * @brief Retrieves the XDG Data Home directory
- */
 EAPI const char *
 efreet_data_home_get(void)
 {
@@ -134,15 +121,6 @@ efreet_data_home_get(void)
     return xdg_data_home;
 }
 
-/**
- * @return Returns the Eina_List of preference ordered extra data directories
- * @brief Returns the Eina_List of prefernece oredred extra data
- * directories
- *
- * @note The returned list is static inside Efreet. If you add/remove from the
- * list then the next call to efreet_data_dirs_get() will return your
- * modified values. DO NOT free this list.
- */
 EAPI Eina_List *
 efreet_data_dirs_get(void)
 {
@@ -162,10 +140,6 @@ efreet_data_dirs_get(void)
     return xdg_data_dirs;
 }
 
-/**
- * @return Returns the XDG Config Home directory
- * @brief Retrieves the XDG Config Home directory
- */
 EAPI const char *
 efreet_config_home_get(void)
 {
@@ -174,15 +148,6 @@ efreet_config_home_get(void)
     return xdg_config_home;
 }
 
-/**
- * @return Returns the Eina_List of preference ordered extra config directories
- * @brief Returns the Eina_List of prefernece ordered extra config
- * directories
- *
- * @note The returned list is static inside Efreet. If you add/remove from the
- * list then the next call to efreet_config_dirs_get() will return your
- * modified values. DO NOT free this list.
- */
 EAPI Eina_List *
 efreet_config_dirs_get(void)
 {
@@ -191,10 +156,6 @@ efreet_config_dirs_get(void)
     return xdg_config_dirs;
 }
 
-/**
- * @return Returns the XDG Cache Home directory
- * @brief Retrieves the XDG Cache Home directory
- */
 EAPI const char *
 efreet_cache_home_get(void)
 {
@@ -203,10 +164,6 @@ efreet_cache_home_get(void)
     return xdg_cache_home;
 }
 
-/**
- * @return Returns the current hostname
- * @brief Returns the current hostname or empty string if not found
- */
 EAPI const char *
 efreet_hostname_get(void)
 {

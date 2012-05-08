@@ -35,9 +35,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = efreet_test$(EXEEXT) efreet_spec_test$(EXEEXT) \
-	efreet_cache_test$(EXEEXT) $(am__EXEEXT_1)
-@ICON_CACHE_TRUE@am__append_1 = efreet_icon_cache_dump
-@DEFAULT_VISIBILITY_TRUE@am__append_2 = \
+	efreet_cache_test$(EXEEXT) efreet_icon_cache_dump$(EXEEXT)
+@DEFAULT_VISIBILITY_TRUE@am__append_1 = \
 @DEFAULT_VISIBILITY_TRUE@ef_locale.c
 
 @EFL_ENABLE_TESTS_TRUE@check_PROGRAMS = efreet_suite$(EXEEXT)
@@ -58,7 +57,6 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-@ICON_CACHE_TRUE@am__EXEEXT_1 = efreet_icon_cache_dump$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_efreet_cache_test_OBJECTS = ef_cache.$(OBJEXT)
@@ -67,12 +65,10 @@ efreet_cache_test_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
-am__efreet_icon_cache_dump_SOURCES_DIST = efreet_icon_cache_dump.c
-@ICON_CACHE_TRUE@am_efreet_icon_cache_dump_OBJECTS =  \
-@ICON_CACHE_TRUE@	efreet_icon_cache_dump.$(OBJEXT)
+am_efreet_icon_cache_dump_OBJECTS = efreet_icon_cache_dump.$(OBJEXT)
 efreet_icon_cache_dump_OBJECTS = $(am_efreet_icon_cache_dump_OBJECTS)
-@ICON_CACHE_TRUE@efreet_icon_cache_dump_DEPENDENCIES =  \
-@ICON_CACHE_TRUE@	$(top_builddir)/src/lib/libefreet.la
+efreet_icon_cache_dump_DEPENDENCIES =  \
+	$(top_builddir)/src/lib/libefreet.la
 am_efreet_spec_test_OBJECTS = efreet_spec_test.$(OBJEXT)
 efreet_spec_test_OBJECTS = $(am_efreet_spec_test_OBJECTS)
 efreet_spec_test_DEPENDENCIES = $(top_builddir)/src/lib/libefreet.la
@@ -126,8 +122,8 @@ SOURCES = $(efreet_cache_test_SOURCES) \
 	$(efreet_icon_cache_dump_SOURCES) $(efreet_spec_test_SOURCES) \
 	$(efreet_suite_SOURCES) $(efreet_test_SOURCES)
 DIST_SOURCES = $(efreet_cache_test_SOURCES) \
-	$(am__efreet_icon_cache_dump_SOURCES_DIST) \
-	$(efreet_spec_test_SOURCES) $(am__efreet_suite_SOURCES_DIST) \
+	$(efreet_icon_cache_dump_SOURCES) $(efreet_spec_test_SOURCES) \
+	$(am__efreet_suite_SOURCES_DIST) \
 	$(am__efreet_test_SOURCES_DIST)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
@@ -241,6 +237,8 @@ PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -316,7 +314,8 @@ AM_CPPFLAGS = \
 -I$(top_srcdir)/src/lib \
 -DPACKAGE_BIN_DIR=\"$(bindir)\" \
 -DPACKAGE_LIB_DIR=\"$(libdir)\" \
--DPACKAGE_DATA_DIR=\"$(pkgdatadir)\" \
+-DPACKAGE_DATA_DIR=\"$(datadir)\" \
+-DPKG_DATA_DIR=\"$(pkgdatadir)\" \
 @EFREET_CFLAGS@
 
 efreet_test_LDADD = $(top_builddir)/src/lib/libefreet.la \
@@ -325,7 +324,7 @@ efreet_test_LDADD = $(top_builddir)/src/lib/libefreet.la \
 
 efreet_test_SOURCES = ef_test.h ef_data_dirs.c ef_icon_theme.c \
 	ef_ini.c ef_utils.c ef_desktop.c ef_menu.c ef_mime.c main.c \
-	$(am__append_2)
+	$(am__append_1)
 efreet_spec_test_LDADD = $(top_builddir)/src/lib/libefreet.la @EINA_LIBS@
 efreet_spec_test_SOURCES = \
 efreet_spec_test.c
@@ -340,12 +339,12 @@ ef_cache.c
 @EFL_ENABLE_TESTS_TRUE@efreet_test_efreet_cache.c
 
 @EFL_ENABLE_TESTS_TRUE@efreet_suite_LDADD = @CHECK_LIBS@ $(top_builddir)/src/lib/libefreet.la
-@ICON_CACHE_TRUE@efreet_icon_cache_dump_LDADD = \
-@ICON_CACHE_TRUE@$(top_builddir)/src/lib/libefreet.la \
-@ICON_CACHE_TRUE@@EFREET_LIBS@
+efreet_icon_cache_dump_LDADD = \
+$(top_builddir)/src/lib/libefreet.la \
+@EFREET_LIBS@
 
-@ICON_CACHE_TRUE@efreet_icon_cache_dump_SOURCES = \
-@ICON_CACHE_TRUE@efreet_icon_cache_dump.c
+efreet_icon_cache_dump_SOURCES = \
+efreet_icon_cache_dump.c
 
 all: all-recursive
 

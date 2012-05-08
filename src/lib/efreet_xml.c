@@ -2,16 +2,17 @@
 # include <config.h>
 #endif
 
-#include <stdio.h>
-#include <string.h>
 #include <ctype.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/mman.h>
 
 #include <Ecore_File.h>
+
+/* define macros and variable for using the eina logging system  */
+#define EFREET_MODULE_LOG_DOM _efreet_xml_log_dom
+static int _efreet_xml_log_dom = -1;
 
 #include "Efreet.h"
 #include "efreet_private.h"
@@ -35,15 +36,7 @@ static void efreet_xml_comment_skip(char **data, int *size);
 
 static int error = 0;
 
-/* define macros and variable for using the eina logging system  */
-
-#ifdef EFREET_MODULE_LOG_DOM
-#undef EFREET_MODULE_LOG_DOM
-#endif
-#define EFREET_MODULE_LOG_DOM _efreet_xml_log_dom
-
 static int _efreet_xml_init_count = 0;
-static int _efreet_xml_log_dom = -1;
 
 /**
  * @internal
@@ -60,7 +53,7 @@ efreet_xml_init(void)
     if (_efreet_xml_log_dom < 0)
     {
         _efreet_xml_init_count--;
-        ERROR("Efreet: Could not create a log domain for efreet_xml.");
+        EINA_LOG_ERR("Efreet: Could not create a log domain for efreet_xml.");
         return _efreet_xml_init_count;
     }
     return _efreet_xml_init_count;
@@ -77,6 +70,7 @@ efreet_xml_shutdown(void)
     _efreet_xml_init_count--;
     if (_efreet_xml_init_count > 0) return;
     eina_log_domain_unregister(_efreet_xml_log_dom);
+    _efreet_xml_log_dom = -1;
 }
 
 /**
@@ -102,6 +96,9 @@ efreet_xml_new(const char *file)
     fd = open(file, O_RDONLY);
     if (fd == -1) goto efreet_error;
 
+    /* let's make mmap safe and just get 0 pages for IO erro */
+    eina_mmap_safety_enabled_set(EINA_TRUE);
+   
     data = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
     if (data == MAP_FAILED) goto efreet_error;
 

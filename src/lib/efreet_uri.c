@@ -2,10 +2,7 @@
 # include <config.h>
 #endif
 
-#include <stdio.h>
-#include <string.h>
 #include <ctype.h>
-#include <limits.h>
 
 #ifndef _POSIX_HOST_NAME_MAX
 #define _POSIX_HOST_NAME_MAX 255
@@ -15,17 +12,13 @@
 # include <Evil.h>
 #endif
 
+/* define macros and variable for using the eina logging system  */
+#define EFREET_MODULE_LOG_DOM /* no logging in this file */
+
 #include "Efreet.h"
 #include "efreet_private.h"
 
 
-/**
- * @param full_uri a valid uri string to parse
- * @return Return The corresponding Efreet_Uri structure. Or NULL on errors.
- * @brief Read a single uri and return an Efreet_Uri struct. If there's no
- * hostname in the uri then the hostname parameter will be NULL. All the uri
- * escaped chars will be converted to normal.
- */
 EAPI Efreet_Uri *
 efreet_uri_decode(const char *full_uri)
 {
@@ -83,15 +76,6 @@ efreet_uri_decode(const char *full_uri)
     return uri;
 }
 
-/**
- * @param uri Create an URI string from an Efreet_Uri struct
- * @return The string rapresentation of uri (ex: 'file:///home/my%20name')
- * @brief Get the string rapresentation of the given uri struct escaping
- * illegal caracters. Remember to free the string with eina_stringshare_del()
- * when you don't need it anymore.
- * @note The resulting string will contain the protocol and the path but not
- * the hostname, as many apps doesn't handle it.
- */
 EAPI const char *
 efreet_uri_encode(Efreet_Uri *uri)
 {
@@ -110,7 +94,7 @@ efreet_uri_encode(Efreet_Uri *uri)
             dest[i] = *p;
         else
         {
-            snprintf(&(dest[i]), 4, "%%%02X", *p);
+            snprintf(&(dest[i]), 4, "%%%02X", (unsigned char) *p);
             i += 2;
         }
     }
@@ -118,10 +102,6 @@ efreet_uri_encode(Efreet_Uri *uri)
     return eina_stringshare_add(dest);
 }
 
-/**
- * @param uri The uri to free
- * @brief Free the given uri structure.
- */
 EAPI void
 efreet_uri_free(Efreet_Uri *uri)
 {
