@@ -4,7 +4,7 @@
 
 Summary: FreeDesktop.Org Compatibility Library
 Name: efreet
-Version: 1.2.0
+Version: 1.7.4
 Release: %{_rel}
 License: BSD
 Group: System Environment/Libraries
@@ -56,6 +56,7 @@ test "x$RPM_BUILD_ROOT" != "x/" && rm -rf $RPM_BUILD_ROOT
 %{_bindir}/%{name}*
 %{_libdir}/*.so.*
 %{_libdir}/efreet/
+%{_datadir}/locale/*/LC_MESSAGES/*.mo
 
 %files devel
 %defattr(-, root, root)

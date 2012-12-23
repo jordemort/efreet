@@ -1,3 +1,9 @@
+efreet (1.7.4-1) UNRELEASED; urgency=low
+
+  * New upstream release
+
+ -- Albin Tonnerre <lutin@debian.org>  Sun, 23 Dec 2012 14:48:05 +0100
+
 efreet (1.2.0-1) unstable; urgency=low
 
   * New upstream release
