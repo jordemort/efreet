@@ -3,7 +3,7 @@ Section: libs
 Priority: optional
 Maintainer: Debian Pkg-e Team <pkg-e-devel@lists.alioth.debian.org>
 Uploaders: Albin Tonnerre <lutin@debian.org>, Jan Lübbe <jluebbe@debian.org>
-Build-Depends: debhelper (>= 7.0.50~), libecore-dev (>= 1.2.0), libeina-dev (>= 1.2.0)
+Build-Depends: debhelper (>= 9), libecore-dev (>= 1.2.0), libeina-dev (>= 1.2.0)
 Build-Depends-Indep: doxygen, graphviz
 Standards-Version: 3.9.1
 Vcs-Git: git://git.debian.org/pkg-e/libs/efreet.git
@@ -12,6 +12,7 @@ Homepage: http://www.enlightenment.org
 
 Package: libefreet1
 Architecture: any
+Pre-Depends: ${misc:Pre-Depends}
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Library that implements freedesktop.org specs for use with E17/EFL
  An implementation of several specifications from freedesktop.org intended for
