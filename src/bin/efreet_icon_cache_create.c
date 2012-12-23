@@ -1,9 +1,13 @@
 #ifdef HAVE_CONFIG_H
 # include <config.h>
 #endif
+
+#include "efreet_alloca.h"
+
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <errno.h>
 
 #include <Eina.h>
 #include <Eet.h>
@@ -892,7 +896,11 @@ main(int argc, char **argv)
         {
             if (!strncmp(keys[i], "__efreet", 8)) continue;
             theme = eet_data_read(theme_ef, theme_edd, keys[i]);
-            if (theme) eina_hash_direct_add(icon_themes, theme->theme.name.internal, theme);
+            if (theme)
+            {
+                theme->valid = 0;
+                eina_hash_direct_add(icon_themes, theme->theme.name.internal, theme);
+            }
         }
         free(keys);
     }

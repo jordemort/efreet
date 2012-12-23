@@ -2,22 +2,7 @@
 # include <config.h>
 #endif
 
-#ifdef HAVE_ALLOCA_H
-# include <alloca.h>
-#elif defined __GNUC__
-# define alloca __builtin_alloca
-#elif defined _AIX
-# define alloca __alloca
-#elif defined _MSC_VER
-# include <malloc.h>
-# define alloca _alloca
-#else
-# include <stddef.h>
-# ifdef  __cplusplus
-extern "C"
-# endif
-void *alloca (size_t);
-#endif
+#include "efreet_alloca.h"
 
 #include <ctype.h>
 #include <sys/stat.h>
@@ -272,8 +257,7 @@ efreet_mime_type_get(const char *file)
 {
     const char *type = NULL;
 
-    if (!file)
-      return NULL;
+    EINA_SAFETY_ON_NULL_RETURN_VAL(file, NULL);
 
     if ((type = efreet_mime_special_check(file)))
         return type;
@@ -304,8 +288,8 @@ efreet_mime_type_icon_get(const char *mime, const char *theme, unsigned int size
     char buf[PATH_MAX];
     const char *cache;
 
-    if (!mime || !theme || !size)
-        return NULL;
+    EINA_SAFETY_ON_NULL_RETURN_VAL(mime, NULL);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(theme, NULL);
 
     mime = eina_stringshare_add(mime);
     theme = eina_stringshare_add(theme);
@@ -393,6 +377,7 @@ efreet_mime_type_cache_flush(void)
 EAPI const char *
 efreet_mime_magic_type_get(const char *file)
 {
+    EINA_SAFETY_ON_NULL_RETURN_VAL(file, NULL);
     return efreet_mime_magic_check_priority(file, 0, 0);
 }
 
@@ -405,9 +390,9 @@ efreet_mime_globs_type_get(const char *file)
     const char *s;
     char *ext, *mime;
 
-    /* Check in the extension hash for the type */
-    if (!file) return NULL;
+    EINA_SAFETY_ON_NULL_RETURN_VAL(file, NULL);
 
+    /* Check in the extension hash for the type */
     ext = strchr(file, '.');
     if (ext)
     {
@@ -444,12 +429,14 @@ efreet_mime_globs_type_get(const char *file)
 EAPI const char *
 efreet_mime_special_type_get(const char *file)
 {
+    EINA_SAFETY_ON_NULL_RETURN_VAL(file, NULL);
     return efreet_mime_special_check(file);
 }
 
 EAPI const char *
 efreet_mime_fallback_type_get(const char *file)
 {
+    EINA_SAFETY_ON_NULL_RETURN_VAL(file, NULL);
     return efreet_mime_fallback_check(file);
 }
 
@@ -807,6 +794,23 @@ efreet_mime_glob_remove(const char *glob)
     return 0;
 }
 
+static inline const char *
+efreet_eat_space(const char *head, const Eina_File_Line *ln, Eina_Bool not)
+{
+   if (not)
+     {
+        while (!isspace(*head) && (head < ln->end))
+          head++;
+     }
+   else
+     {
+        while (isspace(*head) && (head < ln->end))
+          head++;
+     }
+
+   return head;
+}
+
 /**
  * @internal
  * @param file mime.types file to load
@@ -820,45 +824,63 @@ efreet_mime_glob_remove(const char *glob)
 static void
 efreet_mime_mime_types_load(const char *file)
 {
-    FILE *f = NULL;
-    char buf[4096], mimetype[4096];
-    char ext[4096], *p = NULL, *pp = NULL;
+   const Eina_File_Line *ln;
+   Eina_Iterator *it;
+   Eina_File *f;
+   const char *head_line;
+   const char *word_start;
+   const char *mimetype;
 
-    f = fopen(file, "rb");
-    if (!f) return;
-    while (fgets(buf, sizeof(buf), f))
-    {
-        p = buf;
-        while (isspace(*p) && (*p != 0) && (*p != '\n')) p++;
+   f = eina_file_open(file, 0);
+   if (!f) return ;
 
-        if (*p == '#') continue;
-        if ((*p == '\n') || (*p == 0)) continue;
+   it = eina_file_map_lines(f);
+   if (it)
+     {
+        Eina_Strbuf *ext;
 
-        pp = p;
-        while (!isspace(*p) && (*p != 0) && (*p != '\n')) p++;
+        ext = eina_strbuf_new();
 
-        if ((*p == '\n') || (*p == 0)) continue;
-        strncpy(mimetype, pp, (p - pp));
-        mimetype[p - pp] = 0;
+        EINA_ITERATOR_FOREACH(it, ln)
+          {
+             head_line = efreet_eat_space(ln->start, ln, EINA_FALSE);
+             if (head_line == ln->end) continue ;
 
-        do
-        {
-            while (isspace(*p) && (*p != 0) && (*p != '\n')) p++;
+             if (*head_line == '#') continue ;
 
-            if ((*p == '\n') || (*p == 0)) break;
+             word_start = head_line;
+             head_line = efreet_eat_space(head_line, ln, EINA_TRUE);
 
-            pp = p;
-            while (!isspace(*p) && (*p != 0) && (*p != '\n')) p++;
+             if (head_line == ln->end) continue ;
+             mimetype = eina_stringshare_add_length(word_start, head_line - word_start);
+             do
+               {
+                  head_line = efreet_eat_space(head_line, ln, EINA_FALSE);
+                  if (head_line == ln->end) break ;
 
-            strncpy(ext, pp, (p - pp));
-            ext[p - pp] = 0;
+                  word_start = head_line;
+                  head_line = efreet_eat_space(head_line, ln, EINA_TRUE);
 
-            eina_hash_del(wild, ext, NULL);
-            eina_hash_add(wild, ext, (void*)eina_stringshare_add(mimetype));
-        }
-        while ((*p != '\n') && (*p != 0));
-    }
-    fclose(f);
+                  eina_strbuf_append_length(ext, word_start, head_line - word_start);
+
+                  eina_hash_del(wild,
+                                eina_strbuf_string_get(ext),
+                                NULL);
+                  eina_hash_add(wild,
+                                eina_strbuf_string_get(ext),
+                                eina_stringshare_ref(mimetype));
+
+                  eina_strbuf_reset(ext);
+               }
+             while (head_line < ln->end);
+
+             eina_stringshare_del(mimetype);
+          }
+
+        eina_strbuf_free(ext);
+        eina_iterator_free(it);
+     }
+   eina_file_close(f);
 }
 
 /**
@@ -980,7 +1002,7 @@ efreet_mime_shared_mimeinfo_magic_load(const char *file)
 
     /* let's make mmap safe and just get 0 pages for IO erro */
     eina_mmap_safety_enabled_set(EINA_TRUE);
-   
+
     data = mmap(NULL, size, PROT_READ, MAP_SHARED, fd, 0);
     if (data == MAP_FAILED)
     {
