@@ -1,3 +1,9 @@
+efreet (1.7.4-2) experimental; urgency=low
+
+  * Upload to unstable
+
+ -- Albin Tonnerre <lutin@debian.org>  Sat, 11 May 2013 13:33:10 +0200
+
 efreet (1.7.4-1) experimental; urgency=low
 
   * New upstream release
