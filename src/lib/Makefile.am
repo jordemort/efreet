@@ -3,6 +3,9 @@ MAINTAINERCLEANFILES = Makefile.in
 
 lib_LTLIBRARIES = libefreet.la libefreet_mime.la libefreet_trash.la
 
+INCLUDES = \
+-DLOCALE_DIR=\"@LOCALE_DIR@\"
+
 EFREETHEADERS = \
 Efreet.h \
 efreet_base.h \
@@ -40,7 +43,7 @@ libefreet_la_CPPFLAGS =  \
 -I$(top_srcdir)/src/lib \
 @EFL_EFREET_BUILD@ \
 @EFREET_CFLAGS@
-libefreet_la_LIBADD = @EFREET_LIBS@ @WIN32_LIBS@
+libefreet_la_LIBADD = @EFREET_LIBS@ @WIN32_LIBS@ @LTLIBINTL@
 libefreet_la_LDFLAGS = -no-undefined @lt_enable_auto_import@ -version-info @version_info@ @release_info@
 
 
@@ -50,7 +53,7 @@ libefreet_mime_la_CPPFLAGS = \
 -I$(top_srcdir)/src/lib \
 @EFL_EFREET_MIME_BUILD@ \
 @EFREET_CFLAGS@
-libefreet_mime_la_LIBADD = @EFREET_LIBS@ libefreet.la @WIN32_LIBS@
+libefreet_mime_la_LIBADD = @EFREET_LIBS@ libefreet.la @WIN32_LIBS@ @LTLIBINTL@
 libefreet_mime_la_LDFLAGS = -no-undefined @lt_enable_auto_import@ -version-info @version_info@ @release_info@
 
 
@@ -60,7 +63,7 @@ libefreet_trash_la_CPPFLAGS = \
 -I$(top_srcdir)/src/lib \
 @EFL_EFREET_TRASH_BUILD@ \
 @EFREET_CFLAGS@
-libefreet_trash_la_LIBADD = @EFREET_LIBS@ libefreet.la
+libefreet_trash_la_LIBADD = @EFREET_LIBS@ libefreet.la  @LTLIBINTL@
 libefreet_trash_la_LDFLAGS = -no-undefined @lt_enable_auto_import@ -version-info @version_info@ @release_info@
 
-EXTRA_DIST = efreet_private.h efreet_xml.h efreet_cache_private.h
+EXTRA_DIST = efreet_private.h efreet_xml.h efreet_cache_private.h efreet_alloca.h

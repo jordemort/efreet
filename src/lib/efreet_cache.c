@@ -265,6 +265,8 @@ efreet_icon_cache_file(const char *theme)
     static char cache_file[PATH_MAX] = { '\0' };
     const char *cache;
 
+    EINA_SAFETY_ON_NULL_RETURN_VAL(theme, NULL);
+
     cache = efreet_cache_home_get();
 
     snprintf(cache_file, sizeof(cache_file), "%s/efreet/icons_%s_%s.eet", cache, theme, efreet_hostname_get());
@@ -945,9 +947,44 @@ efreet_cache_desktop_update(void)
     if (!efreet_cache_update) return;
 
     if (desktop_cache_timer)
-        ecore_timer_delay(desktop_cache_timer, 0.2);
-    else
-        desktop_cache_timer = ecore_timer_add(0.2, desktop_cache_update_cache_cb, NULL);
+        ecore_timer_del(desktop_cache_timer);
+    desktop_cache_timer = ecore_timer_add(0.2, desktop_cache_update_cache_cb, NULL);
+}
+
+void
+efreet_cache_desktop_close(void)
+{
+    IF_RELEASE(util_cache_names_key);
+    IF_RELEASE(util_cache_hash_key);
+
+    if ((desktop_cache) && (desktop_cache != NON_EXISTING))
+    {
+        Efreet_Old_Cache *d = NEW(Efreet_Old_Cache, 1);
+        if (d)
+        {
+            d->hash = desktops;
+            d->ef = desktop_cache;
+            old_desktop_caches = eina_list_append(old_desktop_caches, d);
+        }
+
+        desktops = eina_hash_string_superfast_new(NULL);
+    }
+    desktop_cache = NULL;
+
+    efreet_cache_array_string_free(util_cache_names);
+    util_cache_names = NULL;
+
+    if (util_cache_hash)
+    {
+        eina_hash_free(util_cache_hash->hash);
+        free(util_cache_hash);
+        util_cache_hash = NULL;
+    }
+
+    util_cache = efreet_cache_close(util_cache);
+
+    IF_RELEASE(desktop_cache_file);
+    IF_RELEASE(util_cache_file);
 }
 
 void
@@ -956,9 +993,8 @@ efreet_cache_icon_update(void)
     if (!efreet_cache_update) return;
 
     if (icon_cache_timer)
-        ecore_timer_delay(icon_cache_timer, 0.2);
-    else
-        icon_cache_timer = ecore_timer_add(0.2, icon_cache_update_cache_cb, NULL);
+        ecore_timer_del(icon_cache_timer);
+    icon_cache_timer = ecore_timer_add(0.2, icon_cache_update_cache_cb, NULL);
 }
 
 static Eina_Bool
@@ -1111,36 +1147,12 @@ cache_update_cb(void *data __UNUSED__, Ecore_File_Monitor *em __UNUSED__,
     if (!file) return;
     if (!strcmp(file, "desktop_data.update"))
     {
-        ev = NEW(Efreet_Event_Cache_Update, 1);
-        if (!ev) goto error;
         if (cache_check_change(path))
         {
-            IF_RELEASE(util_cache_names_key);
-            IF_RELEASE(util_cache_hash_key);
+            ev = NEW(Efreet_Event_Cache_Update, 1);
+            if (!ev) goto error;
 
-            if ((desktop_cache) && (desktop_cache != NON_EXISTING))
-            {
-                d = NEW(Efreet_Old_Cache, 1);
-                if (!d) goto error;
-                d->hash = desktops;
-                d->ef = desktop_cache;
-                old_desktop_caches = eina_list_append(old_desktop_caches, d);
-
-                desktops = eina_hash_string_superfast_new(NULL);
-            }
-            desktop_cache = NULL;
-
-            efreet_cache_array_string_free(util_cache_names);
-            util_cache_names = NULL;
-
-            if (util_cache_hash)
-            {
-                eina_hash_free(util_cache_hash->hash);
-                free(util_cache_hash);
-                util_cache_hash = NULL;
-            }
-
-            util_cache = efreet_cache_close(util_cache);
+            efreet_cache_desktop_close();
 
             ecore_event_add(EFREET_EVENT_DESKTOP_CACHE_UPDATE, ev, desktop_cache_update_free, d);
         }
@@ -1201,7 +1213,7 @@ desktop_cache_update_cache_cb(void *data __UNUSED__)
 {
     char file[PATH_MAX];
     struct flock fl;
-    int prio;
+    int prio, flags;
 
     desktop_cache_timer = NULL;
 
@@ -1217,6 +1229,9 @@ desktop_cache_update_cache_cb(void *data __UNUSED__)
     fl.l_type = F_WRLCK;
     fl.l_whence = SEEK_SET;
     if (fcntl(desktop_cache_exe_lock, F_SETLK, &fl) < 0) goto error;
+    flags = fcntl(desktop_cache_exe_lock, F_GETFD);
+    flags |= FD_CLOEXEC;
+    if (fcntl(desktop_cache_exe_lock, F_SETFD, flags) < 0) goto error;
     prio = ecore_exe_run_priority_get();
     ecore_exe_run_priority_set(19);
     eina_strlcpy(file, PACKAGE_LIB_DIR "/efreet/efreet_desktop_cache_create", sizeof(file));
@@ -1252,7 +1267,7 @@ icon_cache_update_cache_cb(void *data __UNUSED__)
 {
     char file[PATH_MAX];
     struct flock fl;
-    int prio;
+    int prio, flags;
     Eina_List **l, *l2;
 
     icon_cache_timer = NULL;
@@ -1269,6 +1284,9 @@ icon_cache_update_cache_cb(void *data __UNUSED__)
     fl.l_type = F_WRLCK;
     fl.l_whence = SEEK_SET;
     if (fcntl(icon_cache_exe_lock, F_SETLK, &fl) < 0) goto error;
+    flags = fcntl(icon_cache_exe_lock, F_GETFD);
+    flags |= FD_CLOEXEC;
+    if (fcntl(icon_cache_exe_lock, F_SETFD, flags) < 0) goto error;
     prio = ecore_exe_run_priority_get();
     ecore_exe_run_priority_set(19);
     eina_strlcpy(file, PACKAGE_LIB_DIR "/efreet/efreet_icon_cache_create", sizeof(file));

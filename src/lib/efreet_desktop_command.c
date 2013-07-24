@@ -2,23 +2,7 @@
 # include <config.h>
 #endif
 
-#undef alloca
-#ifdef HAVE_ALLOCA_H
-# include <alloca.h>
-#elif defined __GNUC__
-# define alloca __builtin_alloca
-#elif defined _AIX
-# define alloca __alloca
-#elif defined _MSC_VER
-# include <malloc.h>
-# define alloca _alloca
-#else
-# include <stddef.h>
-# ifdef  __cplusplus
-extern "C"
-# endif
-void *alloca (size_t);
-#endif
+#include "efreet_alloca.h"
 
 #include <unistd.h>
 #include <ctype.h>
@@ -152,7 +136,8 @@ efreet_desktop_command_local_get(Efreet_Desktop *desktop, Eina_List *files)
     char *file;
     Eina_List *execs, *l;
 
-    if (!desktop || !desktop->exec) return NULL;
+    EINA_SAFETY_ON_NULL_RETURN_VAL(desktop, NULL);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(desktop->exec, NULL);
 
     command = NEW(Efreet_Desktop_Command, 1);
     if (!command) return 0;
@@ -195,7 +180,9 @@ efreet_desktop_command_progress_get(Efreet_Desktop *desktop, Eina_List *files,
     char *file;
     void *ret = NULL;
 
-    if (!desktop || !cb_command || !desktop->exec) return NULL;
+    EINA_SAFETY_ON_NULL_RETURN_VAL(desktop, NULL);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(desktop->exec, NULL);
+    EINA_SAFETY_ON_NULL_RETURN_VAL(cb_command, NULL);
 
     command = NEW(Efreet_Desktop_Command, 1);
     if (!command) return NULL;
@@ -237,13 +224,14 @@ efreet_desktop_command_progress_get(Efreet_Desktop *desktop, Eina_List *files,
 }
 
 static void *
-efreet_desktop_exec_cb(void *data, Efreet_Desktop *desktop __UNUSED__,
-                                char *exec, int remaining __UNUSED__)
+efreet_desktop_exec_cb(void *data,
+                       Efreet_Desktop *desktop __UNUSED__,
+                       char *exec,
+                       int remaining __UNUSED__)
 {
-#ifndef _WIN32
     ecore_exe_run(exec, data);
     free(exec);
-#endif
+
     return NULL;
 }
 
@@ -283,7 +271,7 @@ efreet_desktop_command_flags_get(Efreet_Desktop *desktop)
 
         p = strchr(p, '%');
     }
-#ifdef SLOPPY_SPEC   
+#ifdef SLOPPY_SPEC
     /* NON-SPEC!!! this is to work around LOTS of 'broken' .desktop files that
      * do not specify %U/%u, %F/F etc. etc. at all. just a command. this is
      * unlikely to be fixed in distributions etc. in the long run as gnome/kde
@@ -310,7 +298,7 @@ efreet_desktop_command_execs_process(Efreet_Desktop_Command *command, Eina_List 
     char *exec;
     int num;
     void *ret = NULL;
-   
+
     num = eina_list_count(execs);
     EINA_LIST_FOREACH(execs, l, exec)
     {
@@ -347,12 +335,14 @@ efreet_desktop_command_build(Efreet_Desktop_Command *command)
         int size = PATH_MAX;
         int file_added = 0;
         Efreet_Desktop_Command_File *file = eina_list_data_get(l);
+       int single;
 
         exec = malloc(size);
         if (!exec) goto error;
         p = command->desktop->exec;
         len = 0;
 
+        single = 0;
         while (*p)
         {
             if (len >= size - 1)
@@ -381,6 +371,7 @@ efreet_desktop_command_build(Efreet_Desktop_Command *command)
                                     &len, file, *p);
                             if (!exec) goto error;
                             file_added = 1;
+                            single = 1;
                         }
                         break;
                     case 'F':
@@ -391,6 +382,7 @@ efreet_desktop_command_build(Efreet_Desktop_Command *command)
                         {
                             exec = efreet_desktop_command_append_multiple(exec, &size,
                                     &len, command, *p);
+                           fprintf(stderr, "EXE: '%s'\n", exec);
                             if (!exec) goto error;
                             file_added = 1;
                         }
@@ -429,7 +421,7 @@ efreet_desktop_command_build(Efreet_Desktop_Command *command)
             p++;
         }
 
-#ifdef SLOPPY_SPEC       
+#ifdef SLOPPY_SPEC
         /* NON-SPEC!!! this is to work around LOTS of 'broken' .desktop files that
          * do not specify %U/%u, %F/F etc. etc. at all. just a command. this is
          * unlikely to be fixed in distributions etc. in the long run as gnome/kde
@@ -461,8 +453,11 @@ efreet_desktop_command_build(Efreet_Desktop_Command *command)
 #endif
         exec[len++] = '\0';
 
-        execs = eina_list_append(execs, exec);
-        exec = NULL;
+       if ((single) || (!execs))
+         {
+            execs = eina_list_append(execs, exec);
+            exec = NULL;
+         }
 
         /* If no file was added, then the Exec field doesn't contain any file
          * fields (fFuUdDnN). We only want to run the app once in this case. */
@@ -630,7 +625,7 @@ efreet_desktop_command_file_process(Efreet_Desktop_Command *command, const char 
     f->command = command;
 
     /* handle uris */
-    if (!strncmp(file, "http://", 7) || !strncmp(file, "ftp://", 6))
+    if ((!strncmp(file, "http", 4) && (!strncmp(file + 4, "://", 3) || !strncmp(file + 4, "s://", 4))) || !strncmp(file, "ftp://", 6))
     {
         uri = file;
         base = ecore_file_file_get(file);

@@ -2,23 +2,7 @@
 # include <config.h>
 #endif
 
-#undef alloca
-#ifdef HAVE_ALLOCA_H
-# include <alloca.h>
-#elif defined __GNUC__
-# define alloca __builtin_alloca
-#elif defined _AIX
-# define alloca __alloca
-#elif defined _MSC_VER
-# include <malloc.h>
-# define alloca _alloca
-#else
-# include <stddef.h>
-# ifdef  __cplusplus
-extern "C"
-# endif
-void *alloca (size_t);
-#endif
+#include "efreet_alloca.h"
 
 #include <unistd.h>
 #include <sys/stat.h>
@@ -48,17 +32,22 @@ static const char *efreet_lang_modifier = NULL;
 static void efreet_parse_locale(void);
 static int efreet_parse_locale_setting(const char *env);
 
+#ifndef _WIN32
 static uid_t ruid;
 static uid_t rgid;
+#endif
 
 EAPI int
 efreet_init(void)
 {
+#ifndef _WIN32
     char *tmp;
+#endif
 
     if (++_efreet_init_count != 1)
         return _efreet_init_count;
 
+#ifndef _WIN32
     /* Find users real uid and gid */
     tmp = getenv("SUDO_UID");
     if (tmp)
@@ -71,6 +60,7 @@ efreet_init(void)
         rgid = strtoul(tmp, NULL, 10);
     else
         rgid = getgid();
+#endif
 
     if (!eina_init())
         return --_efreet_init_count;
@@ -105,6 +95,11 @@ efreet_init(void)
     if (!efreet_util_init())
         goto shutdown_efreet_menu;
 
+#ifdef ENABLE_NLS
+    bindtextdomain(PACKAGE, LOCALE_DIR);
+    bind_textdomain_codeset(PACKAGE, "UTF-8");
+#endif
+
     return _efreet_init_count;
 
 shutdown_efreet_menu:
@@ -136,6 +131,11 @@ shutdown_eina:
 EAPI int
 efreet_shutdown(void)
 {
+    if (_efreet_init_count <= 0)
+      {
+         EINA_LOG_ERR("Init count not greater than 0 in shutdown.");
+         return 0;
+      }
     if (--_efreet_init_count != 0)
         return _efreet_init_count;
 
@@ -161,7 +161,20 @@ efreet_shutdown(void)
     return _efreet_init_count;
 }
 
-/**
+EAPI void
+efreet_lang_reset(void)
+{
+    IF_RELEASE(efreet_lang);
+    IF_RELEASE(efreet_lang_country);
+    IF_RELEASE(efreet_lang_modifier);
+    efreet_parsed_locale = 0;  /* reset this in case they init efreet again */
+
+    efreet_dirs_reset();
+    efreet_cache_desktop_close();
+    efreet_cache_desktop_update();
+}
+
+ /**
  * @internal
  * @return Returns the current users language setting or NULL if none set
  * @brief Retrieves the current language setting
@@ -215,13 +228,13 @@ efreet_parse_locale(void)
 {
     efreet_parsed_locale = 1;
 
+    if (efreet_parse_locale_setting("LANG"))
+        return;
+
     if (efreet_parse_locale_setting("LC_ALL"))
         return;
 
-    if (efreet_parse_locale_setting("LC_MESSAGES"))
-        return;
-
-    efreet_parse_locale_setting("LANG");
+    efreet_parse_locale_setting("LC_MESSAGES");
 }
 
 /**
@@ -297,6 +310,7 @@ efreet_array_cat(char *buffer, size_t size, const char *strs[])
     return n;
 }
 
+#ifndef _WIN32
 EAPI void
 efreet_fsetowner(int fd)
 {
@@ -308,10 +322,19 @@ efreet_fsetowner(int fd)
 
     if (fchown(fd, ruid, rgid) != 0) return;
 }
+#else
+EAPI void
+efreet_fsetowner(int fd __UNUSED__)
+{
+}
+#endif
 
+#ifndef _WIN32
 EAPI void
 efreet_setowner(const char *path)
 {
+    EINA_SAFETY_ON_NULL_RETURN(path);
+
     int fd;
 
     fd = open(path, O_RDONLY);
@@ -319,3 +342,9 @@ efreet_setowner(const char *path)
     efreet_fsetowner(fd);
     close(fd);
 }
+#else
+EAPI void
+efreet_setowner(const char *path __UNUSED__)
+{
+}
+#endif
