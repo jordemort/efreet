@@ -1,4 +1,26 @@
-Efreet 1.7.4
+Efreet 1.7.7
+
+Changes since Efreet 1.7.6:
+---------------------------
+
+No changes, just updating to keep in sync with latest release.
+
+
+Changes since Efreet 1.7.5:
+---------------------------
+
+Fixes:
+        * Fix desktop command parsing of https
+        * Fix desktop cache updating
+
+
+Efreet 1.7.5
+
+Changes since Efreet 1.7.4:
+---------------------------
+
+Improvements:
+	* Added simplified chinese translation
 
 Changes since Efreet 1.7.3:
 ---------------------------

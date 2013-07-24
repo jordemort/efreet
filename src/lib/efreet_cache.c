@@ -1229,9 +1229,9 @@ desktop_cache_update_cache_cb(void *data __UNUSED__)
     fl.l_type = F_WRLCK;
     fl.l_whence = SEEK_SET;
     if (fcntl(desktop_cache_exe_lock, F_SETLK, &fl) < 0) goto error;
-    flags = fcntl(icon_cache_exe_lock, F_GETFD);
+    flags = fcntl(desktop_cache_exe_lock, F_GETFD);
     flags |= FD_CLOEXEC;
-    if (fcntl(icon_cache_exe_lock, F_SETFD, flags) < 0) goto error;
+    if (fcntl(desktop_cache_exe_lock, F_SETFD, flags) < 0) goto error;
     prio = ecore_exe_run_priority_get();
     ecore_exe_run_priority_set(19);
     eina_strlcpy(file, PACKAGE_LIB_DIR "/efreet/efreet_desktop_cache_create", sizeof(file));

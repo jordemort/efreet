@@ -2,9 +2,8 @@
 ##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##--##
 m4_define([v_maj], [1])
 m4_define([v_min], [7])
-m4_define([v_mic], [4])
-m4_define([v_rev], m4_esyscmd([(svnversion "${SVN_REPO_PATH:-.}" | grep -v '\(export\|Unversioned directory\)' || echo 0) | awk -F : '{printf("%s\n", $1);}' | tr -d ' :MSP\n']))
-m4_if(v_rev, [0], [m4_define([v_rev], m4_esyscmd([git log 2> /dev/null | (grep -m1 git-svn-id || echo 0) | sed -e 's/.*@\([0-9]*\).*/\1/' | tr -d '\n']))])
+m4_define([v_mic], [7])
+m4_define([v_rev], m4_esyscmd([(git rev-list --count HEAD 2>/dev/null || echo 0) | tr -d '\n']))dnl
 ##--   When released, remove the dnl on the below line
 m4_undefine([v_rev])
 ##--   When doing snapshots - change soname. remove dnl on below line
@@ -154,7 +153,7 @@ EFL_EFREET_MIME_BUILD=""
 EFL_EFREET_TRASH_BUILD=""
 case "$host_os" in
    mingw*)
-      PKG_CHECK_MODULES([EVIL], [evil >= 1.6.99])
+      PKG_CHECK_MODULES([EVIL], [evil >= 1.7.7])
       AC_DEFINE(HAVE_EVIL, 1, [Set to 1 if evil package is installed])
       requirement_efreet="evil"
       EFL_EFREET_BUILD="-DEFL_EFREET_BUILD"
@@ -166,9 +165,9 @@ AC_SUBST(EFL_EFREET_BUILD)
 AC_SUBST(EFL_EFREET_MIME_BUILD)
 AC_SUBST(EFL_EFREET_TRASH_BUILD)
 
-requirement_efreet="ecore-file >= 1.6.99 ecore >= 1.6.99 eet >= 1.6.99 eina >= 1.6.99 ${requirement_efreet}"
+requirement_efreet="ecore-file >= 1.7.7 ecore >= 1.7.7 eet >= 1.7.7 eina >= 1.7.7 ${requirement_efreet}"
 PKG_CHECK_MODULES(EFREET, [${requirement_efreet}])
-PKG_CHECK_MODULES(EINA, [eina >= 1.6.99])
+PKG_CHECK_MODULES(EINA, [eina >= 1.7.7])
 
 
 ### Checks for header files
@@ -185,7 +184,6 @@ AC_CHECK_HEADERS([netinet/in.h arpa/inet.h])
 
 AC_C_CONST
 AC_C___ATTRIBUTE__
-AM_PROG_CC_STDC
 AC_HEADER_STDC
 
 case "${host_os}" in
